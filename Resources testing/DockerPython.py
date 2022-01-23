@@ -21,5 +21,3 @@ file = container.get_archive(path="/dataset/data.txt")
 print(file)
 
 container.stop()
-
-
