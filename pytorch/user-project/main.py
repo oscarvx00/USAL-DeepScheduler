@@ -1,11 +1,13 @@
 # coding: utf-8
 import argparse
+import sys
 import time
 import math
 import os
 import torch
 import torch.nn as nn
 import torch.onnx
+import signal
 
 import data
 import model
@@ -79,6 +81,8 @@ corpus = data.Corpus(args.data)
 # dependence of e. g. 'g' on 'f' can not be learned, but allows more efficient
 # batch processing.
 
+
+
 def batchify(data, bsz):
     # Work out how cleanly we can divide the dataset into bsz parts.
     nbatch = data.size(0) // bsz
@@ -104,6 +108,15 @@ else:
     model = model.RNNModel(args.model, ntokens, args.emsize, args.nhid, args.nlayers, args.dropout, args.tied).to(device)
 
 criterion = nn.NLLLoss()
+
+def handleTimeout(signalNumber, frame):
+    print('-' * 89)
+    print('TIMEOUT')
+    with open(args.save, 'wb+') as f:
+        torch.save(model, f)
+    sys.exit() 
+
+signal.signal(signal.SIGTERM, handleTimeout)
 
 ###############################################################################
 # Training code
@@ -156,6 +169,9 @@ def evaluate(data_source):
 
 
 def train():
+
+    
+
     # Turn on training mode which enables dropout.
     model.train()
     total_loss = 0.
@@ -232,9 +248,9 @@ try:
 except KeyboardInterrupt:
     print('-' * 89)
     print('Exiting from training early')
-
     with open(args.save, 'wb+') as f:
         torch.save(model, f)
+    sys.exit()    
 
 # Load the best saved model.
 with open(args.save, 'rb') as f:
