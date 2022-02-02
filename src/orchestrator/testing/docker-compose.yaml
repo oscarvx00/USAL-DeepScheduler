@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - app-network
+
+  orchestrator:
+    build: ../
+    networks:
+      - app-network
+    command: ["./wait-for-it.sh", "rabbit:5672", "--", "python", "orchestrator.py"]
+
+  tester:
+    build: ./
+    networks:
+      - app-network
+    command: ["./wait-for-it.sh", "rabbit:5672", "--", "python", "sender.py"]
+
+
+networks:
+  app-network:
+    driver: bridge
