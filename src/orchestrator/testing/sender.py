@@ -1,22 +1,29 @@
 import pika
-import sys
-import time
+
+from request import Request
+
+RABBIT_HOST = "rabbitmq"
+REQUEST_SCHEDULE = "request_schedule"
 
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='rabbitmq'))
+    pika.ConnectionParameters(host=RABBIT_HOST))
 channel = connection.channel()
 
-channel.queue_declare(queue='execution_schedule', durable=True)
+channel.queue_declare(queue=REQUEST_SCHEDULE, durable=True)
 
-messages = ["Hello", "testing", "message", "queue"]
+messages = [
+    Request("User 1", "5", "Image 1"),
+    Request("User 2", "5", "Image 2"),
+    Request("User 3", "10", "Image 3")
+]
 
-
+#For every message convert it to JSON and send to RabbitMQ
 for m in messages:
 
     channel.basic_publish(
         exchange='',
-        routing_key='execution_schedule',
-        body=m,
+        routing_key=REQUEST_SCHEDULE,
+        body=m.toJson(),
         properties=pika.BasicProperties(
             delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
         ))

@@ -4,3 +4,4 @@ COPY requirements.txt ./
 RUN pip3 install -r requirements.txt
 COPY wait-for-it.sh ./
 COPY sender.py ./
+COPY request.py ./
