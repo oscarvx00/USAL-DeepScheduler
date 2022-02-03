@@ -21,7 +21,7 @@ def callback(ch, method, properties, body):
     #Decode Request data
     rawJson = json.loads(body.decode())
     request = Request.fromJson(rawJson)
-    print(" [x] Received image " + request.imageName + "from User " + request.userId + " Execution time: " + request.executionTime, flush=True)
+    print(' [x] Received image: ', request, flush=True)
 
     #Image execution goes here
     time.sleep(int(request.executionTime))
