@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from asyncio import constants
 import json
 from sys import stderr, stdout
 import time
@@ -51,31 +52,42 @@ def callback(ch, method, properties, body):
     #Get start time
     start_time = time.time()
 
-    #Enter in a loop until max time is reached or container has finished
+    #Enter in a loop until max time is reached or container has exited
     while True:
-        #Get and print container output for debug, we can store this in a log
         container.reload()
-        out = container.logs(stdout=True, stderr=False)
-        print(out.decode(), flush=True)
+        #Optional: upload logs in a periodic time so that users can check them in almost real time
+        #out = container.logs(stdout=True, stderr=False)
+        #print(out.decode(), flush=True)
         current_time = time.time()
         elapsed_time = current_time - start_time
         if elapsed_time > float(request.executionTime):
-            #If max time reached stop exit from loop
+            #If max time reached exit from loop
             print("Max execution time reached")
             break
         elif container.status == "exited":
             print("Container exited")
             break
-        #Seep 10 seconds to prevent high cpu usage
+        #Sleep 10 seconds to prevent high cpu usage
         #print("Status: " + container.status, flush=True)
         time.sleep(10)
 
 
     container.stop()
     #Check exit code, logs, etc
+    out = container.logs(stdout=True, stderr=False)
+    err = container.logs(stdout=False, stderr=True)
+    print("\n\n===========CONTAINER LOGS=============\n\n", flush=True)
+    print(out.decode(), flush=True)
+    print(err.decode(), flush=True)
 
+
+    #Get results, upload files, upload logs
+    #Send container finished to web app
+
+    #Remove container, remove image
 
     ch.basic_ack(delivery_tag=method.delivery_tag)
+
 
 
 channel.basic_qos(prefetch_count=1)
