@@ -18,6 +18,9 @@ services:
       - type: bind
         source: /var/run/docker.sock
         target: /var/run/docker.sock
+    environment:
+        RABBIT_HOST: ${RABBIT_HOST}
+        REQUEST_QUEUE: ${REQUEST_QUEUE}
 
 networks:
   app-network:

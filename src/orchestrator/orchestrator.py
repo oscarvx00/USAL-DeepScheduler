@@ -6,9 +6,10 @@ import time
 import pika
 from request import Request
 import docker
+import os
 
-RABBIT_HOST = "rabbitmq"
-REQUEST_SCHEDULE = "request_schedule"
+RABBIT_HOST = os.environ['RABBIT_HOST']
+REQUEST_QUEUE = os.environ['REQUEST_QUEUE']
 
 #Get docker socket client
 dockerClient = docker.from_env()
@@ -17,7 +18,7 @@ dockerClient = docker.from_env()
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(host=RABBIT_HOST))
 channel = connection.channel()
-channel.queue_declare(queue=REQUEST_SCHEDULE, durable=True)
+channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
 
 print(' [*] Queue declared, waiting for messages')
 
@@ -91,5 +92,5 @@ def callback(ch, method, properties, body):
 
 
 channel.basic_qos(prefetch_count=1)
-channel.basic_consume(REQUEST_SCHEDULE, auto_ack=False, on_message_callback=callback)
+channel.basic_consume(REQUEST_QUEUE, auto_ack=False, on_message_callback=callback)
 channel.start_consuming()

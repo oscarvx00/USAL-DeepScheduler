@@ -1,16 +1,17 @@
 import pika
 import uuid
+import os
 
 from request import Request
 
-RABBIT_HOST = "rabbitmq"
-REQUEST_SCHEDULE = "request_schedule"
+RABBIT_HOST = os.environ['RABBIT_HOST']
+REQUEST_QUEUE = os.environ['REQUEST_QUEUE']
 
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(host=RABBIT_HOST))
 channel = connection.channel()
 
-channel.queue_declare(queue=REQUEST_SCHEDULE, durable=True)
+channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
 
 messages = [
     Request(str(uuid.uuid1()), "User 1", "50", "oscarvicente/tf-user-example"),
@@ -26,7 +27,7 @@ for m in messages:
 
     channel.basic_publish(
         exchange='',
-        routing_key=REQUEST_SCHEDULE,
+        routing_key=REQUEST_QUEUE,
         body=m.toJson(),
         properties=pika.BasicProperties(
             delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
