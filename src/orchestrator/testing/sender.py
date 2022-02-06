@@ -14,10 +14,10 @@ channel = connection.channel()
 channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
 
 messages = [
-    Request(str(uuid.uuid1()), "User 1", "50", "oscarvicente/tf-user-example"),
-    Request(str(uuid.uuid1()),"User 2", "80", "oscarvicente/pytorch-user-example"),
-    Request(str(uuid.uuid1()),"User 3", "35", "b-a-d-i-m-a-g-e"),
-    Request(str(uuid.uuid1()),"User 4", "35", "oscarvicente/tf-user-example")
+    Request(str(uuid.uuid1()), "user-1", "50", "oscarvicente/tf-user-example"),
+    Request(str(uuid.uuid1()),"user-2", "80", "oscarvicente/pytorch-user-example"),
+    Request(str(uuid.uuid1()),"user-3", "35", "b-a-d-i-m-a-g-e"),
+    Request(str(uuid.uuid1()),"user-4", "35", "oscarvicente/tf-user-example")
 ]
 
 #IMPORTANT: make sure there are no white spaces
