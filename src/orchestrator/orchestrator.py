@@ -3,7 +3,6 @@ from asyncio import constants
 from io import BytesIO
 import json
 from sys import stderr, stdout
-import tarfile
 import time
 import pika
 from request import Request
@@ -110,17 +109,39 @@ def callback(ch, method, properties, body):
     for i in strm:
         file_obj.write(i)
     file_obj.seek(0)
-    #tar = tarfile.open(mode='r', fileobj=file_obj)
 
     #Upload files, logs
+    resultsPath = request.requestId + "/results.tar"
     minioClient.put_object(
-        user_bucket, "results.tar", file_obj, length=file_obj.getbuffer().nbytes
+        user_bucket, resultsPath, file_obj, length=file_obj.getbuffer().nbytes
     )
     print("Resuls uploaded", flush=True)
+
+    outLogPath= request.requestId + "/logs/out.log"
+    f = open("outLog.log", "x")
+    f.write(out.decode())
+    f.close()
+    minioClient.fput_object(
+        user_bucket, outLogPath, "outLog.log"
+    )
+    os.remove("outLog.log")
+
+    errLogPath= request.requestId + "/logs/err.log"
+    f = open("errLog.log", "x")
+    f.write(err.decode())
+    f.close()
+    minioClient.fput_object(
+        user_bucket, errLogPath, "errLog.log"
+    )
+    os.remove("errLog.log")
+
+    print("Logs uploaded", flush=True)
 
     #Send container finished to web app
 
     #Remove container, remove image
+    container.remove()
+    dockerClient.images.remove(image.id)
 
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
