@@ -2,21 +2,20 @@
 from asyncio import constants
 from io import BytesIO
 import json
-from sys import stderr, stdout
 import time
 import pika
 from request import Request
 import docker
 import os
 from minio import Minio
-from minio.error import S3Error
 
 RABBIT_HOST = os.environ['RABBIT_HOST']
 REQUEST_QUEUE = os.environ['REQUEST_QUEUE']
 
-MINIO_CLIENT = "minio-oscarvx00.cloud.okteto.net"
-MINIO_ACCESS = "myaccesskey"
-MINIO_SECRET = "mysecretkey"
+MINIO_CLIENT = os.environ['MINIO_CLIENT']
+MINIO_ACCESS = os.environ['MINIO_ACCESS']
+MINIO_SECRET = os.environ['MINIO_SECRET']
+MINIO_RESULTS_BUCKET = os.environ['MINIO_RESULTS_BUCKET']
 
 #Get docker socket client
 dockerClient = docker.from_env()
@@ -28,12 +27,16 @@ minioClient = Minio(
     secret_key=MINIO_SECRET
 )
 
-
 #Create connection to RabbitMQ container based on its service name
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(host=RABBIT_HOST))
 channel = connection.channel()
 channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
+
+#Create user-results bucket if not exists
+found = minioClient.bucket_exists(bucket_name=MINIO_RESULTS_BUCKET)
+if not found:
+    minioClient.make_bucket(MINIO_RESULTS_BUCKET)
 
 print(' [*] Queue declared, waiting for messages')
 
@@ -43,15 +46,7 @@ def callback(ch, method, properties, body):
     #Decode Request data
     rawJson = json.loads(body)
     request = Request.fromJson(rawJson)
-    print(' [x] Received image: ', request, flush=True)
-
-    user_bucket = request.userId
-    #Create user bucket if not exists
-    #https://docs.rightscale.com/faq/clouds/aws/What_are_valid_S3_bucket_names.html
-    #Create bucket when user registers in app?
-    found = minioClient.bucket_exists(bucket_name=user_bucket)
-    if not found:
-        minioClient.make_bucket(user_bucket)
+    print('\n\n [x] Received image: ', request, flush=True)
 
     #Image execution control.
 
@@ -59,12 +54,12 @@ def callback(ch, method, properties, body):
     try: 
         image = dockerClient.images.pull(request.imageName)
     except:
-        print("Cant get the image", flush=True)
+        print("\nError pulling " + request.imageName, flush=True)
         #TODO: Send error message to web app
         ch.basic_ack(delivery_tag=method.delivery_tag)
         return
 
-    print("Image " + request.imageName + " pulled")
+    print(" [x] Image " + request.imageName + " pulled")
 
 
     #Create a container with gpu capabilities.
@@ -85,13 +80,12 @@ def callback(ch, method, properties, body):
         elapsed_time = current_time - start_time
         if elapsed_time > float(request.executionTime):
             #If max time reached exit from loop
-            print("Max execution time reached")
+            print(" [x] Max execution time reached")
             break
         elif container.status == "exited":
-            print("Container exited")
+            print(" [x] Container exited")
             break
         #Sleep 10 seconds to prevent high cpu usage
-        #print("Status: " + container.status, flush=True)
         time.sleep(10)
 
 
@@ -99,9 +93,9 @@ def callback(ch, method, properties, body):
     #Check exit code, logs, etc
     out = container.logs(stdout=True, stderr=False)
     err = container.logs(stdout=False, stderr=True)
-    print("\n\n===========CONTAINER LOGS=============\n\n", flush=True)
-    print(out.decode(), flush=True)
-    print(err.decode(), flush=True)
+    #print("\n\n===========CONTAINER LOGS=============\n\n", flush=True)
+    #print(out.decode(), flush=True)
+    #print(err.decode(), flush=True)
 
     #Get results
     strm, stat = container.get_archive(path="/train/results")
@@ -111,38 +105,38 @@ def callback(ch, method, properties, body):
     file_obj.seek(0)
 
     #Upload files, logs
-    resultsPath = request.requestId + "/results.tar"
+    resultsPath = request.userId + "/" + request.requestId + "/results.tar"
     minioClient.put_object(
-        user_bucket, resultsPath, file_obj, length=file_obj.getbuffer().nbytes
+        MINIO_RESULTS_BUCKET, resultsPath, file_obj, length=file_obj.getbuffer().nbytes
     )
-    print("Resuls uploaded", flush=True)
 
-    outLogPath= request.requestId + "/logs/out.log"
+    outLogPath = request.userId + "/" + request.requestId + "/logs/out.log"
     f = open("outLog.log", "x")
     f.write(out.decode())
     f.close()
     minioClient.fput_object(
-        user_bucket, outLogPath, "outLog.log"
+        MINIO_RESULTS_BUCKET, outLogPath, "outLog.log"
     )
     os.remove("outLog.log")
 
-    errLogPath= request.requestId + "/logs/err.log"
+    errLogPath = request.userId + "/" + request.requestId + "/logs/err.log"
     f = open("errLog.log", "x")
     f.write(err.decode())
     f.close()
     minioClient.fput_object(
-        user_bucket, errLogPath, "errLog.log"
+        MINIO_RESULTS_BUCKET, errLogPath, "errLog.log"
     )
     os.remove("errLog.log")
 
-    print("Logs uploaded", flush=True)
-
-    #Send container finished to web app
+    #TODO: Send container finished to web app
 
     #Remove container, remove image
     container.remove()
     dockerClient.images.remove(image.id)
 
+    print("\n=========== Request " + request.requestId + " completed ===========\n\n\n", flush=True)
+
+    #Ack message
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 

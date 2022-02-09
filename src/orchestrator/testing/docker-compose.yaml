@@ -18,18 +18,16 @@ services:
       - type: bind
         source: /var/run/docker.sock
         target: /var/run/docker.sock
-    environment:
-      RABBIT_HOST: ${RABBIT_HOST}
-      REQUEST_QUEUE: ${REQUEST_QUEUE}
+    env_file:
+      - .env
 
   tester:
     build: ./
     networks:
       - app-network
     command: ["./wait-for-it.sh", "rabbit:5672", "--", "python", "sender.py"]
-    environment:
-        RABBIT_HOST: ${RABBIT_HOST}
-        REQUEST_QUEUE: ${REQUEST_QUEUE}
+    env_file:
+      - .env
 
 
 networks:
