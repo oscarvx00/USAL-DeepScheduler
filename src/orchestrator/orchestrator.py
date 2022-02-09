@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-from asyncio import constants
 from io import BytesIO
 import json
 import time
 import pika
-from request import Request
 import docker
 import os
 from minio import Minio
@@ -17,6 +15,26 @@ MINIO_ACCESS = os.environ['MINIO_ACCESS']
 MINIO_SECRET = os.environ['MINIO_SECRET']
 MINIO_RESULTS_BUCKET = os.environ['MINIO_RESULTS_BUCKET']
 
+class Request:
+    def __init__(self, requestId, userId, executionTime, imageName):
+        self.requestId = requestId
+        self.userId = userId
+        self.executionTime = executionTime
+        self.imageName = imageName
+
+    def fromJson(jsonDict):
+        return Request(jsonDict['requestId'],jsonDict['userId'], jsonDict['executionTime'], jsonDict['imageName'])
+    
+    def toJson(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
+
+    def __str__(self):
+        return "Request: [requestId: " + self.requestId + " userID: " + self.userId + ", executionTime: " + self.executionTime + ", imageName: " + self.imageName + " ]\n"
+
+
+
+
+
 #Get docker socket client
 dockerClient = docker.from_env()
 
@@ -26,6 +44,7 @@ minioClient = Minio(
     access_key=MINIO_ACCESS,
     secret_key=MINIO_SECRET
 )
+
 
 #Create connection to RabbitMQ container based on its service name
 connection = pika.BlockingConnection(
@@ -56,7 +75,7 @@ def callback(ch, method, properties, body):
     except:
         print("\nError pulling " + request.imageName, flush=True)
         #TODO: Send error message to web app
-        ch.basic_ack(delivery_tag=method.delivery_tag)
+        ch.ack_request(method.delivery_tag)
         return
 
     print(" [x] Image " + request.imageName + " pulled")
@@ -137,7 +156,7 @@ def callback(ch, method, properties, body):
     print("\n=========== Request " + request.requestId + " completed ===========\n\n\n", flush=True)
 
     #Ack message
-    ch.basic_ack(delivery_tag=method.delivery_tag)
+    ch.ack_request(method.delivery_tag)
 
 
 
