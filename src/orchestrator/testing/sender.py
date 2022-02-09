@@ -1,11 +1,28 @@
 import pika
 import uuid
+import json
 import os
 
-from request import Request
+RABBIT_HOST =  "localhost" #os.environ['RABBIT_HOST']
+REQUEST_QUEUE = "request_queue" #os.environ['REQUEST_QUEUE']
 
-RABBIT_HOST = os.environ['RABBIT_HOST']
-REQUEST_QUEUE = os.environ['REQUEST_QUEUE']
+class Request:
+    def __init__(self, requestId, userId, executionTime, imageName):
+        self.requestId = requestId
+        self.userId = userId
+        self.executionTime = executionTime
+        self.imageName = imageName
+
+    def fromJson(jsonDict):
+        return Request(jsonDict['requestId'],jsonDict['userId'], jsonDict['executionTime'], jsonDict['imageName'])
+    
+    def toJson(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
+
+    def __str__(self):
+        return "Request: [requestId: " + self.requestId + " userID: " + self.userId + ", executionTime: " + self.executionTime + ", imageName: " + self.imageName + " ]\n"
+
+
 
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(host=RABBIT_HOST))

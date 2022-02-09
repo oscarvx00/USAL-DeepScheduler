@@ -10,7 +10,7 @@ services:
       - app-network
 
   orchestrator:
-    build: ../
+    build: .
     networks:
       - app-network
     command: ["./wait-for-it.sh", "rabbit:5672", "--", "python", "orchestrator.py"]

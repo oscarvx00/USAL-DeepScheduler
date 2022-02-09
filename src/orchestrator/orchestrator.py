@@ -48,7 +48,7 @@ minioClient = Minio(
 
 #Create connection to RabbitMQ container based on its service name
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=RABBIT_HOST))
+    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0))
 channel = connection.channel()
 channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
 
@@ -75,7 +75,7 @@ def callback(ch, method, properties, body):
     except:
         print("\nError pulling " + request.imageName, flush=True)
         #TODO: Send error message to web app
-        ch.ack_request(method.delivery_tag)
+        ch.basic_ack(delivery_tag=method.delivery_tag)
         return
 
     print(" [x] Image " + request.imageName + " pulled")
@@ -156,7 +156,7 @@ def callback(ch, method, properties, body):
     print("\n=========== Request " + request.requestId + " completed ===========\n\n\n", flush=True)
 
     #Ack message
-    ch.ack_request(method.delivery_tag)
+    ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
 
