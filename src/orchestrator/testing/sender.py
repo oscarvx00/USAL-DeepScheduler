@@ -25,7 +25,7 @@ class Request:
 
 
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=RABBIT_HOST))
+    pika.ConnectionParameters(host=RABBIT_HOST, port=30001))
 channel = connection.channel()
 
 channel.queue_declare(queue=REQUEST_QUEUE, durable=True)

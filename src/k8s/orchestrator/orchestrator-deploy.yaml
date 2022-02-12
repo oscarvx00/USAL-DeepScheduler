@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orchestrator
+spec:
+  selector:
+    matchLabels:
+      app: orchestrator
+  template:
+    metadata:
+      labels:
+        app: orchestrator
+    spec:
+      containers:
+        - name: orchestrator
+          image: oscarvicente/deepscheduler-orchestrator
+          imagePullPolicy: Never #For get local image, delete this line when project is finished and images uploaded.
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq.default.svc.cluster.local
+            - name: REQUEST_QUEUE
+              value: request_queue
+            - name: MINIO_CLIENT
+              value: minio-oscarvx00.cloud.okteto.net
+            - name: MINIO_ACCESS
+              value: myaccesskey
+            - name: MINIO_SECRET
+              value: mysecretkey
+            - name: MINIO_RESULTS_BUCKET
+              value: users-results
+          volumeMounts:
+            - mountPath: "/var/run/docker.sock"
+              name: dockersock
+      volumes:
+        - name: dockersock
+          hostPath:
+            path: /var/run/docker.sock
+      nodeSelector:
+        gpu-node: "true"
