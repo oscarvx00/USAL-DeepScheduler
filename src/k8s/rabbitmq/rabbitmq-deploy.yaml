@@ -23,5 +23,5 @@ spec:
             - name: amqp
               protocol: TCP
               containerPort: 5672
-      nodeSelector:
-        gpu-node: "false"
+      #nodeSelector:
+      #  gpu-node: "false"

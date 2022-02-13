@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.5.0-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:11.4.0-cudnn8-runtime-ubuntu20.04
 WORKDIR /train
 RUN mkdir -p /train/results
 ENV RESULTS_PATH="/train/results"
