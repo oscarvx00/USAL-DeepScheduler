@@ -20,7 +20,7 @@ spec:
             - name: http
               protocol: TCP
               containerPort: 15672
-            - name: ampq
+            - name: amqp
               protocol: TCP
               containerPort: 5672
       nodeSelector:
