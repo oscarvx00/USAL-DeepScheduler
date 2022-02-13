@@ -11,6 +11,11 @@ spec:
       labels:
         app: orchestrator
     spec:
+      initContainers:
+        - name: wait-for-rabbitmq
+          image: oscarvicente/wait-for-it
+          imagePullPolicy: Never
+          command: ["./wait-for-it.sh", "rabbitmq.default.svc.cluster.local:5672"]
       containers:
         - name: orchestrator
           image: oscarvicente/deepscheduler-orchestrator
