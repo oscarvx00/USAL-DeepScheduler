@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
   name: orchestrator
 spec:
@@ -14,12 +14,12 @@ spec:
       initContainers:
         - name: wait-for-rabbitmq
           image: oscarvicente/wait-for-it
-          imagePullPolicy: Never
+          #imagePullPolicy: Never 
           command: ["./wait-for-it.sh", "rabbitmq.default.svc.cluster.local:5672"]
       containers:
         - name: orchestrator
           image: oscarvicente/deepscheduler-orchestrator
-          imagePullPolicy: Never #For get local image, delete this line when project is finished and images uploaded.
+          #imagePullPolicy: Never #For get local image, delete this line when project is finished and images uploaded.
           env:
             - name: RABBIT_HOST
               value: rabbitmq.default.svc.cluster.local
