@@ -34,7 +34,7 @@ messages = [
     Request(str(uuid.uuid4()), "user-1", "50", "oscarvicente/tf-user-example"),
     Request(str(uuid.uuid4()),"user-2", "80", "oscarvicente/pytorch-920m-user-example"),
     Request(str(uuid.uuid4()),"user-3", "35", "b-a-d-i-m-a-g-e"),
-    Request(str(uuid.uuid4()),"user-4", "35", "oscarvicente/tf-user-example")
+    #Request(str(uuid.uuid4()),"user-4", "35", "oscarvicente/tf-user-example")
 ]
 
 #IMPORTANT: make sure there are no white spaces

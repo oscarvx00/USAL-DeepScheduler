@@ -150,8 +150,11 @@ def callback(ch, method, properties, body):
     #TODO: Send container finished to web app
 
     #Remove container, remove image
-    container.remove()
-    dockerClient.images.remove(image.id)
+    try:
+        container.remove()
+        dockerClient.images.remove(image.id)
+    except:
+        print("Error removing image or container", flush=True)
 
     print("\n=========== Request " + request.requestId + " completed ===========\n\n\n", flush=True)
 
