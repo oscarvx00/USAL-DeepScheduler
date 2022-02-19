@@ -1,3 +1,6 @@
+@import '~@angular/material/theming';
+@import 'src/custom-theme.scss';
+
 .app-container{
     display: flex;
     flex-flow: column;

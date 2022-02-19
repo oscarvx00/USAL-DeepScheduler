@@ -1,1 +1,22 @@
-<p>login works!</p>
+<div class="login-container">
+    <mat-card class="login-card">
+        <div class="form-container">
+            <form>
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter your email</mat-label>
+                    <input matInput placeholder="pat@example.com" required>
+                    <mat-error>Error</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter your password</mat-label>
+                    <input matInput type="password" required>
+                    <mat-error>Error</mat-error>
+                </mat-form-field>
+                <button mat-stroked-button type="submit">Login</button>
+            </form>
+        </div>
+        <div class="image-container">
+            <img src="/assets/illustrations/login.svg">
+        </div>       
+    </mat-card>
+</div>

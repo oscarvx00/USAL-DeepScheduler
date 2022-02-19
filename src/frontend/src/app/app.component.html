@@ -1,9 +1,9 @@
 <div class="app-container">
-  <mat-toolbar color="primary">
+  <mat-toolbar>
     <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
       <mat-icon>menu</mat-icon>
     </button>
-    <span>Deepscheduler</span>
+    <span [routerLink]="['']">Deepscheduler</span>
     <span class="navbar-spacer"></span>
     <div *ngIf="userAuth" id="toolbar-user-container">
       <span>User id</span>

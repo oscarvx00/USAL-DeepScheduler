@@ -44,24 +44,27 @@ $md-mcgpalette0: (
     )
 );
 
-
+//USING A100 in illustrations
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$deepscheduler-frontend-primary: mat.define-palette($md-mcgpalette0);
-$deepscheduler-frontend-accent: mat.define-palette($md-mcgpalette0, A200, A100, A400);
+$primary: mat.define-palette($md-mcgpalette0);
+$accent: mat.define-palette($md-mcgpalette0, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$deepscheduler-frontend-warn: mat.define-palette($md-mcgpalette0);
+$warn: mat.define-palette($md-mcgpalette0);
+
+//Custom colors
+$background-light: mat.define-palette($md-mcgpalette0, 100);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
 $deepscheduler-frontend-theme: mat.define-light-theme((
   color: (
-    primary: $deepscheduler-frontend-primary,
-    accent: $deepscheduler-frontend-accent,
-    warn: $deepscheduler-frontend-warn,
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
   )
 ));
 
@@ -69,4 +72,5 @@ $deepscheduler-frontend-theme: mat.define-light-theme((
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include mat.all-component-themes($deepscheduler-frontend-theme);
+
 

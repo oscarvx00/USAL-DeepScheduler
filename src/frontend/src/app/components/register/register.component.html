@@ -1,12 +1,27 @@
 <div class="register-container">
     <mat-card class="register-card">
         <div class="image-container">
-            <h2>Welcome!!</h2>
             <img src="/assets/illustrations/register.svg">
         </div>
         <div class="form-container">
-            
+            <form>
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter your email</mat-label>
+                    <input matInput placeholder="pat@example.com" required>
+                    <mat-error>Error</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Enter your password</mat-label>
+                    <input matInput type="password" required>
+                    <mat-error>Error</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Repeat your password</mat-label>
+                    <input matInput type="password" required>
+                    <mat-error>Error</mat-error>
+                </mat-form-field>
+                <button mat-stroked-button type="submit">Register</button>
+            </form>
         </div>
     </mat-card>
-      
 </div>

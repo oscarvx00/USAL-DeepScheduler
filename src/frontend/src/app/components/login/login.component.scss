@@ -1,0 +1,48 @@
+@import '~@angular/material/theming';
+@import 'src/custom-theme.scss';
+
+/*$primary: map-get($deepscheduler-frontend-theme, primary);*/
+
+.login-container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card{
+    height: 60%;
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    border-radius: 10px;
+}
+
+.image-container{
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.image-container img{
+    height: 70%;
+    width: 70%;
+}
+
+.form-container{
+    width: 40%;
+    background-color: mat-color($background-light);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 30px;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.form-container *{
+    width: 100%;
+}

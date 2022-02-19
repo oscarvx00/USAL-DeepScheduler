@@ -1,3 +1,8 @@
+@import '~@angular/material/theming';
+@import 'src/custom-theme.scss';
+
+/*$primary: map-get($deepscheduler-frontend-theme, primary);*/
+
 .register-container{
     height: 100%;
     display: flex;
@@ -11,6 +16,7 @@
     width: 50%;
     display: flex;
     flex-direction: row;
+    border-radius: 10px;
 }
 
 .image-container{
@@ -28,5 +34,15 @@
 
 .form-container{
     width: 40%;
-    background-color: aqua;
+    background-color: mat-color($background-light);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 30px;
+    justify-content: center;
+    border-radius: 10px;
+}
+
+.form-container *{
+    width: 100%;
 }
