@@ -1,0 +1,72 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '~@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+
+/* For use in src/lib/core/theming/_palette.scss */
+$md-mcgpalette0: (
+    50 : #e4e5f0,
+    100 : #babdd8,
+    200 : #8d91bf,
+    300 : #5f65a5,
+    400 : #3c4491,
+    500 : #1a237e,
+    600 : #171f76,
+    700 : #131a6b,
+    800 : #0f1561,
+    900 : #080c4e,
+    A100 : #8387ff,
+    A200 : #5056ff,
+    A400 : #1d24ff,
+    A700 : #030cff,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #ffffff,
+        400 : #ffffff,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #ffffff,
+        A400 : #ffffff,
+        A700 : #ffffff,
+    )
+);
+
+
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$deepscheduler-frontend-primary: mat.define-palette($md-mcgpalette0);
+$deepscheduler-frontend-accent: mat.define-palette($md-mcgpalette0, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$deepscheduler-frontend-warn: mat.define-palette($md-mcgpalette0);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$deepscheduler-frontend-theme: mat.define-light-theme((
+  color: (
+    primary: $deepscheduler-frontend-primary,
+    accent: $deepscheduler-frontend-accent,
+    warn: $deepscheduler-frontend-warn,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($deepscheduler-frontend-theme);
+
