@@ -1,4 +1,0 @@
-Que hemos hecho:
--> Crear rabbitmq deployment y service
--> Crear orchestrator deployment, variables de entorno pasadas,
-    funcionamiento no testeado.
