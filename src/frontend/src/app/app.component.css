@@ -1,3 +1,9 @@
+.app-container{
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
 .navbar-spacer{
     flex: 1 1 auto;
 }
@@ -6,4 +12,8 @@
     margin-left: 15px;
     margin-right: 15px;
     font-size: 16px !important;
+}
+
+.router-container{
+    flex: 1 1 auto;
 }

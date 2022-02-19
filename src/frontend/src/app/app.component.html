@@ -1,16 +1,20 @@
-<mat-toolbar color="primary">
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <span>Deepscheduler</span>
-  <span class="navbar-spacer"></span>
-  <div *ngIf="userAuth" id="toolbar-user-container">
-    <span>User id</span>
+<div class="app-container">
+  <mat-toolbar color="primary">
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>Deepscheduler</span>
+    <span class="navbar-spacer"></span>
+    <div *ngIf="userAuth" id="toolbar-user-container">
+      <span>User id</span>
+    </div>
+    <div *ngIf="!userAuth" id="toolbar-login-container">
+      <button class="navbar-button" mat-button (click)="loginClicked()">Login</button>
+      <button class="navbar-button" mat-raised-button (click)="registerClicked()">Register</button>
+    </div>
+      
+  </mat-toolbar>
+  <div class="router-container" style="background-color: aqua;">
+    <router-outlet></router-outlet>
   </div>
-  <div *ngIf="!userAuth" id="toolbar-login-container">
-    <button class="navbar-button" mat-button (click)="loginClicked()">Login</button>
-    <button class="navbar-button" mat-raised-button (click)="registerClicked()">Register</button>
-  </div>
-    
-</mat-toolbar>
-<router-outlet></router-outlet>
+</div>
