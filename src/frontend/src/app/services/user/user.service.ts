@@ -13,7 +13,11 @@ export class UserService {
     private httpClient : HttpClient
   ) { }
 
-  getUserData() : Observable<User> {
-    return this.httpClient.get<User>(ServiceConstants.API_ENDPOINT + "/user")
+  getUserBasicProfile() : Observable<User> {
+    return this.httpClient.get<User>(ServiceConstants.API_ENDPOINT + "/user/profile/basic")
+  }
+
+  getUserProfile() : Observable<User> {
+    return this.httpClient.get<User>(ServiceConstants.API_ENDPOINT + "/user/profile")
   }
 }

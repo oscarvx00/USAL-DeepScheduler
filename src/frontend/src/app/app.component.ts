@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from './model/user';
+import { AuthService } from './services/auth/auth.service';
 import { AuthDataSharingService } from './services/auth/user-data-sharing';
 import { UserService } from './services/user/user.service';
 
@@ -9,7 +10,7 @@ import { UserService } from './services/user/user.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
   title = 'deepscheduler-frontend';
 
   isUserLoggedIn! : boolean
@@ -21,13 +22,25 @@ export class AppComponent {
   constructor(
     private router : Router,
     private authDataSharingService : AuthDataSharingService,
-    userService : UserService
+    private userService : UserService,
+    private authService : AuthService
   ){
     this.authDataSharingService.isUserLoggedIn.subscribe( value => {
       this.isUserLoggedIn = value
-      userService.getUserData().subscribe((user : User) => {
-        this.username = user.username
-      })
+      this.getUserToolbarInfo()
+    })
+  }
+
+  ngOnInit(){
+    if(this.authService.loggedIn){
+      this.isUserLoggedIn = true
+      this.getUserToolbarInfo()
+    }
+  }
+
+  getUserToolbarInfo(){
+    this.userService.getUserBasicProfile().subscribe((user : User) => {
+      this.username = user.username
     })
   }
 

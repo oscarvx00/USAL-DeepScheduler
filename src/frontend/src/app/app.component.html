@@ -6,7 +6,7 @@
     <span [routerLink]="['']">Deepscheduler</span>
     <span class="navbar-spacer"></span>
     <div *ngIf="isUserLoggedIn" id="toolbar-user-container">
-      <span>{{username}}</span>
+      <span [routerLink]="['me']">{{username}}</span>
     </div>
     <div *ngIf="!isUserLoggedIn" id="toolbar-login-container">
       <button class="navbar-button" mat-button (click)="loginClicked()">Login</button>

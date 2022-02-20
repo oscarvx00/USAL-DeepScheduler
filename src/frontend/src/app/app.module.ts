@@ -20,6 +20,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AuthDataSharingService } from './services/auth/user-data-sharing';
 import { AuthInterceptorService } from './services/auth/auth-interceptor/auth-interceptor.service';
+import { ProfileComponent } from './components/profile/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { AuthInterceptorService } from './services/auth/auth-interceptor/auth-in
     LoginComponent,
     RegisterComponent,
     MainComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,

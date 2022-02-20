@@ -21,9 +21,9 @@ export class AuthService {
       password : password
     }).subscribe((resp : any) => {
       console.log(resp)
-      //this.router.navigate(['profile'])
       localStorage.setItem('auth_token', resp.access_token)
       this.authDataSharingService.isUserLoggedIn.next(true)
+      this.router.navigate(['me'])
     },
     (err : any) => {
       console.log(err)
@@ -34,7 +34,7 @@ export class AuthService {
     localStorage.removeItem('auth_token')
   }
 
-  public get logIn() : boolean{
+  public get loggedIn() : boolean{
     return (localStorage.getItem('auth_token') != null)
   }
 

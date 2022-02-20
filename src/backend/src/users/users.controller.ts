@@ -11,7 +11,7 @@ export class UsersController{
     ) {}
 
     @UseGuards(JwtAuthGuard)
-    @Get()
+    @Get('profile/basic')
     async getUser(@Request() req){
         const user = await this.usersService.findOne(req.user.username)
         return {username : user.username}
