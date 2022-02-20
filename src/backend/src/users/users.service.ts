@@ -29,4 +29,12 @@ export class UsersService {
     //return this.users.find(user => user.username === username);
     return this.userModel.findOne({username: username}).exec()
   }
+
+  async register(user : any, passHash : string){
+    return await new this.userModel({
+      username : user.username,
+      password: passHash,
+      mail: user.mail
+    }).save()
+  }
 }

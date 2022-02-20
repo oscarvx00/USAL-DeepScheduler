@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Request, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { LocalAuthGuard } from "./passport-strategies/local-auth.guard";
+import { LocalAuthGuard } from "./strategies/local-auth.guard";
 
 @Controller('auth')
 export class AuthController {
@@ -11,7 +11,12 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(@Request() req){
-        console.log("AUTH CONTROLER " + req.user)
         return this.authService.login(req.user)
+    }
+
+    @Post('register')
+    async register(@Request() req){
+        //Check if user or mail already exists
+        return this.authService.register(req.body)
     }
 }
