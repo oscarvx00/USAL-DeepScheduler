@@ -18,12 +18,7 @@ export class AppController {
     return this.authService.login(req.user)
   }*/
   
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  async getProfile(@Request() req){
-    const user = await this.usersService.findOne(req.user.username)
-    return user
-  }
+
 
   @Get()
   getHello(): string {
