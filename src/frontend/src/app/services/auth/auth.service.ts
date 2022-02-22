@@ -15,6 +15,7 @@ export class AuthService {
     private authDataSharingService : AuthDataSharingService
   ) { }
 
+  //Must return an observable for show errors??
   login(username : string, password : string) {
     this.httpClient.post(ServiceConstants.API_ENDPOINT + "/auth/login", {
       username : username,
@@ -36,6 +37,23 @@ export class AuthService {
 
   public get loggedIn() : boolean{
     return (localStorage.getItem('auth_token') != null)
+  }
+
+  //Must return an observable for show errors??
+  register(username : string, password : string, mail : string){
+    this.httpClient.post(ServiceConstants.API_ENDPOINT + "/auth/register", {
+      username : username,
+      mail : mail,
+      password : password
+    }).subscribe((resp : any) => {
+      console.log(resp)
+      localStorage.setItem('auth_token', resp.access_token)
+      this.authDataSharingService.isUserLoggedIn.next(true)
+      this.router.navigate(['me'])
+    },
+    (err : any) => {
+      console.log(err)
+    })
   }
 
 }
