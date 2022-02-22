@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { ErrorDialogComponent } from '../../utils/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-register',
@@ -12,10 +14,18 @@ export class RegisterComponent implements OnInit {
 
   registerForm! : FormGroup
 
+  errorMsg = {
+    username : "Error user",
+    mail : "Error",
+    password : "Error",
+    passwordValidate : "Error"
+  }
+
   constructor(
     private formBuilder : FormBuilder,
     private router : Router,
-    private authService : AuthService
+    private authService : AuthService,
+    public dialog : MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -30,7 +40,9 @@ export class RegisterComponent implements OnInit {
   onSubmit(){
     //Validation
     if(this.registerForm.invalid){
-      //Show errors
+      //Pensar como comprobar cada tipo de error, si hacerlo de uno en uno o pensar en algun tipo de automatismo
+      this.getFormValidationErrors()
+      console.log(this.registerForm.controls)
       return
     }
 
@@ -40,6 +52,13 @@ export class RegisterComponent implements OnInit {
     const mail = this.registerForm.controls.mail.value
 
     this.authService.register(username, password, mail)
+  }
+
+  private getFormValidationErrors(){
+    //username
+    if(this.registerForm.controls.username.errors != null){
+      this.errorMsg.username = this.registerForm.controls.username.errors[0]
+    }
   }
 
 }

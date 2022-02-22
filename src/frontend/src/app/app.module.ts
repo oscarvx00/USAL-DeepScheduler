@@ -12,15 +12,17 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card'; 
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input'; 
+import {MatDialogModule} from '@angular/material/dialog';
 
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/auth/login/login.component';
+import { RegisterComponent } from './components/auth/register/register.component';
 import { MainComponent } from './components/main/main.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AuthDataSharingService } from './services/auth/user-data-sharing';
 import { AuthInterceptorService } from './services/auth/auth-interceptor/auth-interceptor.service';
-import { ProfileComponent } from './components/profile/profile/profile.component';
+import { ProfileComponent } from './components/user/profile/profile.component';
+import { ErrorDialogComponent } from './components/utils/error-dialog/error-dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,7 @@ import { ProfileComponent } from './components/profile/profile/profile.component
     RegisterComponent,
     MainComponent,
     ProfileComponent,
+    ErrorDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,6 +46,7 @@ import { ProfileComponent } from './components/profile/profile/profile.component
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MatDialogModule,
   ],
   providers: [
     AuthDataSharingService,

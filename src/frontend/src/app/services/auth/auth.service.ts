@@ -36,7 +36,13 @@ export class AuthService {
   }
 
   public get loggedIn() : boolean{
-    return (localStorage.getItem('auth_token') != null)
+    if(localStorage.getItem('auth_token') != null){
+      this.authDataSharingService.isUserLoggedIn.next(true)
+      return true
+    } else{
+      this.authDataSharingService.isUserLoggedIn.next(false)
+      return false
+    }
   }
 
   //Must return an observable for show errors??

@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './components/auth/login/login.component';
 import { MainComponent } from './components/main/main.component';
-import { ProfileComponent } from './components/profile/profile/profile.component';
-import { RegisterComponent } from './components/register/register.component';
+import { ProfileComponent } from './components/user/profile/profile.component';
+import { RegisterComponent } from './components/auth/register/register.component';
+import { ErrorDialogComponent } from './components/utils/error-dialog/error-dialog.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
