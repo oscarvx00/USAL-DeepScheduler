@@ -36,13 +36,19 @@ export class AuthService {
   }
 
   public get loggedIn() : boolean{
-    if(localStorage.getItem('auth_token') != null){
+    const token = localStorage.getItem('auth_token')
+    if(token != null && !this.isTokenExpired(token)){
       this.authDataSharingService.isUserLoggedIn.next(true)
       return true
     } else{
       this.authDataSharingService.isUserLoggedIn.next(false)
       return false
     }
+  }
+
+  private isTokenExpired(token : string) : boolean {
+    const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
+    return (Math.floor((new Date).getTime() / 1000)) >= expiry;
   }
 
   //Must return an observable for show errors??

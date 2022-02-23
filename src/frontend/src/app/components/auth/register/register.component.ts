@@ -58,6 +58,7 @@ export class RegisterComponent implements OnInit {
     //username
     if(this.registerForm.controls.username.errors != null){
       this.errorMsg.username = this.registerForm.controls.username.errors[0]
+      console.log(this.errorMsg.username)
     }
   }
 

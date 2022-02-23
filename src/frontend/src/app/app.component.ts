@@ -27,7 +27,9 @@ export class AppComponent implements OnInit{
   ){
     this.authDataSharingService.isUserLoggedIn.subscribe( value => {
       this.isUserLoggedIn = value
-      this.getUserToolbarInfo()
+      if(value){
+        this.getUserToolbarInfo()
+      }     
     })
   }
 
