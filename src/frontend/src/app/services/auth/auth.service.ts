@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { ServiceConstants } from '../services-constants';
 import { AuthDataSharingService } from './user-data-sharing';
 
@@ -37,7 +38,7 @@ export class AuthService {
 
   public get loggedIn() : boolean{
     const token = localStorage.getItem('auth_token')
-    if(token != null && !this.isTokenExpired(token)){
+    if(token != null){
       this.authDataSharingService.isUserLoggedIn.next(true)
       return true
     } else{
@@ -46,25 +47,12 @@ export class AuthService {
     }
   }
 
-  private isTokenExpired(token : string) : boolean {
-    const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
-    return (Math.floor((new Date).getTime() / 1000)) >= expiry;
-  }
-
   //Must return an observable for show errors??
-  register(username : string, password : string, mail : string){
-    this.httpClient.post(ServiceConstants.API_ENDPOINT + "/auth/register", {
+  register(username : string, password : string, mail : string) : Observable<any>{
+    return this.httpClient.post(ServiceConstants.API_ENDPOINT + "/auth/register", {
       username : username,
       mail : mail,
       password : password
-    }).subscribe((resp : any) => {
-      console.log(resp)
-      localStorage.setItem('auth_token', resp.access_token)
-      this.authDataSharingService.isUserLoggedIn.next(true)
-      this.router.navigate(['me'])
-    },
-    (err : any) => {
-      console.log(err)
     })
   }
 

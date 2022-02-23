@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/f
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { AuthDataSharingService } from 'src/app/services/auth/user-data-sharing';
 import { ErrorDialogComponent } from '../../utils/error-dialog/error-dialog.component';
 
 @Component({
@@ -14,24 +15,18 @@ export class RegisterComponent implements OnInit {
 
   registerForm! : FormGroup
 
-  errorMsg = {
-    username : "Error user",
-    mail : "Error",
-    password : "Error",
-    passwordValidate : "Error"
-  }
-
   constructor(
     private formBuilder : FormBuilder,
     private router : Router,
     private authService : AuthService,
-    public dialog : MatDialog
+    public dialog : MatDialog,
+    private authDataSharingService : AuthDataSharingService
   ) { }
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
       username : ['', Validators.required],
-      mail : ['', Validators.required, Validators.email],
+      mail : ['', [Validators.required, Validators.email]],
       password : ['', Validators.required],
       passwordValidate : ['', Validators.required]
     })
@@ -40,9 +35,7 @@ export class RegisterComponent implements OnInit {
   onSubmit(){
     //Validation
     if(this.registerForm.invalid){
-      //Pensar como comprobar cada tipo de error, si hacerlo de uno en uno o pensar en algun tipo de automatismo
-      this.getFormValidationErrors()
-      console.log(this.registerForm.controls)
+      //this.getFormValidationErrors()
       return
     }
 
@@ -51,15 +44,25 @@ export class RegisterComponent implements OnInit {
     const passwordValidate = this.registerForm.controls.passwordValidate.value
     const mail = this.registerForm.controls.mail.value
 
-    this.authService.register(username, password, mail)
-  }
-
-  private getFormValidationErrors(){
-    //username
-    if(this.registerForm.controls.username.errors != null){
-      this.errorMsg.username = this.registerForm.controls.username.errors[0]
-      console.log(this.errorMsg.username)
+    if(password != passwordValidate){
+      this.dialog.open(ErrorDialogComponent, {
+        data: "Passwords doesn't match"
+      })
+      return
     }
-  }
 
+    this.authService.register(username, password, mail).subscribe((resp : any) => {
+      console.log(resp)
+      localStorage.setItem('auth_token', resp.access_token)
+      this.authDataSharingService.isUserLoggedIn.next(true)
+      this.router.navigate(['me'])
+    },
+    (err : any) => {
+      //We can do some error msg formatting here
+      console.log(err)
+      this.dialog.open(ErrorDialogComponent, {
+        data: err.message
+      })
+    })
+  }
 }

@@ -16,15 +16,12 @@ export class AuthInterceptorService implements HttpInterceptor{
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{
       const token = localStorage.getItem('auth_token')
 
-      if (token != null && !this.isTokenExpired(token)){
+      if (token != null){
         req = req.clone({
           setHeaders: {
             authorization: `Bearer ${token}`
           }
         })
-      } else{
-        //Set token expired
-        //this.authDataSharingService.isUserLoggedIn.next(false)
       }
 
       //req = req.clone({ headers: req.headers.set('Content-Type', 'application/json') });
@@ -41,10 +38,5 @@ export class AuthInterceptorService implements HttpInterceptor{
           return throwError(error)
         })
       )
-  }
-
-  private isTokenExpired(token : string) : boolean {
-    const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
-    return (Math.floor((new Date).getTime() / 1000)) >= expiry;
   }
 }

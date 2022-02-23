@@ -32,9 +32,7 @@ export class AuthService {
 
     async register(user : any){
         const passHash = await bcrypt.hash(user.password, bcryptConstants.saltOrRounds) 
-
         const mUser = await this.usersService.register(user, passHash)
-
         return await this.login(mUser)
     }
 }
