@@ -59,9 +59,8 @@ export class RegisterComponent implements OnInit {
     },
     (err : any) => {
       //We can do some error msg formatting here
-      console.log(err)
       this.dialog.open(ErrorDialogComponent, {
-        data: err.message
+        data: err.error.message
       })
     })
   }

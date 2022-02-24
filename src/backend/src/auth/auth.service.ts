@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt'
 import { bcryptConstants } from './strategies/constants';
+import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,7 @@ export class AuthService {
                 return user;
             }
         }
-        return null
+        throw new NotFoundException('Wrong username or password')
     }
 
     async login(user : any){

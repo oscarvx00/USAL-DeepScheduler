@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { User } from 'src/app/model/user';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { AuthDataSharingService } from 'src/app/services/auth/user-data-sharing';
+import { ErrorDialogComponent } from '../../utils/error-dialog/error-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +18,10 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private formBuilder : FormBuilder,
-    private authService : AuthService
+    private authService : AuthService,
+    private dialog : MatDialog,
+    private authDataSharingService : AuthDataSharingService,
+    private router : Router
   ) { }
 
   ngOnInit(): void {
@@ -35,7 +42,17 @@ export class LoginComponent implements OnInit {
     user.username = this.loginForm.controls.username.value
     user.password = this.loginForm.controls.password.value
 
-    this.authService.login(user.username, user.password)
+    this.authService.login(user.username, user.password).subscribe((resp : any) => {
+      console.log(resp)
+      localStorage.setItem('auth_token', resp.access_token)
+      this.authDataSharingService.isUserLoggedIn.next(true)
+      this.router.navigate(['me'])
+    },
+    (err : any) => {
+      this.dialog.open(ErrorDialogComponent, {
+        data: err.error.message
+      })
+    })
 
   }
 

@@ -44,15 +44,11 @@ export class UsersService {
           Object.keys(e.keyPattern).forEach(key =>{
             msg += e.keyValue[key] + " already exists"
           })
-          console.log(msg)
           break;
         default:
           msg = e.message
       }
-      throw new HttpException({
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        error: msg
-      }, HttpStatus.INTERNAL_SERVER_ERROR)
+      throw new InternalServerErrorException(msg)
     }
   }
 }

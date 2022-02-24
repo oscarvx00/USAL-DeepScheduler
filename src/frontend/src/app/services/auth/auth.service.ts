@@ -17,18 +17,10 @@ export class AuthService {
   ) { }
 
   //Must return an observable for show errors??
-  login(username : string, password : string) {
-    this.httpClient.post(ServiceConstants.API_ENDPOINT + "/auth/login", {
+  login(username : string, password : string) : Observable<any> {
+    return this.httpClient.post(ServiceConstants.API_ENDPOINT + "/auth/login", {
       username : username,
       password : password
-    }).subscribe((resp : any) => {
-      console.log(resp)
-      localStorage.setItem('auth_token', resp.access_token)
-      this.authDataSharingService.isUserLoggedIn.next(true)
-      this.router.navigate(['me'])
-    },
-    (err : any) => {
-      console.log(err)
     })
   }
 
