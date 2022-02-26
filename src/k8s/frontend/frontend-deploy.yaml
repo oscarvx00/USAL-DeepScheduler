@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deepscheduler-frontend
+spec:
+  selector:
+    matchLabels:
+      app: deepscheduler-frontend
+  template:
+    metadata:
+      labels:
+        app: deepscheduler-frontend
+    spec:
+      initContainers:
+        - name: wait-for-mongo
+          image: oscarvicente/wait-for-it
+          command: ["./wait-for-it.sh", "deepscheduler-backend.default.svc.cluster.local:3000"]
+      containers:
+      - name: deepscheduler-frontend-k8s
+        image: oscarvicente/deepscheduler-frontend
+        ports:
+        - name: http
+          protocol: TCP
+          containerPort: 80
+
+          

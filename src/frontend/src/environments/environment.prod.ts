@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: window["env"].API_BACKEND_URL
+  apiUrl: "http://81.43.248.144:30003"
 };

@@ -11,6 +11,10 @@ spec:
       labels:
         app: deepscheduler-backend
     spec:
+      initContainers:
+        - name: wait-for-mongo
+          image: oscarvicente/wait-for-it
+          command: ["./wait-for-it.sh", "mongodb.default.svc.cluster.local:27017"]
       containers:
       - name: deepscheduler-backend-k8s
         image: oscarvicente/deepscheduler-backend
