@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/model/user';
-import { ServiceConstants } from '../services-constants';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +14,10 @@ export class UserService {
   ) { }
 
   getUserBasicProfile() : Observable<User> {
-    return this.httpClient.get<User>(ServiceConstants.API_ENDPOINT + "/user/profile/basic")
+    return this.httpClient.get<User>(environment.apiUrl + "/user/profile/basic")
   }
 
   getUserProfile() : Observable<User> {
-    return this.httpClient.get<User>(ServiceConstants.API_ENDPOINT + "/user/profile")
+    return this.httpClient.get<User>(environment.apiUrl + "/user/profile")
   }
 }

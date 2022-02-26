@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deepscheduler-backend
+spec:
+  selector:
+    matchLabels:
+      app: deepscheduler-backend
+  template:
+    metadata:
+      labels:
+        app: deepscheduler-backend
+    spec:
+      containers:
+      - name: deepscheduler-backend-k8s
+        image: oscarvicente/deepscheduler-backend
+        env: 
+          - name: MONGO_HOST
+            value: mongodb.default.svc.cluster.local/ds
+        ports:
+        - name: http
+          protocol: TCP
+          containerPort: 3000

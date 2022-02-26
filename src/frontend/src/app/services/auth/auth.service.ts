@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { ServiceConstants } from '../services-constants';
+import { environment } from 'src/environments/environment';
 import { AuthDataSharingService } from './user-data-sharing';
 
 @Injectable({
@@ -18,7 +18,7 @@ export class AuthService {
 
   //Must return an observable for show errors??
   login(username : string, password : string) : Observable<any> {
-    return this.httpClient.post(ServiceConstants.API_ENDPOINT + "/auth/login", {
+    return this.httpClient.post(environment.apiUrl + "/auth/login", {
       username : username,
       password : password
     })
@@ -41,7 +41,7 @@ export class AuthService {
 
   //Must return an observable for show errors??
   register(username : string, password : string, mail : string) : Observable<any>{
-    return this.httpClient.post(ServiceConstants.API_ENDPOINT + "/auth/register", {
+    return this.httpClient.post(environment.apiUrl + "/auth/register", {
       username : username,
       mail : mail,
       password : password
