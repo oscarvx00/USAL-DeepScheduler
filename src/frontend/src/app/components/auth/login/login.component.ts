@@ -1,11 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { User } from 'src/app/model/user';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { AuthDataSharingService } from 'src/app/services/auth/user-data-sharing';
+import { environment } from 'src/environments/environment';
 import { ErrorDialogComponent } from '../../utils/error-dialog/error-dialog.component';
+
+const googleLogoURL = "https://raw.githubusercontent.com/fireflysemantics/logo/master/Google.svg";
 
 @Component({
   selector: 'app-login',
@@ -21,8 +27,16 @@ export class LoginComponent implements OnInit {
     private authService : AuthService,
     private dialog : MatDialog,
     private authDataSharingService : AuthDataSharingService,
-    private router : Router
-  ) { }
+    private router : Router,
+    private domSanitizer : DomSanitizer,
+    private matIconRegistry : MatIconRegistry,
+    @Inject(DOCUMENT) private document : Document
+  ) { 
+    this.matIconRegistry.addSvgIcon(
+      "logo",
+      this.domSanitizer.bypassSecurityTrustResourceUrl(googleLogoURL)
+    )
+  }
 
   ngOnInit(): void {
 
@@ -43,7 +57,6 @@ export class LoginComponent implements OnInit {
     user.password = this.loginForm.controls.password.value
 
     this.authService.login(user.username, user.password).subscribe((resp : any) => {
-      console.log(resp)
       localStorage.setItem('auth_token', resp.access_token)
       this.authDataSharingService.isUserLoggedIn.next(true)
       this.router.navigate(['me'])
@@ -56,6 +69,15 @@ export class LoginComponent implements OnInit {
 
   }
 
-
+  onLoginGoogle(){
+    window.open(environment.apiUrl + '/auth/google',"mywindow","location=1,status=1,scrollbars=1, width=800,height=800");
+    let listener = window.addEventListener('message', (message) => {
+      //console.log(message.data.res.access_token)
+      localStorage.setItem('auth_token', message.data.res.access_token)
+      //console.log("TOKEN: " + localStorage.getItem("auth_token"))
+      this.authDataSharingService.isUserLoggedIn.next(true)
+      this.router.navigate(['me'])
+    });
+  }
 
 }

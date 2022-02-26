@@ -30,6 +30,10 @@ export class UsersService {
     return this.userModel.findOne({username: username}).exec()
   }
 
+  async findBy(req : any): Promise<User | undefined> {
+    return this.userModel.findOne(req).exec()
+  }
+
   async register(user : any, passHash : string){
     try{
         return await new this.userModel({
@@ -49,6 +53,18 @@ export class UsersService {
           msg = e.message
       }
       throw new InternalServerErrorException(msg)
+    }
+  }
+
+  async registerWithGoogle(username : string, googleId : string,  mail : string){
+    try{
+      return await new this.userModel({
+        username : username,
+        googleId : googleId,
+        mail : mail
+      }).save()
+    } catch(e) {
+      throw new InternalServerErrorException(e.message)
     }
   }
 }

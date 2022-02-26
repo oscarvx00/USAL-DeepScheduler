@@ -21,6 +21,10 @@ spec:
         env: 
           - name: MONGO_HOST
             value: mongodb.default.svc.cluster.local/ds
+          - name: GOOGLE_CLIENT_ID
+            value: 189403674376-44r34q7r7o1cs5d3po57ql6fm483iu09.apps.googleusercontent.com
+          - name: GOOGLE_SECRET
+            value: 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
         ports:
         - name: http
           protocol: TCP
