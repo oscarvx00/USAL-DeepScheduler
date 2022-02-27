@@ -30,6 +30,9 @@ export class User {
     @Prop()
     githubId : string | null
 
+    @Prop()
+    gitlabId : string | null
+
     
 }
 

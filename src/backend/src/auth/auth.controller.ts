@@ -2,6 +2,7 @@ import { Controller, Get, NotFoundException, Param, Post, Query, Req, Request, R
 import { UsersService } from "src/users/users.service";
 import { AuthService } from "./auth.service";
 import { GithubAuthGuard } from "./strategies/github-auth.guard";
+import { GitlabAuthGuard } from "./strategies/gitlab-auth.guard";
 import { GoogleAuthGuard } from "./strategies/google-auth.guard";
 import { LocalAuthGuard } from "./strategies/local-auth.guard";
 
@@ -58,6 +59,21 @@ export class AuthController {
     @Get('github/redirect')
     async signInWithGithubRedirect(@Req() req, @Res() res){
         let token = await this.authService.signInWithGithub(req)
+        var responseHTML = '<html><head><title>Main</title></head><body></body><script>res = %value%; window.opener.postMessage(res, "*");window.close();</script></html>'
+        responseHTML = responseHTML.replace('%value%', JSON.stringify({
+        res : token
+        }));
+        res.status(200).send(responseHTML)
+    }
+
+    @UseGuards(GitlabAuthGuard)
+    @Get('gitlab')
+    async signInWithGitlab() { }
+
+    @UseGuards(GitlabAuthGuard)
+    @Get('gitlab/redirect')
+    async signInWithGitlabRedirect(@Req() req, @Res() res){
+        let token = await this.authService.signInWithGitlab(req)
         var responseHTML = '<html><head><title>Main</title></head><body></body><script>res = %value%; window.opener.postMessage(res, "*");window.close();</script></html>'
         responseHTML = responseHTML.replace('%value%', JSON.stringify({
         res : token
