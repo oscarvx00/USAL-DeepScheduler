@@ -1,5 +1,6 @@
 @import '~@angular/material/theming';
 @import 'src/custom-theme.scss';
+@import '../shared-styles.scss';
 
 /*$primary: map-get($deepscheduler-frontend-theme, primary);*/
 
@@ -17,108 +18,11 @@
     display: flex;
     flex-direction: row;
     border-radius: 10px;
-    //background-color: $color-background;
-    //color: $color-foreground;
-}
-
-.image-container{
-    width: 20%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-}
-
-.image-container img{
-    height: 70%;
-    width: 70%;
-}
-
-.input-container{
-    width: 100%;
-    //background-color: mat-color($background-dark);
-    display: flex;
-    flex-direction: row;
-    box-sizing: border-box;
-    padding: 30px;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 10px;
 }
 
 
-.input-local{
-    width: 40%;
-    //background-color: mat-color($background-light);
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    padding: 30px;
-    justify-content: center;
-    border-radius: 10px;
-}
-
-.input-local *{
-    width: 100%;
-}
-
-.input-external{
-    width: 40%;
-    //background-color: mat-color($background-light);
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    padding: 30px;
-    justify-content: center;
-    border-radius: 10px;
-}
-
-.input-separator{
-    height: 100%;
-    width: 20%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
-    align-items: center;
-}
-
-.input-separator p{
-    padding: 0 !important;
-    margin: 10px !important;
-}
-
-.input-external *{
-    width: 100%;
-}
-
-.separator-bar{
-    background-color: $color-primary-hover;
-    height: 100%;
-    width: 2px;
-}
 
 
-.login-google{
-    margin-top: 20px;
-}
 
-.login-github{
-    margin-top: 20px;
-}
 
-.login-external-button{
-    margin: 10px;
-}
 
-.login-external-button-content{
-    display: flex;
-    justify-content:center;
-    align-items: center;
-}
-
-.login-external-button img{
-    height: 27px;
-    width: 27px;
-    margin-right: auto;
-    justify-self: start;
-}

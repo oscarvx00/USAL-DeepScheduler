@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { AuthDataSharingService } from 'src/app/services/auth/user-data-sharing';
 import { ErrorDialogComponent } from '../../utils/error-dialog/error-dialog.component';
+import { LoginExternal } from '../login-external';
 
 @Component({
   selector: 'app-register',
@@ -14,13 +15,14 @@ import { ErrorDialogComponent } from '../../utils/error-dialog/error-dialog.comp
 export class RegisterComponent implements OnInit {
 
   registerForm! : FormGroup
+  loginExternal = new LoginExternal( this.authDataSharingService, this.router)
 
   constructor(
     private formBuilder : FormBuilder,
     private router : Router,
     private authService : AuthService,
     public dialog : MatDialog,
-    private authDataSharingService : AuthDataSharingService
+    private authDataSharingService : AuthDataSharingService,
   ) { }
 
   ngOnInit(): void {
@@ -32,9 +34,7 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(){
-    //Validation
     if(this.registerForm.invalid){
-      //this.getFormValidationErrors()
       return
     }
 
@@ -52,5 +52,13 @@ export class RegisterComponent implements OnInit {
         data: err.error.message
       })
     })
+  }
+
+  onLoginGoogle(){
+    this.loginExternal.loginWithGoogle()
+  }
+
+  onLoginGithub(){
+    this.loginExternal.loginWithGithub()
   }
 }
