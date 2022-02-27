@@ -1,6 +1,7 @@
 import { Controller, Get, NotFoundException, Param, Post, Query, Req, Request, Res, UseGuards } from "@nestjs/common";
 import { UsersService } from "src/users/users.service";
 import { AuthService } from "./auth.service";
+import { GithubAuthGuard } from "./strategies/github-auth.guard";
 import { GoogleAuthGuard } from "./strategies/google-auth.guard";
 import { LocalAuthGuard } from "./strategies/local-auth.guard";
 
@@ -22,6 +23,18 @@ export class AuthController {
         return await this.authService.register(req.body)
     }
 
+    @Get('confirm')
+    async confirmUserMail(@Req() req, @Query('token') token : string){
+        let user = await this.usersService.findBy({confirmationCode : token})
+        if(!user){
+            throw new NotFoundException('User not found')
+        }
+
+        user.mailVerified = true
+        await this.usersService.save(user)
+        //Build response HTML
+    }
+
     @UseGuards(GoogleAuthGuard)
     @Get('google')
     async signInWthGoogle(){ }
@@ -37,15 +50,18 @@ export class AuthController {
         res.status(200).send(responseHTML)
     }
 
-    @Get('confirm')
-    async confirmUserMail(@Req() req, @Query('token') token : string){
-        let user = await this.usersService.findBy({confirmationCode : token})
-        if(!user){
-            throw new NotFoundException('User not found')
-        }
+    @UseGuards(GithubAuthGuard)
+    @Get('github')
+    async signInWithGithub() { }
 
-        user.mailVerified = true
-        await this.usersService.save(user)
-        //Build response HTML
+    @UseGuards(GithubAuthGuard)
+    @Get('github/redirect')
+    async signInWithGithubRedirect(@Req() req, @Res() res){
+        let token = await this.authService.signInWithGithub(req)
+        var responseHTML = '<html><head><title>Main</title></head><body></body><script>res = %value%; window.opener.postMessage(res, "*");window.close();</script></html>'
+        responseHTML = responseHTML.replace('%value%', JSON.stringify({
+        res : token
+        }));
+        res.status(200).send(responseHTML)
     }
 }

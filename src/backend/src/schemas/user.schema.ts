@@ -13,10 +13,7 @@ export class User {
     @Prop()
     password : string | null
 
-    @Prop({
-        required: true,
-        unique: true
-    })
+    @Prop({})
     mail : string
 
     @Prop({
@@ -25,10 +22,15 @@ export class User {
     mailVerified : boolean
 
     @Prop()
+    confirmationCode : string | null
+
+    @Prop()
     googleId : string | null
 
     @Prop()
-    confirmationCode : string | null
+    githubId : string | null
+
+    
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

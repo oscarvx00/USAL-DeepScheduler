@@ -40,6 +40,16 @@ spec:
               secretKeyRef:
                 name: backend-secret
                 key: VERIFICATION_MAIL_PASSWORD
+          - name: GITHUB_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: backend-secret
+                key: GITHUB_CLIENT_ID
+          - name: GITHUB_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: backend-secret
+                key: GITHUB_SECRET
         ports:
         - name: http
           protocol: TCP

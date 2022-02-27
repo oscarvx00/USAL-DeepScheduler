@@ -45,7 +45,7 @@ export class AuthService {
     }
 
     async signInWithGoogle(data){
-        console.log(data)
+        //console.log(data)
         if(!data.user || !data.user.id) throw new BadRequestException()
 
         let user = (await this.usersService.findBy({googleId : data.user.id}))
@@ -60,5 +60,25 @@ export class AuthService {
         } catch(e) {
             throw new Error(e)
         }
+    }
+
+    async signInWithGithub(data){
+        console.log(data)
+        if(!data.user || !data.user.id) throw new BadRequestException();
+
+        let user = (await this.usersService.findBy({githubId : data.user.id}))
+        if(user) return this.login(user)
+
+        if(data.user.email && data.user.email != null){
+            user = (await this.usersService.findBy({mail: data.user.email}))
+            if(user) throw new ForbiddenException('User already exists, but Github account was not connected to user\'s account')
+        }
+
+        try {
+            const newUser = await this.usersService.registerWithGithub(data.user.username, data.user.id, data.user.email)
+            return this.login(newUser)
+        } catch (e) {
+            throw new Error(e)
+        }   
     }
 }

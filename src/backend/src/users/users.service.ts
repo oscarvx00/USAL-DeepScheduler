@@ -63,4 +63,17 @@ export class UsersService {
       throw new InternalServerErrorException(e.message)
     }
   }
+
+  async registerWithGithub(username : string, githubId : string, mail : string){
+    try{
+      return await new this.userModel({
+        username : username,
+        githubId : githubId,
+        mail : mail,
+        mailVerified : true //Mail may be null, but as we do not send confirmation code we must put it as verified
+      }).save()
+    } catch(e) {
+      throw new InternalServerErrorException(e.message)
+    }
+  }
 }
