@@ -18,6 +18,7 @@ kubectl apply -f orchestrator/orchestrator-deploy.yaml
 #Run backend
 kubectl apply -f backend/backend-deploy.yaml
 kubectl apply -f backend/backend-service.yaml
+kubectl apply -f backend/backend-secrets.yaml
 
 #Run frontend
 kubectl apply -f frontend/frontend-deploy.yaml

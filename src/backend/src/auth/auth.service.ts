@@ -1,16 +1,18 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt'
-import { bcryptConstants } from './strategies/constants';
+import { bcryptConstants, jwtConstants } from './strategies/constants';
 import { NotFoundError } from 'rxjs';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
 
     constructor(
         private usersService : UsersService,
-        private jwtService : JwtService
+        private jwtService : JwtService,
+        private mailService : MailService
     ) {}
 
     async validateUser(username : string, password : string) : Promise<any>{
@@ -18,10 +20,14 @@ export class AuthService {
         if(user){           
             const passwordMatch = await bcrypt.compare(password, user.password)
             if(passwordMatch){
-                return user;
+                if(user.mailVerified){
+                    return user;
+                } else{
+                    throw new UnauthorizedException('Account not activated. Please verify your email')
+                }    
             }
         }
-        throw new NotFoundException('Wrong username or password')
+        throw new UnauthorizedException('Wrong username or password')
     }
 
     async login(user : any){
@@ -32,19 +38,20 @@ export class AuthService {
     }
 
     async register(user : any){
+        const token = this.jwtService.sign({mail : user.mail})
         const passHash = await bcrypt.hash(user.password, bcryptConstants.saltOrRounds) 
-        const mUser = await this.usersService.register(user, passHash)
-        return await this.login(mUser)
+        const mUser = await this.usersService.register(user, passHash, token)
+        await this.mailService.sendUserConfirmation(mUser, token)
     }
 
     async signInWithGoogle(data){
         console.log(data)
-        if(!data.user) throw new BadRequestException()
+        if(!data.user || !data.user.id) throw new BadRequestException()
 
-        let user = (await this.usersService.findBy({where : [{googleId : data.user.id}]}))
+        let user = (await this.usersService.findBy({googleId : data.user.id}))
         if(user) return this.login(user)
 
-        user = (await this.usersService.findBy({ where: [{ email: data.user.email }] }));
+        user = (await this.usersService.findBy({ mail: data.user.email }));
         if(user) throw new ForbiddenException('User already exists, but Google account was not connected to user\'s account')
 
         try {

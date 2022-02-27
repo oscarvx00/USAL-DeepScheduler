@@ -3,23 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { Model } from 'mongoose';
 
-// This should be a real class/interface representing a user entity
-//export type User = any;
-
 @Injectable()
 export class UsersService {
-  /*private readonly users = [
-    {
-      userId: 1,
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      userId: 2,
-      username: 'maria',
-      password: 'guess',
-    },
-  ];*/
 
   constructor(
     @InjectModel(User.name) private userModel : Model<UserDocument>
@@ -34,12 +19,13 @@ export class UsersService {
     return this.userModel.findOne(req).exec()
   }
 
-  async register(user : any, passHash : string){
+  async register(user : any, passHash : string, confirmationCode : string){
     try{
         return await new this.userModel({
         username : user.username,
         password: passHash,
-        mail: user.mail
+        mail: user.mail,
+        confirmationCode: confirmationCode
       }).save()
     } catch (e){
       let msg = ""
@@ -56,12 +42,22 @@ export class UsersService {
     }
   }
 
+  async save(user : User){
+    try{
+      return await this.userModel
+        .findOneAndUpdate({mail : user.mail}, user).exec()
+    } catch (e){
+      throw new InternalServerErrorException(e.message)
+    }
+  }
+
   async registerWithGoogle(username : string, googleId : string,  mail : string){
     try{
       return await new this.userModel({
         username : username,
         googleId : googleId,
-        mail : mail
+        mail : mail,
+        mailVerified: true
       }).save()
     } catch(e) {
       throw new InternalServerErrorException(e.message)

@@ -27,8 +27,7 @@ export class RegisterComponent implements OnInit {
     this.registerForm = this.formBuilder.group({
       username : ['', Validators.required],
       mail : ['', [Validators.required, Validators.email]],
-      password : ['', Validators.required],
-      passwordValidate : ['', Validators.required]
+      password : ['', Validators.required]
     })
   }
 
@@ -41,21 +40,11 @@ export class RegisterComponent implements OnInit {
 
     const username = this.registerForm.controls.username.value
     const password = this.registerForm.controls.password.value
-    const passwordValidate = this.registerForm.controls.passwordValidate.value
     const mail = this.registerForm.controls.mail.value
 
-    if(password != passwordValidate){
-      this.dialog.open(ErrorDialogComponent, {
-        data: "Passwords doesn't match"
-      })
-      return
-    }
-
     this.authService.register(username, password, mail).subscribe((resp : any) => {
-      console.log(resp)
-      localStorage.setItem('auth_token', resp.access_token)
-      this.authDataSharingService.isUserLoggedIn.next(true)
-      this.router.navigate(['me'])
+      alert("Registration completed. Check your email")
+      this.router.navigate([''])
     },
     (err : any) => {
       //We can do some error msg formatting here

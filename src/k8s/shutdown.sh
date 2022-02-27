@@ -16,6 +16,6 @@ kubectl delete statefulsets rabbitmq
 kubectl delete svc rabbitmq
 
 #Delete mongo
-kubectl delete svc mongodb
-kubectl delete deploy mongodb
+#kubectl delete svc mongodb
+#kubectl delete deploy mongodb
 #Secrets, volumes and storage class are not deleted

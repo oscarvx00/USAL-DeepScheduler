@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: "http://81.43.248.144:30003"
+  apiUrl: "http://deepscheduler.sytes.net:30003"
 };

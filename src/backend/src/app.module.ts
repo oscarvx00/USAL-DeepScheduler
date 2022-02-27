@@ -8,7 +8,11 @@ import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, MongooseModule.forRoot("mongodb://" + process.env.MONGO_HOST)],
+  imports: [
+    AuthModule, 
+    UsersModule, 
+    MongooseModule.forRoot("mongodb://" + process.env.MONGO_HOST),
+  ],
   controllers: [AppController, AuthController, UsersController],
   providers: [AppService],
 })
