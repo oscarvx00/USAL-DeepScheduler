@@ -1,19 +1,23 @@
 <div class="app-container">
-  <mat-toolbar>
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span [routerLink]="['']">Deepscheduler</span>
-    <span class="navbar-spacer"></span>
-    <div *ngIf="isUserLoggedIn" id="toolbar-user-container">
-      <span [routerLink]="['me']">{{username}}</span>
+  <header>
+    <h2 class="logo-title" [routerLink]="['']">DeepScheduler</h2>
+    <nav>     
+        <ul class="nav-links">
+          <li>Option 1</li>
+          <li>Option 2</li>
+          <li>Option 3</li>
+        </ul>    
+    </nav>
+    <div *ngIf="!isUserLoggedIn">
+      <button class="ds-button-secondary nav-button" (click)="loginClicked()">Login</button>
+      <button class="ds-button-primary nav-button" (click)="registerClicked()">Register</button>
     </div>
-    <div *ngIf="!isUserLoggedIn" id="toolbar-login-container">
-      <button class="navbar-button" mat-button (click)="loginClicked()">Login</button>
-      <button class="navbar-button" mat-raised-button (click)="registerClicked()">Register</button>
+    <div class="nav-user-container" *ngIf="isUserLoggedIn" [routerLink]="['me']">
+      {{username}}
     </div>
-      
-  </mat-toolbar>
+    
+  </header>
+  
   <div class="router-container">
     <router-outlet></router-outlet>
   </div>

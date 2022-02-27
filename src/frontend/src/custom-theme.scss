@@ -12,25 +12,25 @@
 
 /* For use in src/lib/core/theming/_palette.scss */
 $md-mcgpalette0: (
-    50 : #e4e5f0,
-    100 : #babdd8,
-    200 : #8d91bf,
-    300 : #5f65a5,
-    400 : #3c4491,
-    500 : #1a237e,
-    600 : #171f76,
-    700 : #131a6b,
-    800 : #0f1561,
-    900 : #080c4e,
-    A100 : #8387ff,
-    A200 : #5056ff,
-    A400 : #1d24ff,
-    A700 : #030cff,
+    50 : #e0f1f5,
+    100 : #b3dbe5,
+    200 : #80c4d4,
+    300 : #4dacc3,
+    400 : #269ab6,
+    500 : #0088a9,
+    600 : #0080a2,
+    700 : #007598,
+    800 : #006b8f,
+    900 : #00587e,
+    A100 : #ace1ff,
+    A200 : #79cfff,
+    A400 : #46bdff,
+    A700 : #2cb4ff,
     contrast: (
         50 : #000000,
         100 : #000000,
         200 : #000000,
-        300 : #ffffff,
+        300 : #000000,
         400 : #ffffff,
         500 : #ffffff,
         600 : #ffffff,
@@ -38,12 +38,11 @@ $md-mcgpalette0: (
         800 : #ffffff,
         900 : #ffffff,
         A100 : #000000,
-        A200 : #ffffff,
-        A400 : #ffffff,
-        A700 : #ffffff,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
     )
 );
-
 //USING A100 in illustrations
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
@@ -57,6 +56,7 @@ $warn: mat.define-palette($md-mcgpalette0);
 
 //Custom colors
 $background-light: mat.define-palette($md-mcgpalette0, 100);
+$background-dark: mat.define-palette($md-mcgpalette0, 700);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
@@ -73,4 +73,11 @@ $deepscheduler-frontend-theme: mat.define-light-theme((
 // that you are using.
 @include mat.all-component-themes($deepscheduler-frontend-theme);
 
+$color-primary: rgb(0, 136, 169);
+$color-primary-hover: rgba(0, 136, 169, 0.8);
+$color-background: #24252A;
+$color-background-hover: #44464e;
+$color-foreground: rgb(233, 233, 233, 1);
+$color-foreground-hover: rgb(233, 233, 233, 0.8);
+$color-background-general: #38383a;
 

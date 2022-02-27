@@ -1,32 +1,44 @@
 <div class="login-container">
     <mat-card class="login-card">
-        <div class="form-container">
-            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                <mat-form-field appearance="outline">
-                    <mat-label>Enter your username</mat-label>
-                    <input matInput placeholder="username" required formControlName="username">
-                    <mat-error>Error</mat-error>
-                </mat-form-field>
-                <mat-form-field appearance="outline">
-                    <mat-label>Enter your password</mat-label>
-                    <input matInput type="password" required formControlName="password">
-                    <mat-error>Error</mat-error>
-                </mat-form-field>
-                <button mat-stroked-button type="submit">Login</button>
-            </form>
-            <button class="login-google" mat-stroked-button (click)="onLoginGoogle()">
-                <mat-icon style="width: 50px; height:30px"
-              svgIcon="logoGoogle"></mat-icon>
-                Login with google
-            </button>
-            <button class="login-github" mat-stroked-button (click)="onLoginGithub()">
-                <mat-icon style="width: 50px; height:30px"
-              svgIcon="logoGithub"></mat-icon>
-                Login with github
-            </button>
-        </div>
-        <div class="image-container">
-            <img src="/assets/illustrations/login.svg">
-        </div>       
+        <div class="input-container">
+            <div class="input-local">
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Enter your username</mat-label>
+                        <input matInput placeholder="username" required formControlName="username">
+                        <mat-error>Error</mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline"> 
+                        <mat-label>Enter your password</mat-label>
+                        <input matInput type="password" required formControlName="password">
+                        <mat-error>Error</mat-error>
+                    </mat-form-field>
+                    <button mat-stroked-button type="submit">Login</button>
+                </form>
+            </div>
+            <div class="input-separator">
+                <div class="separator-bar">
+
+                </div>
+                <p>OR</p>
+                <div class="separator-bar">
+
+                </div>
+            </div>
+            <div class="input-external">
+                <button class="login-external-button" mat-stroked-button (click)="onLoginGoogle()">
+                    <div class="login-external-button-content">
+                        <img src="/assets/imgs/logoGoogle.png"/>
+                        <span>Login with Google</span>
+                    </div>    
+                </button>
+                <button class="login-external-button" style="background-color: rgb(48, 48, 48); color: white;" mat-stroked-button (click)="onLoginGithub()">
+                    <div class="login-external-button-content">
+                        <img src="/assets/imgs/logoGithub.png"/>
+                        <span>Login with Github</span>
+                    </div>    
+                </button>
+            </div> 
+        </div>   
     </mat-card>
 </div>
