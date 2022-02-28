@@ -50,6 +50,16 @@ spec:
               secretKeyRef:
                 name: backend-secret
                 key: GITHUB_SECRET
+          - name: GITLAB_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: backend-secret
+                key: GITLAB_CLIENT_ID
+          - name: GITLAB_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: backend-secret
+                key: GITLAB_SECRET
         ports:
         - name: http
           protocol: TCP

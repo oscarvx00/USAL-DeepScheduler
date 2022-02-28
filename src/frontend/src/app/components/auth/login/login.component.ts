@@ -62,4 +62,8 @@ export class LoginComponent implements OnInit {
   onLoginGithub(){
     this.loginExternal.loginWithGithub()
   }
+
+  onLoginGitlab(){
+    this.loginExternal.loginWithGitlab()
+  }
 }

@@ -61,4 +61,8 @@ export class RegisterComponent implements OnInit {
   onLoginGithub(){
     this.loginExternal.loginWithGithub()
   }
+
+  onLoginGitlab(){
+    this.loginExternal.loginWithGitlab()
+  }
 }
