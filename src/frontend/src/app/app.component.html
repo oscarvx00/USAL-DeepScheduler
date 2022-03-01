@@ -12,13 +12,23 @@
       <button class="ds-button-secondary nav-button" (click)="loginClicked()">Login</button>
       <button class="ds-button-primary nav-button" (click)="registerClicked()">Register</button>
     </div>
-    <div class="nav-user-container" *ngIf="isUserLoggedIn" [routerLink]="['me']">
-      {{username}}
+    <div class="dropdown" *ngIf="isUserLoggedIn">
+      <div class="nav-user-container"   (click)="showProfile = true">
+        {{username}}
+      </div>
+      <div class="dropdown-menu" role="tablist" #navdrop id="navdrop" *ngIf="showProfile">
+        <h4>User menu</h4>
+        <div class="dropdown-menu-separator"></div>
+        <ul>
+          <li (click)="profileClicked()"><img src="/assets/imgs/iconProfile.png" >My Profile</li>
+          <li (click)="logoutClicked()"><img src="/assets/imgs/iconLogout.png">Logout</li>
+        </ul>
+      </div>
     </div>
     
   </header>
   
-  <div class="router-container">
+  <div class="router-container" (click)="showProfile = false" >
     <router-outlet></router-outlet>
   </div>
 </div>

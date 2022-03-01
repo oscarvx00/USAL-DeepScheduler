@@ -4,6 +4,7 @@ import { User } from './model/user';
 import { AuthService } from './services/auth/auth.service';
 import { AuthDataSharingService } from './services/auth/user-data-sharing';
 import { UserService } from './services/user/user.service';
+import {  ElementRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -19,11 +20,15 @@ export class AppComponent implements OnInit{
 
   username : string = ""
 
+  //@ViewChild('navdrop', undefined) navdrop! : ElementRef
+
+  showProfile : boolean = false
+
   constructor(
     private router : Router,
     private authDataSharingService : AuthDataSharingService,
     private userService : UserService,
-    private authService : AuthService
+    private authService : AuthService,
   ){
     this.authDataSharingService.isUserLoggedIn.subscribe( value => {
       this.isUserLoggedIn = value
@@ -47,11 +52,24 @@ export class AppComponent implements OnInit{
   }
 
   loginClicked(){
-    this.router.navigateByUrl('/login')
+    this.router.navigateByUrl('login')
   }
 
   registerClicked(){
     this.router.navigateByUrl('register')
   }
+
+  profileClicked(){
+    this.showProfile = false
+    this.router.navigateByUrl('me')
+  }
+
+  logoutClicked(){
+    this.showProfile = false
+    localStorage.removeItem('auth_token')
+    this.authDataSharingService.isUserLoggedIn.next(false)
+    this.router.navigate([''])
+  }
+
 
 }
