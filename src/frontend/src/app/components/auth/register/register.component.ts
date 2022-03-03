@@ -44,9 +44,11 @@ export class RegisterComponent implements OnInit {
 
     this.authService.register(username, password, mail).subscribe((resp : any) => {
       alert("Registration completed. Check your email")
+      console.log(resp)
       this.router.navigate([''])
     },
     (err : any) => {
+      console.log(err)
       //We can do some error msg formatting here
       this.dialog.open(ErrorDialogComponent, {
         data: err.error.message
@@ -55,6 +57,7 @@ export class RegisterComponent implements OnInit {
   }
 
   onLoginGoogle(){
+    console.log("ALOO")
     this.loginExternal.loginWithGoogle()
   }
 

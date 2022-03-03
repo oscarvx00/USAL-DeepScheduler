@@ -2,7 +2,7 @@
     <mat-card class="register-card">
         <div class="input-container">
             <div class="input-local">
-                <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">      
+                <form [formGroup]="registerForm" >      
                     <mat-form-field appearance="outline">
                         <mat-label>Enter your username</mat-label>
                         <input matInput placeholder="username" required formControlName="username">
@@ -17,7 +17,7 @@
                         <input matInput type="password" required formControlName="password">
                         <mat-error>Error</mat-error>
                     </mat-form-field> 
-                    <button mat-stroked-button type="submit">Register</button>
+                    <button mat-stroked-button type="submit" (click)="onSubmit()" >Register</button>
                 </form>
             </div>
             <div class="input-separator">
