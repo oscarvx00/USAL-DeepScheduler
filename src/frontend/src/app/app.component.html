@@ -3,9 +3,8 @@
     <h2 class="logo-title" [routerLink]="['']">DeepScheduler</h2>
     <nav>     
         <ul class="nav-links">
-          <li>Option 1</li>
-          <li>Option 2</li>
-          <li>Option 3</li>
+          <li [routerLink]="['default-images/tensorflow']" class="nav-link-item">Tensorflow</li>
+          <li [routerLink]="['default-images/pytorch']" class="nav-link-item">Pytorch</li>
         </ul>    
     </nav>
     <div *ngIf="!isUserLoggedIn">

@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "custom-theme.scss";
+@import '~highlight.js/styles/vs.css';
 
 html, body { height: 100%; width: 100%; }
 body { 
@@ -10,6 +11,7 @@ body {
  }
  
  @import url('https://fonts.googleapis.com/css2?family=Days+One&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Days+One&family=Montserrat:wght@300;500&display=swap');
 
 
 .ds-button-primary{
