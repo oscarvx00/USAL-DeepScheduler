@@ -1,0 +1,33 @@
+<div class="training-new-container">
+    <div class="input-card" #inputImageName>
+        <h2 class="input-card-title">Image repository name</h2>
+        <form [formGroup]="imageNameForm">
+            <mat-form-field appearence="fill">
+                <mat-label>Input</mat-label>
+                <input matInput placeholder="Placeholder" formControlName="imageName">
+                <!--<mat-hint>Hint</mat-hint>-->
+            </mat-form-field>
+        </form>
+    </div>
+    <div class="input-card view-gone" #inputComputingTime>
+        <h2 class="input-card-title">Computing time</h2>
+        <form [formGroup]="computingTimeForm">
+            <mat-form-field class="input-card-computing-field" appearence="fill" floatLabel="always">
+                <mat-label>Hours</mat-label>
+                <mat-select formControlName="hours">
+                    <mat-option *ngFor="let h of hours" value="{{h}}">{{h}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <span> : </span>
+            <mat-form-field class="input-card-computing-field" appearence="fill" floatLabel="always">
+                <mat-label>Minutes</mat-label>
+                <mat-select formControlName="minutes">
+                    <mat-option *ngFor="let m of minutes" value="{{m}}">{{m}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </form>
+    </div>
+    <button class="continue-button" color="primary" mat-fab (click)="continueClicked()" #continueButton >
+        <img src="/assets/imgs/iconArrowDown.png">
+    </button>
+</div>

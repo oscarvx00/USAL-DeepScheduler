@@ -1,0 +1,31 @@
+<div class="training-container">
+    <div class="training-content">
+        <div class="training-content-header">
+            <h1>My training images</h1>
+            <button class="ds-button-primary nav-button" (click)="createClicked()">Create new</button>
+        </div>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+          
+            <!-- Position Column -->
+            <ng-container matColumnDef="image">
+              <th mat-header-cell *matHeaderCellDef> Image</th>
+              <td mat-cell *matCellDef="let element"> {{element.image}} </td>
+            </ng-container>
+          
+            <!-- Name Column -->
+            <ng-container matColumnDef="state">
+              <th mat-header-cell *matHeaderCellDef> State </th>
+              <td mat-cell *matCellDef="let element"> {{element.state}} </td>
+            </ng-container>
+          
+          
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          
+           
+    </div>
+</div>

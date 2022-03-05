@@ -1,0 +1,40 @@
+@import '~@angular/material/theming';
+@import 'src/custom-theme.scss';
+
+.training-container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: $color-background-general;
+}
+
+.training-content{
+    //background-color: aqua;
+    margin-top: 50px;
+    width: 70%;
+    color: white;
+    
+}
+
+.training-content-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.training-content-header h1{
+    margin-top: 40px;
+    margin-bottom: 40px;
+    justify-self: center;
+}
+
+.training-content-header button{
+    height: 35px;
+}
+
+table{
+    width: 100%;
+
+}

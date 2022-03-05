@@ -14,6 +14,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input'; 
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatTableModule} from '@angular/material/table';
+import {MatSelectModule} from '@angular/material/select';
 
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
@@ -33,6 +35,8 @@ import { ErrorDialogComponent } from './components/utils/error-dialog/error-dial
 import { TensorflowComponent } from './components/default-images/tensorflow/tensorflow.component';
 import { CodeBlockComponent } from './components/utils/code-block/code-block.component';
 import { PytorchComponent } from './components/default-images/pytorch/pytorch.component';
+import { TrainingHomeComponent } from './components/training/training-home/training-home.component';
+import { TrainingNewComponent } from './components/training/training-new/training-new.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +49,8 @@ import { PytorchComponent } from './components/default-images/pytorch/pytorch.co
     TensorflowComponent,
     CodeBlockComponent,
     PytorchComponent,
+    TrainingHomeComponent,
+    TrainingNewComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,7 +67,9 @@ import { PytorchComponent } from './components/default-images/pytorch/pytorch.co
     HttpClientModule,
     MatDialogModule,
     MatTabsModule,
-    HighlightModule
+    HighlightModule,
+    MatTableModule,
+    MatSelectModule
   ],
   providers: [
     AuthDataSharingService,

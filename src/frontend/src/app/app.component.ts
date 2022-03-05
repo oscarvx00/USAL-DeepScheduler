@@ -71,5 +71,10 @@ export class AppComponent implements OnInit{
     this.router.navigate([''])
   }
 
+  trainingClicked(){
+    this.showProfile = false
+    this.router.navigate(['training'])
+  }
+
 
 }

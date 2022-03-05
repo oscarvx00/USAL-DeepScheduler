@@ -1,0 +1,47 @@
+@import '~@angular/material/theming';
+@import 'src/custom-theme.scss';
+
+.training-new-container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: $color-background-general;
+}
+
+.input-card{
+    width: 60%;
+    background-color: rgba($color: #FFF, $alpha: 0.5);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    padding: 40px;
+}
+
+.input-card form{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-gone{
+    display: none;
+}
+
+.continue-button{
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.continue-button img{
+    height: 35px;
+}
+
+.input-card-computing-field{
+    width: 60px !important;
+}

@@ -73,11 +73,11 @@ $deepscheduler-frontend-theme: mat.define-light-theme((
 // that you are using.
 @include mat.all-component-themes($deepscheduler-frontend-theme);
 
-$color-primary: rgb(0, 136, 169);
+$color-primary: #0088a9;
 $color-primary-hover: rgba(0, 136, 169, 0.8);
 $color-background: #24252A;
 $color-background-hover: #44464e;
-$color-foreground: rgb(233, 233, 233, 1);
+$color-foreground: #e9e9e9;
 $color-foreground-hover: rgb(233, 233, 233, 0.8);
 $color-background-general: #38383a;
 

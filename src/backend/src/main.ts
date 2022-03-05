@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { appendFile } from 'fs';
 import { AppModule } from './app.module';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {cors: true});
@@ -16,6 +17,17 @@ async function bootstrap() {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next()
   })*/
-  await app.listen(3000);
+  /*await app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: ['amqp://localhost:30001'],
+      queue: "request_queue",
+      queueOptions: {
+        durable: true
+      }
+    }
+  })
+  app.startAllMicroservices()*/
+  app.listen(3000)
 }
 bootstrap();

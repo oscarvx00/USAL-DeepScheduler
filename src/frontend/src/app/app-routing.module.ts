@@ -7,6 +7,8 @@ import { RegisterComponent } from './components/auth/register/register.component
 import { ErrorDialogComponent } from './components/utils/error-dialog/error-dialog.component';
 import { TensorflowComponent } from './components/default-images/tensorflow/tensorflow.component';
 import { PytorchComponent } from './components/default-images/pytorch/pytorch.component';
+import { TrainingHomeComponent } from './components/training/training-home/training-home.component';
+import { TrainingNewComponent } from './components/training/training-new/training-new.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -14,7 +16,9 @@ const routes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'me', component: ProfileComponent},
   {path: 'default-images/tensorflow', component: TensorflowComponent},
-  {path: 'default-images/pytorch', component: PytorchComponent}
+  {path: 'default-images/pytorch', component: PytorchComponent},
+  {path: 'training', component: TrainingHomeComponent},
+  {path: 'training/new', component: TrainingNewComponent}
 ];
 
 @NgModule({

@@ -21,13 +21,17 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@golevelup/nestjs-rabbitmq": "^2.2.0",
     "@nestjs-modules/mailer": "^1.6.1",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/jwt": "^8.0.0",
+    "@nestjs/microservices": "^8.4.0",
     "@nestjs/mongoose": "^9.0.2",
     "@nestjs/passport": "^8.2.1",
     "@nestjs/platform-express": "^8.0.0",
+    "amqp-connection-manager": "^4.1.1",
+    "amqplib": "^0.8.0",
     "bcrypt": "^5.0.1",
     "handlebars": "^4.7.7",
     "mongoose": "^6.2.2",
