@@ -33,6 +33,8 @@ spec:
               value: mysecretkey
             - name: MINIO_RESULTS_BUCKET
               value: users-results
+            - name: MONGO_HOST
+              value: mongodb.default.svc.cluster.local
           volumeMounts:
             - mountPath: "/var/run/docker.sock"
               name: dockersock

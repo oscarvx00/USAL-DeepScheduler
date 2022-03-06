@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { TrainingService } from 'src/app/services/training/training.service';
 
 @Component({
@@ -11,7 +12,7 @@ export class TrainingNewComponent implements OnInit {
 
   currentStep = 0
 
-  hours = [1,2,3,4,5,6]
+  hours = [0,1,2,3,4,5,6]
   minutes = [0,15,30,45]
 
   imageNameForm! : FormGroup
@@ -22,7 +23,8 @@ export class TrainingNewComponent implements OnInit {
 
   constructor(
     private formBuilder : FormBuilder,
-    private trainingService : TrainingService
+    private trainingService : TrainingService,
+    private router : Router
   ) { }
 
   ngOnInit(): void {
@@ -67,7 +69,7 @@ export class TrainingNewComponent implements OnInit {
 
     this.trainingService.submitTrainingRequest(imageName, Number(hours), Number(minutes))
       .subscribe((res : any) => {
-
+        this.router.navigateByUrl('training')
       },
       (err : any) =>{
 

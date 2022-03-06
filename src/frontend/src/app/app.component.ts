@@ -73,7 +73,7 @@ export class AppComponent implements OnInit{
 
   trainingClicked(){
     this.showProfile = false
-    this.router.navigate(['training'])
+    this.router.navigateByUrl('training')
   }
 
 

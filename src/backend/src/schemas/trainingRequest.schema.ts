@@ -16,7 +16,7 @@ export class TrainingRequest {
     computingTime : number
 
     @Prop()
-    state : string
+    status : string
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'User'})
     user : User

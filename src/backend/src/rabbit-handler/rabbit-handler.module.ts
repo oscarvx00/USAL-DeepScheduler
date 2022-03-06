@@ -5,7 +5,7 @@ import { RabbitHandlerService } from './rabbit-handler.service';
 @Module({
     imports: [
         RabbitMQModule.forRoot(RabbitMQModule, {
-            uri: 'amqp://localhost:30001',
+            uri: 'amqp://' + process.env.RABBIT_HOST,
             /*channels: {
                 'request_queue': {
 

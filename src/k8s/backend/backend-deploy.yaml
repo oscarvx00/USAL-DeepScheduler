@@ -12,7 +12,11 @@ spec:
         app: deepscheduler-backend
     spec:
       initContainers:
-        - name: wait-for-mongo
+        - name: wait-for-rabbitmq
+          image: oscarvicente/wait-for-it
+          #imagePullPolicy: Never 
+          command: ["./wait-for-it.sh", "rabbitmq.default.svc.cluster.local:5672"]
+        - name: wait-for-mongo #Can be removed if rabbitmq waits for mongo
           image: oscarvicente/wait-for-it
           command: ["./wait-for-it.sh", "mongodb.default.svc.cluster.local:27017"]
       containers:
@@ -60,6 +64,8 @@ spec:
               secretKeyRef:
                 name: backend-secret
                 key: GITLAB_SECRET
+          - name: RABBIT_HOST
+            value: rabbitmq.default.svc.cluster.local
         ports:
         - name: http
           protocol: TCP

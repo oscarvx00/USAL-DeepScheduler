@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 from io import BytesIO
 import json
+import re
 import time
 import pika
 import docker
 import os
 from minio import Minio
+from pymongo import MongoClient
+import mongoHandler
 
 RABBIT_HOST = os.environ['RABBIT_HOST']
 REQUEST_QUEUE = os.environ['REQUEST_QUEUE']
@@ -15,22 +18,25 @@ MINIO_ACCESS = os.environ['MINIO_ACCESS']
 MINIO_SECRET = os.environ['MINIO_SECRET']
 MINIO_RESULTS_BUCKET = os.environ['MINIO_RESULTS_BUCKET']
 
-class Request:
-    def __init__(self, requestId, userId, executionTime, imageName):
-        self.requestId = requestId
-        self.userId = userId
-        self.executionTime = executionTime
+MONGO_HOST = os.environ['MONGO_HOST']
+
+
+class TrainingRequest:
+    def __init__(self, _id, user, status,computingTime, imageName):
+        self._id = _id
+        self.user = user
+        self.status = status
+        self.computingTime = computingTime
         self.imageName = imageName
 
     def fromJson(jsonDict):
-        return Request(jsonDict['requestId'],jsonDict['userId'], jsonDict['executionTime'], jsonDict['imageName'])
+        return TrainingRequest(jsonDict['_id'],jsonDict['user'], jsonDict['status'], jsonDict['computingTime'], jsonDict['imageName'])
     
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
     def __str__(self):
-        return "Request: [requestId: " + self.requestId + " userID: " + self.userId + ", executionTime: " + self.executionTime + ", imageName: " + self.imageName + " ]\n"
-
+        return "Request: [requestId: " + str(self._id) + " userID: " + str(self.user) + ", status: " + self.status + ", executionTime: " + str(self.computingTime) + ", imageName: " + self.imageName + " ]\n"
 
 
 
@@ -45,8 +51,16 @@ minioClient = Minio(
     secret_key=MINIO_SECRET
 )
 
+#Create MongoDB client
+#mongoClient = MongoClient(host='localhost', port=30002)
+mongoClient = MongoClient(host=MONGO_HOST)
+mongoDatabase = mongoClient.ds
+
+
 
 #Create connection to RabbitMQ container based on its service name
+#connection = pika.BlockingConnection(
+#    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0))
 channel = connection.channel()
@@ -64,25 +78,32 @@ def callback(ch, method, properties, body):
 
     #Decode Request data
     rawJson = json.loads(body)
-    request = Request.fromJson(rawJson)
-    print('\n\n [x] Received image: ', request, flush=True)
+    trainingRequest = TrainingRequest.fromJson(mongoHandler.getRequestById(mongoDatabase, rawJson['id']))
+    print('\n\n [x] Received image: ', trainingRequest._id, flush=True)
+    
+    #Check if state is scheduled, if not discard
+    if trainingRequest.status != "SCHEDULED":
+        #Discard
+        print('\n [-] State is not scheduled: ', trainingRequest._id, flush=True)
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+        return
 
     #Image execution control.
 
     #Download image
     try: 
-        image = dockerClient.images.pull(request.imageName)
+        image = dockerClient.images.pull(trainingRequest.imageName)
     except:
-        print("\nError pulling " + request.imageName, flush=True)
+        print("\n [-]Error pulling " + trainingRequest.imageName, flush=True)
         #TODO: Send error message to web app
         ch.basic_ack(delivery_tag=method.delivery_tag)
         return
 
-    print(" [x] Image " + request.imageName + " pulled")
+    print(" [x] Image " + trainingRequest.imageName + " pulled")
 
 
     #Create a container with gpu capabilities.
-    container = dockerClient.containers.run(image=request.imageName, detach="True", device_requests=[
+    container = dockerClient.containers.run(image=trainingRequest.imageName, detach="True", device_requests=[
         docker.types.DeviceRequest(count=-1, capabilities=[['gpu']])
     ])
 
@@ -97,7 +118,7 @@ def callback(ch, method, properties, body):
         #print(out.decode(), flush=True)
         current_time = time.time()
         elapsed_time = current_time - start_time
-        if elapsed_time > float(request.executionTime):
+        if elapsed_time > float(trainingRequest.computingTime):
             #If max time reached exit from loop
             print(" [x] Max execution time reached")
             break
@@ -124,12 +145,12 @@ def callback(ch, method, properties, body):
     file_obj.seek(0)
 
     #Upload files, logs
-    resultsPath = request.userId + "/" + request.requestId + "/results.tar"
+    resultsPath = str(trainingRequest.user) + "/" + str(trainingRequest._id) + "/results.tar"
     minioClient.put_object(
         MINIO_RESULTS_BUCKET, resultsPath, file_obj, length=file_obj.getbuffer().nbytes
     )
 
-    outLogPath = request.userId + "/" + request.requestId + "/logs/out.log"
+    outLogPath = str(trainingRequest.user) + "/" + str(trainingRequest._id) + "/logs/out.log"
     f = open("outLog.log", "x")
     f.write(out.decode())
     f.close()
@@ -138,7 +159,7 @@ def callback(ch, method, properties, body):
     )
     os.remove("outLog.log")
 
-    errLogPath = request.userId + "/" + request.requestId + "/logs/err.log"
+    errLogPath = str(trainingRequest.user) + "/" + str(trainingRequest._id) + "/logs/err.log"
     f = open("errLog.log", "x")
     f.write(err.decode())
     f.close()
@@ -149,6 +170,9 @@ def callback(ch, method, properties, body):
 
     #TODO: Send container finished to web app
 
+    #Save status in database
+    mongoHandler.setRequestCompleted(mongoDatabase, trainingRequest._id)
+
     #Remove container, remove image
     try:
         container.remove()
@@ -156,7 +180,7 @@ def callback(ch, method, properties, body):
     except:
         print("Error removing image or container", flush=True)
 
-    print("\n=========== Request " + request.requestId + " completed ===========\n\n\n", flush=True)
+    print("\n=========== Request " + str(trainingRequest._id)+ " completed ===========\n\n\n", flush=True)
 
     #Ack message
     ch.basic_ack(delivery_tag=method.delivery_tag)

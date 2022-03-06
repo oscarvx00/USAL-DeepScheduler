@@ -18,12 +18,12 @@ export class TrainingService {
         const nRequest =  await new this.trainingRequestModel({
             imageName: request.imageName,
             computingTime: request.computingTime,
-            state: "scheduled",
+            status: "SCHEDULED",
             user: user._id
         }).save()
         //console.log(nRequest)
-        this.rabbitService.publishTrainingRequest(nRequest)
-
+        await this.rabbitService.publishTrainingRequest(nRequest)
+        
     }
 
 }

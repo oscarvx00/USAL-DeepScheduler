@@ -1,0 +1,6 @@
+export RABBIT_HOST=localhost
+export REQUEST_QUEUE=request_queue
+export MINIO_CLIENT=minio-oscarvx00.cloud.okteto.net
+export MINIO_ACCESS=myaccesskey
+export MINIO_SECRET=mysecretkey
+export MINIO_RESULTS_BUCKET=users-results
