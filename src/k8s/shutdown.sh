@@ -12,8 +12,8 @@ kubectl delete deploy deepscheduler-backend
 kubectl delete daemonset orchestrator
 
 #Delete rabbitmq
-kubectl delete statefulsets rabbitmq
-kubectl delete svc rabbitmq
+#kubectl delete statefulsets rabbitmq
+#kubectl delete svc rabbitmq
 
 #Delete mongo
 #kubectl delete svc mongodb

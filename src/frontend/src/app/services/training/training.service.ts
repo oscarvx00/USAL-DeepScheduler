@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { TrainingRequest } from 'src/app/model/trainingRequest';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -19,5 +20,9 @@ export class TrainingService {
       imageName : imageName,
       computingTime : timeInSeconds
     })
+  }
+
+  getUserTrainingRequests() : Observable<TrainingRequest[]>{
+    return this.httpClient.get<TrainingRequest[]>(environment.apiUrl + '/training')
   }
 }

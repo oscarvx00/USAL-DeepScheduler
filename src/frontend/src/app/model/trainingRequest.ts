@@ -1,15 +1,15 @@
-export interface TrainingRequest {
-    uuid : string 
-    image : string 
-    state : string 
-    executingTime : string 
-    date : string
+export class TrainingRequest {
+    _id : string 
+    imageName : string 
+    status : string 
+    computingTime : string 
+    /*date : string*/
 
-    /*constructor(uuid : string, image : string, state : string, executingTime : string, date : string){
-        this.uuid = uuid
-        this.image = image
-        this.state = state
-        this.executingTime = executingTime
-        this.date = date
-    }*/
+    constructor(_id : string, imageName : string, status : string, computingTime : string/*, date : string*/){
+        this._id = _id
+        this.imageName = imageName
+        this.status = status
+        this.computingTime = computingTime
+        /*this.date = date*/
+    }
 }

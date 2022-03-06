@@ -26,4 +26,8 @@ export class TrainingService {
         
     }
 
+    async getUserTrainingRequests(user : any){
+       return await this.trainingRequestModel.find({user : user._id})
+    }
+
 }
