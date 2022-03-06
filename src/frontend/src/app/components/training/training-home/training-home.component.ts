@@ -14,8 +14,10 @@ export class TrainingHomeComponent implements OnInit {
 
   displayedColumns: string[] = ['image', 'status'];
   dataSource: TrainingRequest[] = [
-    {_id: "uuid1", imageName: "image 1", status: "pending", computingTime: "2 h"/*, date: "01/01/2000"*/},
-    {_id: "uuid1", imageName: "image 2", status: "pending", computingTime: "2 h"/*, date: "01/01/2000"*/}
+    /*{_id: "uuid1", imageName: "image 1", status: "COMPLETED", computingTime: "2 h"},
+    {_id: "uuid1", imageName: "image 2", status: "SCHEDULED", computingTime: "2 h"},
+    {_id: "uuid1", imageName: "image 3", status: "EXECUTING", computingTime: "2 h"},
+    {_id: "uuid1", imageName: "image 4", status: "CANCELED", computingTime: "2 h"}*/
   
   ]
 
@@ -36,6 +38,25 @@ export class TrainingHomeComponent implements OnInit {
 
   createClicked(){
     this.router.navigateByUrl('training/new')
+  }
+
+  test(item : any){
+    console.log(item)
+  }
+
+  getStatusClass(status : string){
+    switch(status){
+      case "COMPLETED":
+        return 'status-completed'
+      case "SCHEDULED":
+        return 'status-scheduled'
+      case "EXECUTING":
+        return 'status-executing'
+      case 'CANCELED':
+        return 'status-canceled'
+      default:
+        return ""
+    }
   }
 
 }

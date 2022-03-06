@@ -20,6 +20,11 @@ export class TrainingRequest {
 
     @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'User'})
     user : User
+
+    @Prop({
+        required: true
+    })
+    date : Date
 }
 
 export const TrainingRequestSchema = SchemaFactory.createForClass(TrainingRequest)

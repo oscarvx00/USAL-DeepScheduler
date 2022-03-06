@@ -4,28 +4,23 @@
             <h1>My training images</h1>
             <button class="ds-button-primary nav-button" (click)="createClicked()">Create new</button>
         </div>
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-            <!--- Note that these columns can be defined in any order.
-                  The actual rendered columns are set as a property on the row definition" -->
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z6">
           
-            <!-- Position Column -->
+            <!-- Image Column -->
             <ng-container matColumnDef="image">
               <th mat-header-cell *matHeaderCellDef> Image</th>
               <td mat-cell *matCellDef="let element"> {{element.imageName}} </td>
             </ng-container>
           
-            <!-- Name Column -->
-            <ng-container matColumnDef="status">
-              <th mat-header-cell *matHeaderCellDef> Status </th>
-              <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+            <!-- Status Column -->
+            <ng-container matColumnDef="status" >
+              <th mat-header-cell *matHeaderCellDef class="align-right"> Status </th>
+              <td mat-cell *matCellDef="let element" class="align-right"><span class="status-cell" [ngClass]="getStatusClass(element.status)">{{element.status.toLowerCase()}}</span> </td>
             </ng-container>
-          
-          
+                   
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>
-          
-           
+                     
     </div>
 </div>

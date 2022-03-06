@@ -19,7 +19,8 @@ export class TrainingService {
             imageName: request.imageName,
             computingTime: request.computingTime,
             status: "SCHEDULED",
-            user: user._id
+            user: user._id,
+            date: new Date()
         }).save()
         //console.log(nRequest)
         await this.rabbitService.publishTrainingRequest(nRequest)
@@ -27,7 +28,7 @@ export class TrainingService {
     }
 
     async getUserTrainingRequests(user : any){
-       return await this.trainingRequestModel.find({user : user._id})
+       return await this.trainingRequestModel.find({user : user._id}).sort({'date':-1}).exec()
     }
 
 }
