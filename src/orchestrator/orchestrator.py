@@ -88,6 +88,9 @@ def callback(ch, method, properties, body):
         ch.basic_ack(delivery_tag=method.delivery_tag)
         return
 
+    #Set current state to executing
+    mongoHandler.setRequestExecuting(mongoDatabase, trainingRequest._id)
+
     #Image execution control.
 
     #Download image
