@@ -20,11 +20,12 @@ def setRequestExecuting(database, id):
         upsert=False
     )
 
-def setRequestCompleted(database, id):
+def setRequestCompleted(database, id, completedComputingTime):
     database.trainingrequests.update_one(
         {'_id' : ObjectId(id)},
         {'$set' : {
-            'status' : 'COMPLETED'
+            'status' : 'COMPLETED',
+            'completedComputingTime' : completedComputingTime
         }},
         upsert=False
     )

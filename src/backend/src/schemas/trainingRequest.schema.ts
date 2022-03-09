@@ -25,6 +25,11 @@ export class TrainingRequest {
         required: true
     })
     date : Date
+
+    @Prop({
+        default: 0
+    })
+    completedComputingTime : number
 }
 
 export const TrainingRequestSchema = SchemaFactory.createForClass(TrainingRequest)

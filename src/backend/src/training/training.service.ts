@@ -38,7 +38,7 @@ export class TrainingService {
         let hours = 0
         let count = trainingRequests.length
         res["totalContainers"] = count
-        res["totalHours"] = hours
+        res["totalHours"] = this.getTotalComputedTime(trainingRequests)
         res["imagesByStatus"] = this.getTrainingRequestsCountByStatus(trainingRequests)
 
         return res
@@ -75,6 +75,14 @@ export class TrainingService {
               "value" : countByType.CANCELED
             },
           ]
+    }
+
+    private getTotalComputedTime(trainingRequest : any){
+        let count = 0
+        trainingRequest.forEach(element => {
+            count += element.completedComputingTime
+        });
+        return Math.floor(count / 3600)
     }
 
 }

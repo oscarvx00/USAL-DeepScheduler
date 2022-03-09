@@ -131,6 +131,10 @@ def callback(ch, method, properties, body):
         #Sleep 10 seconds to prevent high cpu usage
         time.sleep(10)
 
+    final_time = time.time()
+    #Stored for stats purposes
+    completed_computing_time = final_time - start_time
+    print(" [x] Total time: ", completed_computing_time)
 
     container.stop()
     #Check exit code, logs, etc
@@ -174,7 +178,7 @@ def callback(ch, method, properties, body):
     #TODO: Send container finished to web app
 
     #Save status in database
-    mongoHandler.setRequestCompleted(mongoDatabase, trainingRequest._id)
+    mongoHandler.setRequestCompleted(mongoDatabase, trainingRequest._id, completed_computing_time)
 
     #Remove container, remove image
     try:
