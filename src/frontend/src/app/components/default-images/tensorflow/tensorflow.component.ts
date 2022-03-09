@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CodeBlockComponent } from '../../utils/code-block/code-block.component';
 
 @Component({
   selector: 'app-tensorflow',

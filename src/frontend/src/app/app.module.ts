@@ -27,13 +27,13 @@ import {
   HIGHLIGHT_OPTIONS,
   HighlightOptions,
 } from 'ngx-highlightjs';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { AuthDataSharingService } from './services/auth/user-data-sharing';
 import { AuthInterceptorService } from './services/auth/auth-interceptor/auth-interceptor.service';
 import { ProfileComponent } from './components/user/profile/profile.component';
 import { ErrorDialogComponent } from './components/utils/error-dialog/error-dialog.component';
 import { TensorflowComponent } from './components/default-images/tensorflow/tensorflow.component';
-import { CodeBlockComponent } from './components/utils/code-block/code-block.component';
 import { PytorchComponent } from './components/default-images/pytorch/pytorch.component';
 import { TrainingHomeComponent } from './components/training/training-home/training-home.component';
 import { TrainingNewComponent } from './components/training/training-new/training-new.component';
@@ -47,7 +47,6 @@ import { TrainingNewComponent } from './components/training/training-new/trainin
     ProfileComponent,
     ErrorDialogComponent,
     TensorflowComponent,
-    CodeBlockComponent,
     PytorchComponent,
     TrainingHomeComponent,
     TrainingNewComponent,
@@ -69,7 +68,8 @@ import { TrainingNewComponent } from './components/training/training-new/trainin
     MatTabsModule,
     HighlightModule,
     MatTableModule,
-    MatSelectModule
+    MatSelectModule,
+    NgxChartsModule
   ],
   providers: [
     AuthDataSharingService,

@@ -25,4 +25,8 @@ export class TrainingService {
   getUserTrainingRequests() : Observable<TrainingRequest[]>{
     return this.httpClient.get<TrainingRequest[]>(environment.apiUrl + '/training')
   }
+
+  getUserTrainingStats() : Observable<any>{
+    return this.httpClient.get(environment.apiUrl + "/training/stats")
+  }
 }

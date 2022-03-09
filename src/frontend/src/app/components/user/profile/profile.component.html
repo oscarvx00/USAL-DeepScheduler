@@ -1,2 +1,33 @@
-<h1>{{user.username}}</h1>
-<h1>{{user.mail}}</h1>
+<div class="profile-container">
+    <div class="profile-content">
+        <div class="profile-content-header">
+            <h1>My profile</h1>
+        </div>
+        <div class="profile-content-user">
+            <img src="/assets/imgs/defaultProfile.jpg"/>
+            <div class="profile-content-user-data">
+                <h2>{{user.username}}</h2>
+                <p>{{user.mail}}</p> 
+            </div>
+            <div class="profile-content-user-options">
+                <button class="button-profile">Change password</button>
+                <button class="button-profile button-red">Remove account</button>
+            </div>
+        </div>
+        <div class="profile-content-stats mat-elevation-z6">
+            <div class="profile-content-stats-data">
+                <h1>Stats</h1>
+                <p class="profile-content-stats-data-row">{{statsData.totalContainers}} containers executed</p>
+                <p class="profile-content-stats-data-row">{{statsData.totalHours}} hours</p>
+            </div>
+            <div class="profile-content-stats-chart">
+                <ngx-charts-pie-chart *ngIf="statsData.totalContainers > 0"
+                    [results]="statsData.imagesByStatus"
+                    [customColors]="statsColors"
+                    >
+
+                </ngx-charts-pie-chart>
+            </div>
+        </div>                    
+    </div>
+</div>

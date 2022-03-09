@@ -6,12 +6,13 @@
 html, body { height: 100%; width: 100%; }
 body { 
     margin: 0; 
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+    //font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     //background-color: $color-background-general
  }
  
- @import url('https://fonts.googleapis.com/css2?family=Days+One&display=swap');
- @import url('https://fonts.googleapis.com/css2?family=Days+One&family=Montserrat:wght@300;500&display=swap');
+ //@import url('https://fonts.googleapis.com/css2?family=Days+One&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Days+One&family=Montserrat:wght@300;500;800&display=swap');
 
 
 .ds-button-primary{
@@ -39,5 +40,19 @@ body {
 }
 
 .ds-button-secondary:hover{
+    background-color: $color-background-hover;
+}
+
+.ds-button-background-default{
+    padding: 9px 25px;
+    background-color: $color-background-general;
+    border: 1px solid $color-primary;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    color: $color-foreground;
+}
+
+.ds-button-background-default:hover{
     background-color: $color-background-hover;
 }
