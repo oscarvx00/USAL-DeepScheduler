@@ -5,6 +5,8 @@ import { GithubAuthGuard } from "./strategies/github-auth.guard";
 import { GitlabAuthGuard } from "./strategies/gitlab-auth.guard";
 import { GoogleAuthGuard } from "./strategies/google-auth.guard";
 import { LocalAuthGuard } from "./strategies/local-auth.guard";
+import * as fs from 'fs'
+import * as path from 'path'
 
 @Controller('auth')
 export class AuthController {
@@ -33,7 +35,13 @@ export class AuthController {
 
         user.mailVerified = true
         await this.usersService.save(user)
-        //Build response HTML
+        return fs.readFileSync(
+            path.resolve(
+                __dirname,
+                '../static-content/registrationCompleted.html'
+            )
+        ).toString()
+
     }
 
     @UseGuards(GoogleAuthGuard)
