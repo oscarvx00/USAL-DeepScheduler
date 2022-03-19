@@ -11,12 +11,12 @@ import { RabbitHandlerService } from './rabbit-handler.service';
 
                 }
             }*/
-            /*exchanges: [
+            exchanges: [
                 {
-                    name: 'backend_exchange',
-                    type: 'direct',
+                    name: 'direct_logs',
+                    type: 'topic',
                 }
-            ],*/
+            ],
         })
     ],
     providers: [RabbitHandlerService],

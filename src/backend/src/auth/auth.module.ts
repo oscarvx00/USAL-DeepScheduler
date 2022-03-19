@@ -10,6 +10,7 @@ import { GitlabStrategy } from './strategies/gitlab.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
+import { WsGuard } from './strategies/ws-auth.guard';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { LocalStrategy } from './strategies/local.strategy';
     }),
     MailModule,
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy, GithubStrategy, GitlabStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy, GithubStrategy, GitlabStrategy, WsGuard],
   exports: [AuthService]
 })
 export class AuthModule {}

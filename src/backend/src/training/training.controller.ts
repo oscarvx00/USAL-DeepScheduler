@@ -24,4 +24,10 @@ export class TrainingController {
     async getUserTrainingStats(@Req() req){
         return await this.trainingService.getUserTrainingStats(req.user)
     }
+
+    /*@Get('/test')
+    test(){
+        this.trainingService.test()
+    }*/
+
 }

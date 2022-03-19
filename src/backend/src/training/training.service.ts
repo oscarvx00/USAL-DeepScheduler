@@ -85,4 +85,11 @@ export class TrainingService {
         return Math.floor(count / 3600)
     }
 
+    /*async test(){
+        await this.rabbitService.subscribeToUser()
+        .then((res) => {
+            console.log("EXIT")
+            console.log(res)
+        })
+    }*/
 }
