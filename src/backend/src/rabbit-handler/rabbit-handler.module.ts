@@ -13,7 +13,7 @@ import { RabbitHandlerService } from './rabbit-handler.service';
             }*/
             exchanges: [
                 {
-                    name: 'direct_logs',
+                    name: 'requestsStatus',
                     type: 'topic',
                 }
             ],

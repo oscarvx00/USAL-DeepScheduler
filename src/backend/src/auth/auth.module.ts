@@ -10,7 +10,7 @@ import { GitlabStrategy } from './strategies/gitlab.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
-import { WsGuard } from './strategies/ws-auth.guard';
+import { WsGuard } from './strategies/ws.strategy';
 
 @Module({
   imports: [

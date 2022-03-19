@@ -34,6 +34,10 @@ export class TrainingHomeComponent implements OnInit {
     (err : any) => {
       console.log(err)
     })
+
+    this.trainingService.getTrainingRequestUpdate().subscribe((message : any) => {
+      this.updateTrainingRequest(message.data)
+    })
   }
 
   createClicked(){
@@ -57,6 +61,12 @@ export class TrainingHomeComponent implements OnInit {
       default:
         return ""
     }
+  }
+
+  private updateTrainingRequest(tr : TrainingRequest){
+    const index = this.dataSource.findIndex(x => x._id == tr._id)
+    this.dataSource[index] = tr
+    this.dataSource = [...this.dataSource]
   }
 
 }

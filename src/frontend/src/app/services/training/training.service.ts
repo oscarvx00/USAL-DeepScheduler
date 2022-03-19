@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { io } from 'socket.io-client';
 import { TrainingRequest } from 'src/app/model/trainingRequest';
 import { environment } from 'src/environments/environment';
 
@@ -9,9 +10,31 @@ import { environment } from 'src/environments/environment';
 })
 export class TrainingService {
 
+  socket = io(environment.apiSocketUrl, {
+    extraHeaders: {
+      Authorization : "Bearer " + localStorage.getItem('auth_token')
+    }
+  })
+
+  public updateTrainingRequestMessage$ : BehaviorSubject<any> = new BehaviorSubject({})
+
   constructor(
     private httpClient : HttpClient
   ) { }
+
+  subscibeToTrainingRequestsMessages(){
+    this.socket.emit('requestsStatus', {}); //Subcription message to init rabbitmq queue in backend
+  } 
+
+  getTrainingRequestUpdate(){
+    this.socket.emit('requestsStatus', {}); //Subcription message to init rabbitmq queue in backend
+    this.socket.on('requestsStatus', (message) => {
+      //console.log(message)
+      this.updateTrainingRequestMessage$.next(message)
+    })
+
+    return this.updateTrainingRequestMessage$.asObservable()
+  }
 
   submitTrainingRequest(imageName : string, hours : number, minutes : number) : Observable<any>{
 

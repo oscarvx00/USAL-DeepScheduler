@@ -33,33 +33,30 @@ export class RabbitHandlerService {
         console.log(msg)
     }*/
 
-    public async subscribeToUser(socket : Socket, userId : string) : Promise<void>{
-        let check =  this.amqpConnection.createSubscriber(
-            this.handler.bind(this, socket),
+    public async subscribeToUser(socket : Socket, userId : string, handler : (socket : Socket, userId : string, msg : any) => void) : Promise<void>{
+        return this.amqpConnection.createSubscriber(
+            //this.mHandler.bind(this, socket, userId),
+            handler.bind(this, socket, userId),
             {
-                exchange: 'direct_logs',
+                exchange: 'requestsStatus',
                 routingKey: userId,
-                queue: userId,
+                queue: 'requestsStatus_' + userId,
                 queueOptions: {
                     durable: false,
                     exclusive: true
                 }
             }
         )
-        console.log(check)
-        return check
-
-
     }
 
-    removeQueue(userId : string){
-       this.amqpConnection.channel.deleteQueue(userId) 
-    }
-
-    handler(socket : Socket, msg : {}) : Promise<Nack>{
+    mHandler(socket : Socket, userId : string,  msg : {}){
         console.log(msg)
-        socket.emit('rabbit', msg)
+        socket.emit('requestsStatus', msg)
         return undefined
+    }
+
+    removeQueues(userId : string){
+       this.amqpConnection.channel.deleteQueue('requestsStatus_' + userId) 
     }
 
 }

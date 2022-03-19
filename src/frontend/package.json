@@ -24,7 +24,9 @@
     "@types/d3-scale": "^4.0.2",
     "ngx-highlight-js": "^13.0.0",
     "ngx-highlightjs": "^6.1.1",
+    "ngx-socket-io": "^4.2.0",
     "rxjs": "~6.6.0",
+    "socket.io-client": "^4.4.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
