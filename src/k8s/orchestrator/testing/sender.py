@@ -31,9 +31,9 @@ channel = connection.channel()
 channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
 
 messages = [
-    Request(str(uuid.uuid4()), "user-1", "50", "oscarvicente/tf-user-example"),
-    Request(str(uuid.uuid4()),"user-2", "80", "oscarvicente/pytorch-920m-user-example"),
-    Request(str(uuid.uuid4()),"user-3", "35", "b-a-d-i-m-a-g-e"),
+    json.dumps({"id": "6230f332abbf22a24e186c49"})
+    #Request(str(uuid.uuid4()),"user-2", "80", "oscarvicente/pytorch-920m-user-example"),
+    #Request(str(uuid.uuid4()),"user-3", "35", "b-a-d-i-m-a-g-e"),
     #Request(str(uuid.uuid4()),"user-4", "35", "oscarvicente/tf-user-example")
 ]
 
@@ -45,7 +45,7 @@ for m in messages:
     channel.basic_publish(
         exchange='',
         routing_key=REQUEST_QUEUE,
-        body=m.toJson(),
+        body=m,
         properties=pika.BasicProperties(
             delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
             content_type='application/json',

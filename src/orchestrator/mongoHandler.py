@@ -1,5 +1,6 @@
 from bson.objectid import ObjectId
 
+
 def getAllRequests(database):
     requests = []
     cursor = database.trainingrequests.find({})
@@ -19,6 +20,13 @@ def setRequestExecuting(database, id):
         }},
         upsert=False
     )
+    rawData = database.trainingrequests.find_one(
+        {'_id' : ObjectId(id)}
+    )
+    rawData["_id"] = str(rawData["_id"])
+    rawData["user"] = str(rawData["user"])
+    return rawData
+
 
 def setRequestCompleted(database, id, completedComputingTime):
     database.trainingrequests.update_one(
@@ -29,3 +37,10 @@ def setRequestCompleted(database, id, completedComputingTime):
         }},
         upsert=False
     )
+
+    rawData = database.trainingrequests.find_one(
+        {'_id' : ObjectId(id)}
+    )
+    rawData["_id"] = str(rawData["_id"])
+    rawData["user"] = str(rawData["user"])
+    return rawData

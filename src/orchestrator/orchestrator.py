@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from io import BytesIO
 import json
-import re
 import time
 import pika
 import docker
@@ -9,6 +8,7 @@ import os
 from minio import Minio
 from pymongo import MongoClient
 import mongoHandler
+from bson.objectid import ObjectId
 
 RABBIT_HOST = os.environ['RABBIT_HOST']
 REQUEST_QUEUE = os.environ['REQUEST_QUEUE']
@@ -18,7 +18,7 @@ MINIO_ACCESS = os.environ['MINIO_ACCESS']
 MINIO_SECRET = os.environ['MINIO_SECRET']
 MINIO_RESULTS_BUCKET = os.environ['MINIO_RESULTS_BUCKET']
 
-MONGO_HOST = os.environ['MONGO_HOST']
+MONGO_HOST = os.environ['MONGO_HOST'] 
 
 
 class TrainingRequest:
@@ -30,6 +30,7 @@ class TrainingRequest:
         self.imageName = imageName
 
     def fromJson(jsonDict):
+        print(jsonDict)
         return TrainingRequest(jsonDict['_id'],jsonDict['user'], jsonDict['status'], jsonDict['computingTime'], jsonDict['imageName'])
     
     def toJson(self):
@@ -38,6 +39,10 @@ class TrainingRequest:
     def __str__(self):
         return "Request: [requestId: " + str(self._id) + " userID: " + str(self.user) + ", status: " + self.status + ", executionTime: " + str(self.computingTime) + ", imageName: " + self.imageName + " ]\n"
 
+
+def rabbitSendUpdate(update):
+    channel.basic_publish(
+    exchange='requestsStatus', routing_key=str(update.user), body=update.toJson())
 
 
 
@@ -62,9 +67,10 @@ mongoDatabase = mongoClient.ds
 #connection = pika.BlockingConnection(
 #    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0))
+    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
 channel = connection.channel()
 channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
+channel.exchange_declare(exchange='requestsStatus', exchange_type='topic', durable=True)
 
 #Create user-results bucket if not exists
 found = minioClient.bucket_exists(bucket_name=MINIO_RESULTS_BUCKET)
@@ -89,7 +95,8 @@ def callback(ch, method, properties, body):
         return
 
     #Set current state to executing
-    mongoHandler.setRequestExecuting(mongoDatabase, trainingRequest._id)
+    imageUpdated = TrainingRequest.fromJson(mongoHandler.setRequestExecuting(mongoDatabase, trainingRequest._id))
+    rabbitSendUpdate(imageUpdated)
 
     #Image execution control.
 
@@ -178,7 +185,8 @@ def callback(ch, method, properties, body):
     #TODO: Send container finished to web app
 
     #Save status in database
-    mongoHandler.setRequestCompleted(mongoDatabase, trainingRequest._id, completed_computing_time)
+    imageUpdated = TrainingRequest.fromJson(mongoHandler.setRequestCompleted(mongoDatabase, trainingRequest._id, completed_computing_time))
+    rabbitSendUpdate(imageUpdated)
 
     #Remove container, remove image
     try:
@@ -197,3 +205,5 @@ def callback(ch, method, properties, body):
 channel.basic_qos(prefetch_count=1)
 channel.basic_consume(REQUEST_QUEUE, auto_ack=False, on_message_callback=callback)
 channel.start_consuming()
+
+
