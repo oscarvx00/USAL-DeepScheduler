@@ -70,3 +70,6 @@ spec:
         - name: http
           protocol: TCP
           containerPort: 3000
+        - name: websocket
+          protocol: TCP
+          containerPort: 3001

@@ -8,7 +8,6 @@ import os
 from minio import Minio
 from pymongo import MongoClient
 import mongoHandler
-from bson.objectid import ObjectId
 
 RABBIT_HOST = os.environ['RABBIT_HOST']
 REQUEST_QUEUE = os.environ['REQUEST_QUEUE']
@@ -30,7 +29,7 @@ class TrainingRequest:
         self.imageName = imageName
 
     def fromJson(jsonDict):
-        print(jsonDict)
+        #print(jsonDict)
         return TrainingRequest(jsonDict['_id'],jsonDict['user'], jsonDict['status'], jsonDict['computingTime'], jsonDict['imageName'])
     
     def toJson(self):
@@ -67,7 +66,7 @@ mongoDatabase = mongoClient.ds
 #connection = pika.BlockingConnection(
 #    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
+    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0))
 channel = connection.channel()
 channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
 channel.exchange_declare(exchange='requestsStatus', exchange_type='topic', durable=True)
