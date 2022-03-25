@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { TrainingRequest } from 'src/app/model/trainingRequest';
@@ -10,7 +10,7 @@ import { TrainingService } from 'src/app/services/training/training.service';
   templateUrl: './training-home.component.html',
   styleUrls: ['./training-home.component.scss']
 })
-export class TrainingHomeComponent implements OnInit {
+export class TrainingHomeComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['image', 'status'];
   dataSource: TrainingRequest[] = [
@@ -38,6 +38,10 @@ export class TrainingHomeComponent implements OnInit {
     this.trainingService.getTrainingRequestUpdate().subscribe((message : any) => {
       this.updateTrainingRequest(message.data)
     })
+  }
+
+  ngOnDestroy(): void {
+    this.trainingService.unsuscribeFromTrainingRequestMessages()
   }
 
   createClicked(){

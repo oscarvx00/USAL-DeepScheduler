@@ -23,24 +23,14 @@ export class RabbitHandlerService {
         )
     }
 
-    /*@RabbitSubscribe({
-        exchange: 'direct_logs',
-        routingKey: 'user1',
-        queue: 'q1' 
-    })
-    public async pubSubHandler(msg: {}){
-        console.log("HALLO") 
-        console.log(msg)
-    }*/
-
-    public async subscribeToUser(socket : Socket, userId : string, handler : (socket : Socket, userId : string, msg : any) => void) : Promise<void>{
+    public async subscribeToRabbitMessage(socket : Socket, userId : string, handler : (socket : Socket, userId : string, msg : any) => void) : Promise<void>{
         return this.amqpConnection.createSubscriber(
             //this.mHandler.bind(this, socket, userId),
             handler.bind(this, socket, userId),
             {
-                exchange: 'requestsStatus',
+                exchange: 'orchestrator_msgs_exchange',
                 routingKey: userId,
-                queue: 'requestsStatus_' + userId,
+                queue: 'orchestrator_msgs_queue_' + userId,
                 queueOptions: {
                     durable: false,
                     exclusive: true
@@ -49,14 +39,14 @@ export class RabbitHandlerService {
         )
     }
 
-    mHandler(socket : Socket, userId : string,  msg : {}){
+    /*mHandler(socket : Socket, userId : string,  msg : {}){
         console.log(msg)
         socket.emit('requestsStatus', msg)
         return undefined
-    }
+    }*/
 
     removeQueues(userId : string){
-       this.amqpConnection.channel.deleteQueue('requestsStatus_' + userId) 
+       this.amqpConnection.channel.deleteQueue('orchestrator_msgs_queue_' + userId) 
     }
 
 }

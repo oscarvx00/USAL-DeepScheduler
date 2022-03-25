@@ -46,23 +46,27 @@ export class TrainingGateway implements OnGatewayDisconnect{
     }*/
 
     @UseGuards(WsGuard)
-    @SubscribeMessage('requestsStatus')
-    handleRabbit(client : Socket, data : any){
+    @SubscribeMessage('request_status')
+    handleRabbitMessage(client : Socket, data : any){
         const token = client.handshake.headers.authorization.split(' ')[1];
         //console.log(token)
         const decoded = jwt.verify(token, jwtConstants.secret)
         const userId : string = decoded.sub as string
-        this.rabbitService.subscribeToUser(client, userId, this.requestsStatusMessageHandler)
+        this.rabbitService.subscribeToRabbitMessage(client, userId, this.rabbitMessageHandler)
     }
 
-    //When the status os a message is changed, we enter here and get all the images from the database.
-    async requestsStatusMessageHandler(socket : Socket, userId : string, msg : any){
+    async rabbitMessageHandler(socket : Socket, userId : string, msg : any){
         //console.log(msg)
-        const emitMsg : TrainingGatewayDTO = {
-            type : "requests_status",
-            data : msg
+        if(!msg.type){
+            return undefined
         }
-        socket.emit('requestsStatus', emitMsg)
+        
+        const emitMsg : TrainingGatewayDTO = {
+            type : msg.type,
+            data : msg.message
+        }
+        console.log(emitMsg)
+        socket.emit(msg.type, emitMsg)
         return undefined
     }
 
@@ -73,10 +77,11 @@ export class TrainingGateway implements OnGatewayDisconnect{
         const userId : string = decoded.sub as string
         this.rabbitService.removeQueues(userId)
     }
+
     
 }
 
 interface TrainingGatewayDTO{
-    type : "requests_status" | "request_log",
+    type : "request_status" | "request_log",
     data : {}
 }

@@ -23,17 +23,24 @@ export class TrainingService {
   ) { }
 
   subscibeToTrainingRequestsMessages(){
-    this.socket.emit('requestsStatus', {}); //Subcription message to init rabbitmq queue in backend
+    this.socket.emit('request_status', {}); //Subcription message to init rabbitmq queue in backend
   } 
 
   getTrainingRequestUpdate(){
-    this.socket.emit('requestsStatus', {}); //Subcription message to init rabbitmq queue in backend
-    this.socket.on('requestsStatus', (message) => {
-      //console.log(message)
-      this.updateTrainingRequestMessage$.next(message)
+    this.socket.emit('request_status', {}); //Subcription message to init rabbitmq queue in backend
+    this.socket.on('request_status', (message) => {
+      console.log(message)
+      if(message.type == 'request_status'){
+        this.updateTrainingRequestMessage$.next(message)
+      } 
+      
     })
 
     return this.updateTrainingRequestMessage$.asObservable()
+  }
+
+  unsuscribeFromTrainingRequestMessages(){
+    this.socket.off('request_status')
   }
 
   submitTrainingRequest(imageName : string, hours : number, minutes : number) : Observable<any>{

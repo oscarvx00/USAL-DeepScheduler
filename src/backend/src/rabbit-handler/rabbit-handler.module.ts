@@ -13,7 +13,7 @@ import { RabbitHandlerService } from './rabbit-handler.service';
             }*/
             exchanges: [
                 {
-                    name: 'requestsStatus',
+                    name: 'orchestrator_msgs_exchange',
                     type: 'topic',
                 }
             ],

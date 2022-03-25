@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from cProfile import label
 from io import BytesIO
 import json
 import time
@@ -8,6 +9,7 @@ import os
 from minio import Minio
 from pymongo import MongoClient
 import mongoHandler
+from enum import Enum
 
 RABBIT_HOST = os.environ['RABBIT_HOST']
 REQUEST_QUEUE = os.environ['REQUEST_QUEUE']
@@ -39,9 +41,27 @@ class TrainingRequest:
         return "Request: [requestId: " + str(self._id) + " userID: " + str(self.user) + ", status: " + self.status + ", executionTime: " + str(self.computingTime) + ", imageName: " + self.imageName + " ]\n"
 
 
-def rabbitSendUpdate(update):
+class RabbitMessageType(str, Enum):
+    REQUEST_STATUS: str = "request_status"
+    REQUEST_LOGS: str = "request_logs"
+
+    def toJson(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
+
+
+class RabbitMessage:
+    def __init__(self, type : RabbitMessageType, userId, message):
+        self.type = type
+        self.userId = userId
+        self.message = message
+
+    def toJson(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
+
+
+def rabbitSendUpdate(message : RabbitMessage):
     channel.basic_publish(
-    exchange='requestsStatus', routing_key=str(update.user), body=update.toJson())
+    exchange='orchestrator_msgs_exchange', routing_key=str(message.userId), body=message.toJson())
 
 
 
@@ -56,20 +76,19 @@ minioClient = Minio(
 )
 
 #Create MongoDB client
-#mongoClient = MongoClient(host='localhost', port=30002)
-mongoClient = MongoClient(host=MONGO_HOST)
+mongoClient = MongoClient(host='localhost', port=30002)
+#mongoClient = MongoClient(host=MONGO_HOST)
 mongoDatabase = mongoClient.ds
 
 
-
 #Create connection to RabbitMQ container based on its service name
-#connection = pika.BlockingConnection(
-#    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0))
+    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
+#connection = pika.BlockingConnection(
+#    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0))
 channel = connection.channel()
 channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
-channel.exchange_declare(exchange='requestsStatus', exchange_type='topic', durable=True)
+channel.exchange_declare(exchange='orchestrator_msgs_exchange', exchange_type='topic', durable=True)
 
 #Create user-results bucket if not exists
 found = minioClient.bucket_exists(bucket_name=MINIO_RESULTS_BUCKET)
@@ -95,7 +114,10 @@ def callback(ch, method, properties, body):
 
     #Set current state to executing
     imageUpdated = TrainingRequest.fromJson(mongoHandler.setRequestExecuting(mongoDatabase, trainingRequest._id))
-    rabbitSendUpdate(imageUpdated)
+    requestUserId = str(imageUpdated.user)
+    rMessage = RabbitMessage(RabbitMessageType.REQUEST_STATUS, requestUserId, imageUpdated)
+    #print(rMessage.toJson())
+    rabbitSendUpdate(rMessage)
 
     #Image execution control.
 
@@ -185,7 +207,7 @@ def callback(ch, method, properties, body):
 
     #Save status in database
     imageUpdated = TrainingRequest.fromJson(mongoHandler.setRequestCompleted(mongoDatabase, trainingRequest._id, completed_computing_time))
-    rabbitSendUpdate(imageUpdated)
+    rabbitSendUpdate(RabbitMessage(RabbitMessageType.REQUEST_STATUS, requestUserId, imageUpdated))
 
     #Remove container, remove image
     try:
@@ -204,5 +226,3 @@ def callback(ch, method, properties, body):
 channel.basic_qos(prefetch_count=1)
 channel.basic_consume(REQUEST_QUEUE, auto_ack=False, on_message_callback=callback)
 channel.start_consuming()
-
-

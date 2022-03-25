@@ -31,7 +31,7 @@ channel = connection.channel()
 channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
 
 messages = [
-    json.dumps({"id": "6230f332abbf22a24e186c49"})
+    json.dumps({"id": "623e10e7b5cbf2c3261daea2"})
     #Request(str(uuid.uuid4()),"user-2", "80", "oscarvicente/pytorch-920m-user-example"),
     #Request(str(uuid.uuid4()),"user-3", "35", "b-a-d-i-m-a-g-e"),
     #Request(str(uuid.uuid4()),"user-4", "35", "oscarvicente/tf-user-example")
