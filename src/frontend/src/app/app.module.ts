@@ -37,6 +37,7 @@ import { TensorflowComponent } from './components/default-images/tensorflow/tens
 import { PytorchComponent } from './components/default-images/pytorch/pytorch.component';
 import { TrainingHomeComponent } from './components/training/training-home/training-home.component';
 import { TrainingNewComponent } from './components/training/training-new/training-new.component';
+import { TrainingDetailComponent } from './components/training/training-detail/training-detail.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { TrainingNewComponent } from './components/training/training-new/trainin
     PytorchComponent,
     TrainingHomeComponent,
     TrainingNewComponent,
+    TrainingDetailComponent,
   ],
   imports: [
     BrowserModule,

@@ -17,3 +17,19 @@
     color: rgb(255, 123, 123);
     border-color: rgb(255, 123, 123) !important;
 }
+
+.status-completed-card{
+    border-color: rgb(153, 255, 153) !important;
+}
+
+.status-scheduled-card{
+    border-color: rgb(225, 126, 255) !important;
+}
+
+.status-executing-card{
+    border-color: rgb(128, 204, 255) !important;
+}
+
+.status-canceled-card{
+    border-color: rgb(255, 123, 123) !important;
+}

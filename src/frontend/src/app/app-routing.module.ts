@@ -9,6 +9,7 @@ import { TensorflowComponent } from './components/default-images/tensorflow/tens
 import { PytorchComponent } from './components/default-images/pytorch/pytorch.component';
 import { TrainingHomeComponent } from './components/training/training-home/training-home.component';
 import { TrainingNewComponent } from './components/training/training-new/training-new.component';
+import { TrainingDetailComponent } from './components/training/training-detail/training-detail.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -18,7 +19,8 @@ const routes: Routes = [
   {path: 'default-images/tensorflow', component: TensorflowComponent},
   {path: 'default-images/pytorch', component: PytorchComponent},
   {path: 'training', component: TrainingHomeComponent},
-  {path: 'training/new', component: TrainingNewComponent}
+  {path: 'training/new', component: TrainingNewComponent},
+  {path: 'training/:id', component: TrainingDetailComponent}
 ];
 
 @NgModule({

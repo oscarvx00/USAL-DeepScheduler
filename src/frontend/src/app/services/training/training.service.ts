@@ -23,11 +23,11 @@ export class TrainingService {
   ) { }
 
   subscibeToTrainingRequestsMessages(){
-    this.socket.emit('request_status', {}); //Subcription message to init rabbitmq queue in backend
+    this.socket.emit('socket_init', {}); //Subcription message to init rabbitmq queue in backend
   } 
 
   getTrainingRequestUpdate(){
-    this.socket.emit('request_status', {}); //Subcription message to init rabbitmq queue in backend
+    this.socket.emit('socket_init', {}); //Subcription message to init rabbitmq queue in backend
     this.socket.on('request_status', (message) => {
       console.log(message)
       if(message.type == 'request_status'){
@@ -58,5 +58,9 @@ export class TrainingService {
 
   getUserTrainingStats() : Observable<any>{
     return this.httpClient.get(environment.apiUrl + "/training/stats")
+  }
+
+  getTrainingResults(trainingRequestId : string){
+    
   }
 }

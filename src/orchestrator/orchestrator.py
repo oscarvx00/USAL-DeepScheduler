@@ -2,7 +2,10 @@
 from cProfile import label
 from io import BytesIO
 import json
+from pathlib import Path
+import tarfile
 import time
+import zipfile
 import pika
 import docker
 import os
@@ -10,6 +13,7 @@ from minio import Minio
 from pymongo import MongoClient
 import mongoHandler
 from enum import Enum
+import shutil
 
 RABBIT_HOST = os.environ['RABBIT_HOST']
 REQUEST_QUEUE = os.environ['REQUEST_QUEUE']
@@ -62,6 +66,15 @@ class RabbitMessage:
 def rabbitSendUpdate(message : RabbitMessage):
     channel.basic_publish(
     exchange='orchestrator_msgs_exchange', routing_key=str(message.userId), body=message.toJson())
+
+
+def zipdir(path, ziph):
+    # ziph is zipfile handle
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ziph.write(os.path.join(root, file), 
+                       os.path.relpath(os.path.join(root, file), 
+                                       os.path.join(path, '..')))
 
 
 
@@ -166,11 +179,12 @@ def callback(ch, method, properties, body):
 
     container.stop()
     #Check exit code, logs, etc
-    out = container.logs(stdout=True, stderr=False)
-    err = container.logs(stdout=False, stderr=True)
-    #print("\n\n===========CONTAINER LOGS=============\n\n", flush=True)
-    #print(out.decode(), flush=True)
-    #print(err.decode(), flush=True)
+
+    #Create directory for container data
+    current_directory = '/tmp/container_results'
+    container_data_directory = os.path.join(current_directory, str(trainingRequest._id))
+    if not os.path.exists(container_data_directory):
+        os.makedirs(container_data_directory)
 
     #Get results
     strm, stat = container.get_archive(path="/train/results")
@@ -179,31 +193,43 @@ def callback(ch, method, properties, body):
         file_obj.write(i)
     file_obj.seek(0)
 
-    #Upload files, logs
-    resultsPath = str(trainingRequest.user) + "/" + str(trainingRequest._id) + "/results.tar"
-    minioClient.put_object(
-        MINIO_RESULTS_BUCKET, resultsPath, file_obj, length=file_obj.getbuffer().nbytes
-    )
+    with open(os.path.join(container_data_directory, 'results.tar'), 'wb') as outfile:
+        outfile.write(file_obj.getbuffer())
 
-    outLogPath = str(trainingRequest.user) + "/" + str(trainingRequest._id) + "/logs/out.log"
-    f = open("outLog.log", "x")
+    #Extract tar file
+    results_tar = tarfile.open(os.path.join(container_data_directory, 'results.tar'))
+    results_tar.extractall(path=os.path.join(container_data_directory))
+    results_tar.close()
+    os.remove(os.path.join(container_data_directory, 'results.tar'))
+
+
+    #Get logs from container
+    out = container.logs(stdout=True, stderr=False)
+    err = container.logs(stdout=False, stderr=True)
+
+    f = open(os.path.join(container_data_directory, "outLog.log"), "x")
     f.write(out.decode())
     f.close()
-    minioClient.fput_object(
-        MINIO_RESULTS_BUCKET, outLogPath, "outLog.log"
-    )
-    os.remove("outLog.log")
 
-    errLogPath = str(trainingRequest.user) + "/" + str(trainingRequest._id) + "/logs/err.log"
-    f = open("errLog.log", "x")
+    f = open(os.path.join(container_data_directory, "errLog.log"), "x")
     f.write(err.decode())
     f.close()
-    minioClient.fput_object(
-        MINIO_RESULTS_BUCKET, errLogPath, "errLog.log"
-    )
-    os.remove("errLog.log")
 
-    #TODO: Send container finished to web app
+    #Make zip
+    zip_path = os.path.join('/tmp',str(trainingRequest._id)+'.zip')
+    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        zipdir(container_data_directory, zipf)
+
+    #Upload zip to minio
+    minio_path = str(trainingRequest.user) + "/" + str(trainingRequest._id)+'.zip'
+    minioClient.fput_object(
+        MINIO_RESULTS_BUCKET, minio_path, zip_path
+    )
+
+    #Remove container data from system
+    os.remove(zip_path)
+    shutil.rmtree(container_data_directory)
+
 
     #Save status in database
     imageUpdated = TrainingRequest.fromJson(mongoHandler.setRequestCompleted(mongoDatabase, trainingRequest._id, completed_computing_time))

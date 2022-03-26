@@ -46,7 +46,7 @@ export class TrainingGateway implements OnGatewayDisconnect{
     }*/
 
     @UseGuards(WsGuard)
-    @SubscribeMessage('request_status')
+    @SubscribeMessage('socket_init')
     handleRabbitMessage(client : Socket, data : any){
         const token = client.handshake.headers.authorization.split(' ')[1];
         //console.log(token)
