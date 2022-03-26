@@ -18,6 +18,8 @@ export class TrainingDetailComponent implements OnInit {
     status : "COMPLETED"
   }
 
+  _id = ""
+
   constructor(
     private trainingService : TrainingService,
     private route : ActivatedRoute
@@ -25,8 +27,11 @@ export class TrainingDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.data._id = params['id']
-      console.log(this.data._id)
+      this._id = params['id']
+    })
+    this.trainingService.getTrainingRequest(this._id).subscribe(data => {
+      this.data = data
+      console.log(data)
     })
   }
 

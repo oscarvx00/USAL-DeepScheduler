@@ -38,6 +38,7 @@ import { PytorchComponent } from './components/default-images/pytorch/pytorch.co
 import { TrainingHomeComponent } from './components/training/training-home/training-home.component';
 import { TrainingNewComponent } from './components/training/training-new/training-new.component';
 import { TrainingDetailComponent } from './components/training/training-detail/training-detail.component';
+import { SecondsTime } from './pipes/seconds-time.pipe';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { TrainingDetailComponent } from './components/training/training-detail/t
     TrainingHomeComponent,
     TrainingNewComponent,
     TrainingDetailComponent,
+    SecondsTime
   ],
   imports: [
     BrowserModule,

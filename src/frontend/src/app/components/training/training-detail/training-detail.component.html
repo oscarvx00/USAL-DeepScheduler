@@ -5,8 +5,8 @@
                 <div class="card-info-data">
                     <h1>{{data.imageName}}</h1>
                     <p>Date: {{data.date}}</p>
-                    <p>Reserved computing time: {{data.computingTime}}</p>
-                    <p>Completed computing time: {{data.completedComputingTime}}</p>
+                    <p>Reserved computing time: {{data.computingTime | secondsTime}}</p>
+                    <p>Completed computing time: {{data.completedComputingTime | secondsTime}}</p>
                 </div>
                 <div class="card-info-status">
                     <span class="status-cell" [ngClass]="getStatusClass()">{{data.status.toLowerCase()}}</span>
@@ -14,7 +14,7 @@
             </div>
             <div class="card-status-data">
                 <div *ngIf="data.status == 'COMPLETED'" class="card-status-data-completed">
-                    <button (click)="getTrainingRequestResults()">Download results</button>
+                    <button class="ds-button-primary" (click)="getTrainingRequestResults()">Download results</button>
                 </div> 
             </div>
         </div>                

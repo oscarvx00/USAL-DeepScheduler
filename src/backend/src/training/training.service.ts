@@ -4,6 +4,7 @@ import { TrainingRequest } from 'src/schemas/trainingRequest.schema';
 import { Model } from 'mongoose';
 import { RabbitHandlerService } from 'src/rabbit-handler/rabbit-handler.service';
 import { MinioHandlerService } from 'src/minio-handler/minio-handler/minio-handler.service';
+import { User } from 'src/schemas/user.schema';
 
 @Injectable()
 export class TrainingService {
@@ -87,8 +88,15 @@ export class TrainingService {
         return Math.floor(count / 3600)
     }
 
+    async getTrainingRequestById(user : any, id : string){
+        return await this.trainingRequestModel.findOne({
+            user : user._id,
+            _id : id
+        }).sort({'date':-1}).exec()
+    }
+
     
-    public async getTrainingRequestResultsUrl(user : any, id : string){
+    async getTrainingRequestResultsUrl(user : any, id : string){
         const filename = `${user._id}/${id}.zip`
         //TODO: VERIFY USER OWNS REQUEST 
         const url =  await this.minioService.getPresignedUrl(filename)

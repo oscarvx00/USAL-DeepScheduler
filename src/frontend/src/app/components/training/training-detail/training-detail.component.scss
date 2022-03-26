@@ -8,6 +8,7 @@
     flex-direction: column;
     align-items: center;
     background-color: $color-background-general;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .training-detail-content{
@@ -34,23 +35,23 @@
     flex-direction: column;
     align-items: center;
     
-}
+} 
 
 .card-info{
     display: flex;
     width: 90%;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+}
+
+.card-info-data h1{
+    font-weight: 800;
 }
 
 .card-info-data p{
     margin-bottom: 4px;
-}
-
-.card-info-status{
-    height: 100%;
-    display: flex;
-    flex-direction: row;
+    font-weight: 300;
 }
 
 .status-cell{
@@ -58,7 +59,7 @@
     border: 1px solid white;
     padding: 5px 12px;
     border-radius: 17px;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .card-status-data{

@@ -26,6 +26,11 @@ export class TrainingController {
     }
 
     @Get("/:id")
+    async getTrainingRequest(@Req() req, @Param('id') id){
+        return await this.trainingService.getTrainingRequestById(req.user, id)
+    }
+
+    @Get("/results/:id")
     async getTrainingRequestResultsUrl(@Req() req, @Param('id') id){
         return await this.trainingService.getTrainingRequestResultsUrl(req.user, id)
     }
