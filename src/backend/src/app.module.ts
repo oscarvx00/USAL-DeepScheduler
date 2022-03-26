@@ -9,12 +9,13 @@ import { UsersModule } from './users/users.module';
 import { TrainingModule } from './training/training.module';
 import { TrainingController } from './training/training.controller';
 import { RabbitHandlerModule } from './rabbit-handler/rabbit-handler.module';
+import { MinioHandlerModule } from './minio-handler/minio-handler/minio-handler.module';
 
 @Module({
   imports: [
     AuthModule, 
     UsersModule, 
-    MongooseModule.forRoot("mongodb://" + process.env.MONGO_HOST), TrainingModule, RabbitHandlerModule,
+    MongooseModule.forRoot("mongodb://" + process.env.MONGO_HOST), TrainingModule, RabbitHandlerModule, MinioHandlerModule,
   ],
   controllers: [AppController, AuthController, UsersController, TrainingController],
   providers: [AppService],

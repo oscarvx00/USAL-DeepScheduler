@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { TrainingService } from 'src/app/services/training/training.service';
 
 @Component({
   selector: 'app-training-detail',
@@ -8,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 export class TrainingDetailComponent implements OnInit {
 
   data = {
+    _id : "Id",
     imageName : "Image name",
     date : "Date",
     computingTime : "Computing time",
@@ -15,9 +18,16 @@ export class TrainingDetailComponent implements OnInit {
     status : "COMPLETED"
   }
 
-  constructor() { }
+  constructor(
+    private trainingService : TrainingService,
+    private route : ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.data._id = params['id']
+      console.log(this.data._id)
+    })
   }
 
   getStatusClass(){
@@ -48,6 +58,12 @@ export class TrainingDetailComponent implements OnInit {
       default:
         return ""
     }
+  }
+
+  getTrainingRequestResults(){
+    this.trainingService.getTrainingRequestResults(this.data._id).subscribe((data : any)=> {
+      window.open(data.url, "_blank")
+    })
   }
 
 }

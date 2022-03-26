@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "src/auth/strategies/jwt-auth.guard";
 import { TrainingService } from "./training.service";
 
@@ -23,6 +23,11 @@ export class TrainingController {
     @Get("/stats")
     async getUserTrainingStats(@Req() req){
         return await this.trainingService.getUserTrainingStats(req.user)
+    }
+
+    @Get("/:id")
+    async getTrainingRequestResultsUrl(@Req() req, @Param('id') id){
+        return await this.trainingService.getTrainingRequestResultsUrl(req.user, id)
     }
 
     /*@Get('/test')

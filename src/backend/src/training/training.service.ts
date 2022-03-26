@@ -3,13 +3,15 @@ import { InjectModel } from '@nestjs/mongoose';
 import { TrainingRequest } from 'src/schemas/trainingRequest.schema';
 import { Model } from 'mongoose';
 import { RabbitHandlerService } from 'src/rabbit-handler/rabbit-handler.service';
+import { MinioHandlerService } from 'src/minio-handler/minio-handler/minio-handler.service';
 
 @Injectable()
 export class TrainingService {
 
     constructor(
         @InjectModel(TrainingRequest.name) private trainingRequestModel : Model<TrainingRequest>,
-        private rabbitService : RabbitHandlerService
+        private rabbitService : RabbitHandlerService,
+        private minioService : MinioHandlerService
     ){}
 
     async newTrainingRequest(request : any, user : any){
@@ -85,11 +87,14 @@ export class TrainingService {
         return Math.floor(count / 3600)
     }
 
-    /*async test(){
-        await this.rabbitService.subscribeToUser()
-        .then((res) => {
-            console.log("EXIT")
-            console.log(res)
-        })
-    }*/
+    
+    public async getTrainingRequestResultsUrl(user : any, id : string){
+        const filename = `${user._id}/${id}.zip`
+        //TODO: VERIFY USER OWNS REQUEST 
+        const url =  await this.minioService.getPresignedUrl(filename)
+        return {
+            url : url
+        }
+    }
+
 }

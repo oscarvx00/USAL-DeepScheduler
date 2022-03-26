@@ -60,7 +60,7 @@ export class TrainingService {
     return this.httpClient.get(environment.apiUrl + "/training/stats")
   }
 
-  getTrainingResults(trainingRequestId : string){
-    
+  getTrainingRequestResults(trainingRequestId : string) : Observable<any>{
+    return this.httpClient.get(environment.apiUrl + `/training/${trainingRequestId}`)
   }
 }
