@@ -31,7 +31,10 @@ export class TrainingDetailComponent implements OnInit {
     })
     this.trainingService.getTrainingRequest(this._id).subscribe(data => {
       this.data = data
-      console.log(data)
+    })
+    this.trainingService.getTrainingRequestUpdate().subscribe((message : any) => {
+      console.log(message)
+      this.updateTrainingRequest(message.data)
     })
   }
 
@@ -69,6 +72,15 @@ export class TrainingDetailComponent implements OnInit {
     this.trainingService.getTrainingRequestResults(this.data._id).subscribe((data : any)=> {
       window.open(data.url, "_blank")
     })
+  }
+
+  private updateTrainingRequest(data : any){
+    if(data == undefined){
+      return 
+    }
+    if(this.data._id == data._id){
+      this.data = data
+    }
   }
 
 }
