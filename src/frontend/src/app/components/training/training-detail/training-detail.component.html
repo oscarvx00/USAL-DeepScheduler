@@ -1,0 +1,22 @@
+<div class="training-detail-container">
+    <div class="training-detail-content">
+        <div class="training-detail-card mat-elevation-z6" [ngClass]="getCardStatusClass()">
+            <div class="card-info">
+                <div class="card-info-data">
+                    <h1>{{data.imageName}}</h1>
+                    <p>Date: {{data.date}}</p>
+                    <p>Reserved computing time: {{data.computingTime}}</p>
+                    <p>Completed computing time: {{data.completedComputingTime}}</p>
+                </div>
+                <div class="card-info-status">
+                    <span class="status-cell" [ngClass]="getStatusClass()">{{data.status.toLowerCase()}}</span>
+                </div>
+            </div>
+            <div class="card-status-data">
+                <div *ngIf="data.status == 'COMPLETED'" class="card-status-data-completed">
+                    <h1>TEST</h1>
+                </div> 
+            </div>
+        </div>                
+    </div>
+</div>

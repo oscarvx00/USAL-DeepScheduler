@@ -1,0 +1,71 @@
+@import '~@angular/material/theming';
+@import 'src/custom-theme.scss';
+@import '../shared-styles.scss';
+
+.training-detail-container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: $color-background-general;
+}
+
+.training-detail-content{
+    //background-color: aqua;
+    //margin-top: 50px;
+    width: 70%;
+    height: 100%;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.training-detail-card{
+    width: 100%;
+    min-height: 60%;
+    border-radius: 15px;
+    border: 1px solid;
+    border-color: green;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+.card-info{
+    display: flex;
+    width: 90%;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.card-info-data p{
+    margin-bottom: 4px;
+}
+
+.card-info-status{
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.status-cell{
+    //font-size: 14px;
+    border: 1px solid white;
+    padding: 5px 12px;
+    border-radius: 17px;
+    font-size: 20px;
+}
+
+.card-status-data{
+    flex: 1;
+    display: flex;
+    width: 90%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
