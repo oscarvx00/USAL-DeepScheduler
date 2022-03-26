@@ -5,8 +5,8 @@
                 <div class="card-info-data">
                     <h1>{{data.imageName}}</h1>
                     <p>Date: {{data.date}}</p>
-                    <p>Reserved computing time: {{data.computingTime | secondsTime}}</p>
-                    <p>Completed computing time: {{data.completedComputingTime | secondsTime}}</p>
+                    <p *ngIf="data.status == 'COMPLETED'">Reserved computing time: {{data.computingTime | secondsTime}}</p>
+                    <p *ngIf="data.status == 'COMPLETED'">Completed computing time: {{data.completedComputingTime | secondsTime}}</p>
                 </div>
                 <div class="card-info-status">
                     <span class="status-cell" [ngClass]="getStatusClass()">{{data.status.toLowerCase()}}</span>
@@ -15,7 +15,10 @@
             <div class="card-status-data">
                 <div *ngIf="data.status == 'COMPLETED'" class="card-status-data-completed">
                     <button class="ds-button-primary" (click)="getTrainingRequestResults()">Download results</button>
-                </div> 
+                </div>
+                <div *ngIf="data.status == 'SCHEDULED'" class="card-status-data-scheduled">
+                    <h1>Your training request is in the queue</h1>
+                </div>
             </div>
         </div>                
     </div>

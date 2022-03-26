@@ -73,4 +73,8 @@ export class TrainingHomeComponent implements OnInit, OnDestroy {
     this.dataSource = [...this.dataSource]
   }
 
+  rowClicked(row : any){
+    this.router.navigateByUrl('training/'+row._id)
+  }
+
 }

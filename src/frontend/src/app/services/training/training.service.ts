@@ -29,11 +29,7 @@ export class TrainingService {
   getTrainingRequestUpdate(){
     this.socket.emit('socket_init', {}); //Subcription message to init rabbitmq queue in backend
     this.socket.on('request_status', (message) => {
-      console.log(message)
-      if(message.type == 'request_status'){
         this.updateTrainingRequestMessage$.next(message)
-      } 
-      
     })
 
     return this.updateTrainingRequestMessage$.asObservable()
