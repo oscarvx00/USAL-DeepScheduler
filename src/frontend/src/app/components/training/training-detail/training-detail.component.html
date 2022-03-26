@@ -14,10 +14,18 @@
             </div>
             <div class="card-status-data">
                 <div *ngIf="data.status == 'COMPLETED'" class="card-status-data-completed">
+                    <div #scrollBottom class="log-container">
+                        <div class="log-container-text">{{log}}</div>
+                    </div>
                     <button class="ds-button-primary" (click)="getTrainingRequestResults()">Download results</button>
                 </div>
                 <div *ngIf="data.status == 'SCHEDULED'" class="card-status-data-scheduled">
                     <h1>Your training request is in the queue</h1>
+                </div>
+                <div *ngIf="data.status == 'EXECUTING'" class="card-status-data-executing">
+                    <div #scrollBottom class="log-container">
+                        <div class="log-container-text">{{log}}</div>
+                    </div>
                 </div>
             </div>
         </div>                

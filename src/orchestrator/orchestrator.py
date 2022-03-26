@@ -128,9 +128,7 @@ def callback(ch, method, properties, body):
     #Set current state to executing
     imageUpdated = TrainingRequest.fromJson(mongoHandler.setRequestExecuting(mongoDatabase, trainingRequest._id))
     requestUserId = str(imageUpdated.user)
-    rMessage = RabbitMessage(RabbitMessageType.REQUEST_STATUS, requestUserId, imageUpdated)
-    #print(rMessage.toJson())
-    rabbitSendUpdate(rMessage)
+    rabbitSendUpdate(RabbitMessage(RabbitMessageType.REQUEST_STATUS, requestUserId, imageUpdated))
 
     #Image execution control.
 
@@ -158,8 +156,10 @@ def callback(ch, method, properties, body):
     while True:
         container.reload()
         #Optional: upload logs in a periodic time so that users can check them in almost real time
-        #out = container.logs(stdout=True, stderr=False)
-        #print(out.decode(), flush=True)
+        logs = container.logs(stdout=True, stderr=True, tail=50).decode()
+        #logs = logs.replace('\n', '\\n')
+        #print(logs.decode(), flush=True)
+        rabbitSendUpdate(RabbitMessage(RabbitMessageType.REQUEST_LOGS, requestUserId, logs))
         current_time = time.time()
         elapsed_time = current_time - start_time
         if elapsed_time > float(trainingRequest.computingTime):
@@ -170,7 +170,7 @@ def callback(ch, method, properties, body):
             print(" [x] Container exited")
             break
         #Sleep 10 seconds to prevent high cpu usage
-        time.sleep(10)
+        time.sleep(3)
 
     final_time = time.time()
     #Stored for stats purposes
@@ -222,6 +222,7 @@ def callback(ch, method, properties, body):
 
     #Upload zip to minio
     minio_path = str(trainingRequest.user) + "/" + str(trainingRequest._id)+'.zip'
+    print("Uploading " + minio_path, flush=True)
     minioClient.fput_object(
         MINIO_RESULTS_BUCKET, minio_path, zip_path
     )

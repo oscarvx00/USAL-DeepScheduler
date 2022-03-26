@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TrainingService } from 'src/app/services/training/training.service';
 
@@ -9,14 +9,18 @@ import { TrainingService } from 'src/app/services/training/training.service';
 })
 export class TrainingDetailComponent implements OnInit {
 
+  @ViewChild('scrollBottom') private logContainerText! : ElementRef
+
   data = {
     _id : "Id",
     imageName : "Image name",
     date : "Date",
     computingTime : "Computing time",
-    completedComputingTime : "Completed computong time",
+    completedComputingTime : "Completed computing time",
     status : "COMPLETED"
   }
+
+  log = ""
 
   _id = ""
 
@@ -33,9 +37,17 @@ export class TrainingDetailComponent implements OnInit {
       this.data = data
     })
     this.trainingService.getTrainingRequestUpdate().subscribe((message : any) => {
-      console.log(message)
       this.updateTrainingRequest(message.data)
     })
+    this.trainingService.getTrainingRequestLogs().subscribe((message : any) => {
+      this.log = message.data
+      this.scrollToBottom()
+    })
+    
+  }
+
+  ngAfterViewInit(){
+    this.scrollToBottom()
   }
 
   getStatusClass(){
@@ -80,6 +92,14 @@ export class TrainingDetailComponent implements OnInit {
     }
     if(this.data._id == data._id){
       this.data = data
+    }
+  }
+
+  private scrollToBottom(){
+    try{
+      this.logContainerText.nativeElement.scrollTop = this.logContainerText.nativeElement.scrollHeight
+    } catch (err){
+      //console.log(err)
     }
   }
 

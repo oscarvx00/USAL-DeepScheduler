@@ -17,6 +17,7 @@ export class TrainingService {
   })
 
   public updateTrainingRequestMessage$ : BehaviorSubject<any> = new BehaviorSubject({})
+  public trainingRequestLog$ : BehaviorSubject<any> = new BehaviorSubject({})
 
   constructor(
     private httpClient : HttpClient
@@ -33,6 +34,13 @@ export class TrainingService {
     })
 
     return this.updateTrainingRequestMessage$.asObservable()
+  }
+
+  getTrainingRequestLogs(){
+    this.socket.on('request_logs', (message) => {
+      this.trainingRequestLog$.next(message)
+    })
+    return this.trainingRequestLog$.asObservable()
   }
 
   unsuscribeFromTrainingRequestMessages(){

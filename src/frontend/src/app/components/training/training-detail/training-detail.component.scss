@@ -4,6 +4,7 @@
 
 .training-detail-container{
     height: 100%;
+    max-height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -73,4 +74,34 @@
 
 .card-status-data-scheduled h1{
     font-weight: 300;
+}
+
+.card-status-data-executing, .card-status-data-completed{
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ds-button-primary{
+    width: 10vw;
+    margin-top: 20px;
+}
+
+.log-container{
+    margin-top: 80px;
+    //flex: 1;
+    height: 40vh;
+    max-height: 40vh;
+    width: 100%;
+    background-color: #222;
+    padding: 10px;
+    overflow-y: scroll;
+    font-family: 'Inconsolata', monospace;
+    font-weight: 500;
+}
+
+.log-container-text{
+    white-space: pre-wrap;
 }

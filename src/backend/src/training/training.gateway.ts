@@ -65,7 +65,7 @@ export class TrainingGateway implements OnGatewayDisconnect{
             type : msg.type,
             data : msg.message
         }
-        console.log(emitMsg)
+        //console.log(emitMsg)
         socket.emit(msg.type, emitMsg)
         return undefined
     }
