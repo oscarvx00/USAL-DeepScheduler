@@ -66,6 +66,15 @@ spec:
                 key: GITLAB_SECRET
           - name: RABBIT_HOST
             value: rabbitmq.default.svc.cluster.local
+          - name: MINIO_HOST
+            value: minio-oscarvx00.cloud.okteto.net
+          - name: MINIO_ACCESS
+            value: myaccesskey
+          - name: MINIO_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: backend-secret
+                key: MINIO_SECRET
         ports:
         - name: http
           protocol: TCP

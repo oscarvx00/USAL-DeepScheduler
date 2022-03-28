@@ -89,16 +89,16 @@ minioClient = Minio(
 )
 
 #Create MongoDB client
-mongoClient = MongoClient(host='localhost', port=30002)
-#mongoClient = MongoClient(host=MONGO_HOST)
+#mongoClient = MongoClient(host='localhost', port=30002)
+mongoClient = MongoClient(host=MONGO_HOST)
 mongoDatabase = mongoClient.ds
 
 
 #Create connection to RabbitMQ container based on its service name
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
 #connection = pika.BlockingConnection(
-#    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0))
+#    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
+connection = pika.BlockingConnection(
+    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0))
 channel = connection.channel()
 channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
 channel.exchange_declare(exchange='orchestrator_msgs_exchange', exchange_type='topic', durable=True)
@@ -222,10 +222,11 @@ def callback(ch, method, properties, body):
 
     #Upload zip to minio
     minio_path = str(trainingRequest.user) + "/" + str(trainingRequest._id)+'.zip'
-    print("Uploading " + minio_path, flush=True)
+    print("Uploading " + zip_path +" ---> " + minio_path, flush=True)
     minioClient.fput_object(
         MINIO_RESULTS_BUCKET, minio_path, zip_path
     )
+    print("Object uploaded", flush=True)
 
     #Remove container data from system
     os.remove(zip_path)
