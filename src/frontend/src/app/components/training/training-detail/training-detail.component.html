@@ -14,7 +14,7 @@
             </div>
             <div class="card-status-data">
                 <div *ngIf="data.status == 'COMPLETED'" class="card-status-data-completed">
-                    <div #scrollBottom class="log-container">
+                    <div *ngIf="log != ''" #scrollBottom class="log-container">
                         <div class="log-container-text">{{log}}</div>
                     </div>
                     <button class="ds-button-primary" (click)="getTrainingRequestResults()">Download results</button>

@@ -45,6 +45,14 @@ class TrainingRequest:
         return "Request: [requestId: " + str(self._id) + " userID: " + str(self.user) + ", status: " + self.status + ", executionTime: " + str(self.computingTime) + ", imageName: " + self.imageName + " ]\n"
 
 
+class LogMessage:
+    def __init__(self, requestId, log):
+        self.requestId = requestId
+        self.log = log
+    
+    def toJson(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
+
 class RabbitMessageType(str, Enum):
     REQUEST_STATUS: str = "request_status"
     REQUEST_LOGS: str = "request_logs"
@@ -159,7 +167,7 @@ def callback(ch, method, properties, body):
         logs = container.logs(stdout=True, stderr=True, tail=50).decode()
         #logs = logs.replace('\n', '\\n')
         #print(logs.decode(), flush=True)
-        rabbitSendUpdate(RabbitMessage(RabbitMessageType.REQUEST_LOGS, requestUserId, logs))
+        rabbitSendUpdate(RabbitMessage(RabbitMessageType.REQUEST_LOGS, requestUserId, LogMessage(str(trainingRequest._id),logs)))
         current_time = time.time()
         elapsed_time = current_time - start_time
         if elapsed_time > float(trainingRequest.computingTime):

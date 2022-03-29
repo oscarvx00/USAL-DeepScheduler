@@ -40,8 +40,12 @@ export class TrainingDetailComponent implements OnInit {
       this.updateTrainingRequest(message.data)
     })
     this.trainingService.getTrainingRequestLogs().subscribe((message : any) => {
-      this.log = message.data
-      this.scrollToBottom()
+      
+      if(message.data != undefined && message.data.requestId == this.data._id){
+        this.log = message.data.log
+        this.scrollToBottom()
+      }
+      console.log(this.log)
     })
     
   }
