@@ -105,4 +105,9 @@ export class TrainingService {
         }
     }
 
+    async removeAllUserTrainingData(userId : string){
+        await this.minioService.removeUserData(userId)
+        await this.trainingRequestModel.deleteMany({user : userId})
+    }
+
 }

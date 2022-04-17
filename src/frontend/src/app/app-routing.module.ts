@@ -10,6 +10,7 @@ import { PytorchComponent } from './components/default-images/pytorch/pytorch.co
 import { TrainingHomeComponent } from './components/training/training-home/training-home.component';
 import { TrainingNewComponent } from './components/training/training-new/training-new.component';
 import { TrainingDetailComponent } from './components/training/training-detail/training-detail.component';
+import { ChangePasswordDialogComponent } from './components/user/profile/change-password-dialog/change-password-dialog/change-password-dialog.component';
 
 const routes: Routes = [
   {path: '', component: MainComponent},
@@ -20,7 +21,8 @@ const routes: Routes = [
   {path: 'default-images/pytorch', component: PytorchComponent},
   {path: 'training', component: TrainingHomeComponent},
   {path: 'training/new', component: TrainingNewComponent},
-  {path: 'training/:id', component: TrainingDetailComponent}
+  {path: 'training/:id', component: TrainingDetailComponent},
+  {path: 'test', component: ChangePasswordDialogComponent}
 ];
 
 @NgModule({

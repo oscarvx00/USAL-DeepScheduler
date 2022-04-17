@@ -1,13 +1,17 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { Model } from 'mongoose';
+import * as bcrypt from 'bcrypt'
+import { bcryptConstants } from 'src/auth/strategies/constants';
+import { TrainingService } from 'src/training/training.service';
 
 @Injectable()
 export class UsersService {
 
   constructor(
-    @InjectModel(User.name) private userModel : Model<UserDocument>
+    @InjectModel(User.name) private userModel : Model<UserDocument>,
+    private trainingService : TrainingService
   ){}
 
   async findOne(username: string): Promise<User | undefined> {
@@ -88,5 +92,43 @@ export class UsersService {
     } catch(e) {
       throw new InternalServerErrorException(e.message)
     }
+  }
+
+  async changePassword(currentPass : string, newPass : string, username : string){
+
+    const user = await this.findOne(username)
+        if(user){           
+            const passwordMatch = await bcrypt.compare(currentPass, user.password)
+            if(passwordMatch){
+                 const passHash = await bcrypt.hash(newPass, bcryptConstants.saltOrRounds)
+                 const result = await this.updateUser(username, {password : passHash}) 
+                 //console.log(result)
+                 return
+            }
+        }
+        throw new UnauthorizedException('Wrong password')
+
+  }
+
+  async updateUser(username : string, updateParams : any){
+    return await this.userModel.findOneAndUpdate(
+      {username : username},
+      updateParams
+    ).exec()
+  }
+
+  async removeUser(mUser : any, password : string){
+    const user = await this.findOne(mUser.username)
+    
+        if(user){           
+            const passwordMatch = await bcrypt.compare(password, user.password)
+            if(passwordMatch){
+                //Also stop all running images
+                await this.trainingService.removeAllUserTrainingData(mUser._id)
+                await this.userModel.deleteOne({username : user.username})
+                return
+            }
+        }
+        throw new UnauthorizedException('Wrong password')
   }
 }

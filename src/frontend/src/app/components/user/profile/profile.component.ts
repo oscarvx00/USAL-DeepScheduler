@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { LegendPosition } from '@swimlane/ngx-charts';
 import { User } from 'src/app/model/user';
 import { TrainingService } from 'src/app/services/training/training.service';
 import { UserService } from 'src/app/services/user/user.service';
+import { ChangePasswordDialogComponent } from './change-password-dialog/change-password-dialog/change-password-dialog.component';
+import { RemoveAccountDialogComponent } from './remove-account-dialog/remove-account-dialog/remove-account-dialog.component';
 
   
 
@@ -63,7 +66,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private userService : UserService,
-    private trainingService : TrainingService
+    private trainingService : TrainingService,
+    private dialog : MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -73,6 +77,22 @@ export class ProfileComponent implements OnInit {
     this.trainingService.getUserTrainingStats().subscribe((res : any) => {
       console.log(res)
       this.statsData = res
+    })
+  }
+
+  changePassword(){
+    const dialogRef = this.dialog.open(ChangePasswordDialogComponent)
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.userService.changePassword(result.data.currentPassword, result.data.newPassword)
+    })
+  }
+
+  removeAccount(){
+    const dialogRef = this.dialog.open(RemoveAccountDialogComponent)
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.userService.removeAccount(result.data.currentPassword)
     })
   }
 

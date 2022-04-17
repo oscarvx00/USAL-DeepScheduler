@@ -20,4 +20,22 @@ export class UserService {
   getUserProfile() : Observable<User> {
     return this.httpClient.get<User>(environment.apiUrl + "/user/profile")
   }
+
+  changePassword(currentPass : string, newPass : string) {
+    this.httpClient.post(environment.apiUrl + '/user/changePassword', {
+      currentPass : currentPass,
+      newPass : newPass
+    }).subscribe()
+  }
+
+  removeAccount(currentPass : string){
+    this.httpClient.post(environment.apiUrl + "/user/remove", {
+      currentPass : currentPass
+    }).subscribe((resp : any) => {
+      //localStorage.removeItem('auth_token')
+    },
+    (err : any) => {
+
+    })
+  }
 }

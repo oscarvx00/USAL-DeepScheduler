@@ -10,8 +10,8 @@
                 <p>{{user.mail}}</p> 
             </div>
             <div class="profile-content-user-options">
-                <button class="button-profile">Change password</button>
-                <button class="button-profile button-red">Remove account</button>
+                <button *ngIf="user.hasPassword" class="button-profile" (click)="changePassword()">Change password</button>
+                <button class="button-profile button-red" (click)="removeAccount()">Remove account</button>
             </div>
         </div>
         <div class="profile-content-stats mat-elevation-z6">

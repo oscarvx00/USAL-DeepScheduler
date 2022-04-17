@@ -39,6 +39,8 @@ import { TrainingHomeComponent } from './components/training/training-home/train
 import { TrainingNewComponent } from './components/training/training-new/training-new.component';
 import { TrainingDetailComponent } from './components/training/training-detail/training-detail.component';
 import { SecondsTime } from './pipes/seconds-time.pipe';
+import { ChangePasswordDialogComponent } from './components/user/profile/change-password-dialog/change-password-dialog/change-password-dialog.component';
+import { RemoveAccountDialogComponent } from './components/user/profile/remove-account-dialog/remove-account-dialog/remove-account-dialog.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +55,9 @@ import { SecondsTime } from './pipes/seconds-time.pipe';
     TrainingHomeComponent,
     TrainingNewComponent,
     TrainingDetailComponent,
-    SecondsTime
+    SecondsTime,
+    ChangePasswordDialogComponent,
+    RemoveAccountDialogComponent,
   ],
   imports: [
     BrowserModule,
