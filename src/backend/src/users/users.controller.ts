@@ -31,9 +31,14 @@ export class UsersController{
         this.usersService.changePassword(req.body.currentPass, req.body.newPass, req.user.username)
     }
 
-    @Post("remove")
+    @Get("remove/init")
     async removeAccount(@Request() req){
-        this.usersService.removeUser(req.user, req.body.currentPass)
+        this.usersService.removeUserInit(req.user)
+    }
+
+    @Post("remove/confirm")
+    async removeUserConfirm(@Request() req){
+        this.usersService.removeUserConfirm(req.user, req.body.confirmationCode)
     }
 
 }

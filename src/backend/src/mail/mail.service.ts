@@ -23,4 +23,16 @@ export class MailService {
         })
     }
 
+    async sendUserRemoveCode(user : User, code : number){
+        await this.mailerService.sendMail({
+            to: user.mail,
+            subject: 'Delete account request',
+            template: 'deletion',
+            context: {
+                name: user.username,
+                code: code
+            }
+        })
+    }
+
 }

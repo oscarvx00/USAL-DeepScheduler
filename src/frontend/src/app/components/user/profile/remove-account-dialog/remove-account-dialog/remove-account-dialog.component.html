@@ -1,10 +1,11 @@
 <h3 mat-dialog-title>Warning!! You will lose all your data</h3>
+<h5>A confirmation code has been sent to your mail</h5>
 <mat-dialog-content class="mat-typography" align="center">
     <div class="input-local">
         <form [formGroup]="removeAccountForm">
             <mat-form-field appearance="outline">
-                <mat-label>Current password</mat-label>
-                <input matInput placeholder="password" required formControlName="currentPassword">
+                <mat-label>Confirmation code</mat-label>
+                <input matInput placeholder="password" required formControlName="confirmationCode">
                 <mat-error>Error</mat-error>
             </mat-form-field>
         </form>

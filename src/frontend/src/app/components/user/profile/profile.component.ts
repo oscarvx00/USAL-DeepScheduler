@@ -88,12 +88,24 @@ export class ProfileComponent implements OnInit {
     })
   }
 
-  removeAccount(){
-    const dialogRef = this.dialog.open(RemoveAccountDialogComponent)
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.userService.removeAccount(result.data.currentPassword)
-    })
+
+  removeAccount(){
+
+    this.userService.removeAccountInit().subscribe(
+      (res : any) => {
+        const dialogRef = this.dialog.open(RemoveAccountDialogComponent)
+
+        dialogRef.afterClosed().subscribe(result => {
+          this.userService.removeAccountConfirm(result.data.confirmationCode)
+        })
+      },
+      (err : any) => {
+        
+      }
+    )
+
+    
   }
 
 }

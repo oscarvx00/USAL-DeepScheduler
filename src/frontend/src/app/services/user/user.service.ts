@@ -28,9 +28,13 @@ export class UserService {
     }).subscribe()
   }
 
-  removeAccount(currentPass : string){
-    this.httpClient.post(environment.apiUrl + "/user/remove", {
-      currentPass : currentPass
+  removeAccountInit() : Observable<any>{
+    return this.httpClient.get(environment.apiUrl + "/user/remove/init")
+  }
+
+  removeAccountConfirm(confirmationCode : string){
+    this.httpClient.post(environment.apiUrl + "/user/remove/confirm", {
+      confirmationCode : confirmationCode
     }).subscribe((resp : any) => {
       //localStorage.removeItem('auth_token')
     },

@@ -20,7 +20,7 @@ export class RemoveAccountDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.removeAccountForm = this.formBuilder.group({
-      currentPassword : ['', Validators.required],
+      confirmationCode : ['', Validators.required],
     })
   }
 
@@ -31,7 +31,7 @@ export class RemoveAccountDialogComponent implements OnInit {
     }
 
     let data = {
-      currentPassword : this.removeAccountForm.controls.currentPassword.value
+      confirmationCode : this.removeAccountForm.controls.confirmationCode.value
     }
     
 

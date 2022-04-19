@@ -33,6 +33,9 @@ export class User {
     @Prop()
     gitlabId : string | null
 
+    @Prop()
+    removeAccountCode : number | null
+
     
 }
 

@@ -5,13 +5,15 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt'
 import { bcryptConstants } from 'src/auth/strategies/constants';
 import { TrainingService } from 'src/training/training.service';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UsersService {
 
   constructor(
     @InjectModel(User.name) private userModel : Model<UserDocument>,
-    private trainingService : TrainingService
+    private trainingService : TrainingService,
+    private mailService : MailService
   ){}
 
   async findOne(username: string): Promise<User | undefined> {
@@ -107,7 +109,6 @@ export class UsersService {
             }
         }
         throw new UnauthorizedException('Wrong password')
-
   }
 
   async updateUser(username : string, updateParams : any){
@@ -117,18 +118,32 @@ export class UsersService {
     ).exec()
   }
 
-  async removeUser(mUser : any, password : string){
+  async removeUserInit(mUser : any){
+    const user = await this.findOne(mUser.username)
+
+    if(user){
+      const code = Math.floor(100000 + Math.random() * 900000)
+      this.updateUser(
+        user.username,
+        {
+          removeAccountCode : code
+        }
+      )
+      this.mailService.sendUserRemoveCode(user, code)
+    }
+  }
+
+  async removeUserConfirm(mUser : any, confirmationCode : number){
     const user = await this.findOne(mUser.username)
     
-        if(user){           
-            const passwordMatch = await bcrypt.compare(password, user.password)
-            if(passwordMatch){
-                //Also stop all running images
+        if(user){     
+            if(confirmationCode == user.removeAccountCode){
+              //Also stop all running images
                 await this.trainingService.removeAllUserTrainingData(mUser._id)
                 await this.userModel.deleteOne({username : user.username})
                 return
-            }
+            }    
         }
-        throw new UnauthorizedException('Wrong password')
+        throw new UnauthorizedException('Wrong confirmation code')
   }
 }
