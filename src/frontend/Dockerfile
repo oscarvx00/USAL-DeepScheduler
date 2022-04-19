@@ -1,14 +1,28 @@
-# Stage 0, "build-stage", based on Node.js, to build and compile the frontend
-FROM node:14.18.1 as build-stage
-WORKDIR /app
-COPY package*.json /app/
+### STAGE 1:BUILD ###
+# Defining a node image to be used as giving it an alias of "build"
+# Which version of Node image to use depends on project dependencies 
+# This is needed to build and compile our code 
+# while generating the docker image
+FROM node:12.14-alpine AS build
+# Create a Virtual directory inside the docker image
+WORKDIR /dist/src/app
+# Copy files to virtual directory
+# COPY package.json package-lock.json ./
+# Run command in Virtual directory
+RUN npm cache clean --force
+# Copy files from local machine to virtual directory in docker image
+COPY . .
 RUN npm install
-COPY ./ /app/
-ARG configuration=production
-RUN npm run build -- --output-path=./dist/out --configuration $configuration
+RUN npm run build --prod
 
-# Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
-FROM nginx
-#Copy ci-dashboard-dist
-COPY --from=build-stage /app/dist/out/ /usr/share/nginx/html
+
+### STAGE 2:RUN ###
+# Defining nginx image to be used
+FROM nginx:latest AS ngi
+COPY nginx.conf  /etc/nginx/nginx.conf
+# Copying compiled code and nginx config to different folder
+# NOTE: This path may change according to your project's output folder 
+COPY --from=build /dist/src/app/dist/deepscheduler-frontend /usr/share/nginx/html
+# Exposing a port, here it means that inside the container 
+# the app will be using Port 80 while running
 EXPOSE 80
