@@ -45,7 +45,6 @@ export class AuthService {
     }
 
     async signInWithGoogle(data){
-        //console.log(data)
         if(!data.user || !data.user.id) throw new BadRequestException()
 
         let user = (await this.usersService.findBy({googleId : data.user.id}))
@@ -63,7 +62,6 @@ export class AuthService {
     }
 
     async signInWithGithub(data){
-        console.log(data)
         if(!data.user || !data.user.id) throw new BadRequestException();
 
         let user = (await this.usersService.findBy({githubId : data.user.id}))
@@ -83,7 +81,6 @@ export class AuthService {
     }
 
     async signInWithGitlab(data){
-        console.log(data)
         if(!data.user || !data.user.id) throw new BadRequestException();
 
         let user = (await this.usersService.findBy({gitlabId : data.user.id}))

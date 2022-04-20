@@ -13,12 +13,13 @@ kubectl apply -f rabbitmq/rabbitmq-service.yaml
 kubectl apply -f rabbitmq/rabbitmq-deploy.yaml
 
 #Run orchestrator
+kubectl apply -f orchestrator/orchestrator-secrets.yaml
 kubectl apply -f orchestrator/orchestrator-deploy.yaml
 
 #Run backend
+kubectl apply -f backend/backend-secrets.yaml
 kubectl apply -f backend/backend-deploy.yaml
 kubectl apply -f backend/backend-service.yaml
-kubectl apply -f backend/backend-secrets.yaml
 
 #Run frontend
 kubectl apply -f frontend/frontend-deploy.yaml

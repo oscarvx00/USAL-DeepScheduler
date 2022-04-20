@@ -11,7 +11,6 @@ export class TrainingController {
 
     @Post()
     async newTrainingRequest(@Req() req){
-        //console.log(req)
         await this.trainingService.newTrainingRequest(req.body, req.user)
     }
 

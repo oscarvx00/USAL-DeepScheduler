@@ -47,14 +47,7 @@ export class RabbitHandlerService {
         )
     }
 
-    /*mHandler(socket : Socket, userId : string,  msg : {}){
-        console.log(msg)
-        socket.emit('requestsStatus', msg)
-        return undefined
-    }*/
-
     removeQueues(userId : string){
        this.amqpConnection.channel.deleteQueue('orchestrator_msgs_queue_' + userId) 
     }
-
 }

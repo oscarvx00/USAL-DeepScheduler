@@ -25,7 +25,6 @@ export class TrainingService {
             user: user._id,
             date: new Date()
         }).save()
-        //console.log(nRequest)
         await this.rabbitService.publishTrainingRequest(nRequest)
         
     }
@@ -95,7 +94,6 @@ export class TrainingService {
         }).sort({'date':-1}).exec()
     }
 
-    
     async getTrainingRequestResultsUrl(user : any, id : string){
         const filename = `${user._id}/${id}.zip`
         //TODO: VERIFY USER OWNS REQUEST 

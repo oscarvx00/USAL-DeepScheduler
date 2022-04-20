@@ -17,7 +17,6 @@ export class UsersService {
   ){}
 
   async findOne(username: string): Promise<User | undefined> {
-    //return this.users.find(user => user.username === username);
     return this.userModel.findOne({username: username}).exec()
   }
 
@@ -104,7 +103,6 @@ export class UsersService {
             if(passwordMatch){
                  const passHash = await bcrypt.hash(newPass, bcryptConstants.saltOrRounds)
                  const result = await this.updateUser(username, {password : passHash}) 
-                 //console.log(result)
                  return
             }
         }

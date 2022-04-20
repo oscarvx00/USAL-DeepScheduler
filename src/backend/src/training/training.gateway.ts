@@ -35,28 +35,17 @@ export class TrainingGateway implements OnGatewayDisconnect{
         private rabbitService : RabbitHandlerService,
         private trainingService : TrainingService
     ){}
-    
-    /*@SubscribeMessage('events')
-    handleEvent(@MessageBody() data : string) : Observable<WsResponse<any>>{
-        console.log(data)
-        this.server.emit('events', 'myEvent')
-        return  new Observable(subscriber => {
-
-        }).pipe(map(item => ({event : 'events', data : 'myData'})))
-    }*/
 
     @UseGuards(WsGuard)
     @SubscribeMessage('socket_init')
     handleRabbitMessage(client : Socket, data : any){
         const token = client.handshake.headers.authorization.split(' ')[1];
-        //console.log(token)
         const decoded = jwt.verify(token, jwtConstants.secret)
         const userId : string = decoded.sub as string
         this.rabbitService.subscribeToRabbitMessage(client, userId, this.rabbitMessageHandler)
     }
 
     async rabbitMessageHandler(socket : Socket, userId : string, msg : any){
-        //console.log(msg)
         if(!msg.type){
             return undefined
         }
@@ -65,7 +54,7 @@ export class TrainingGateway implements OnGatewayDisconnect{
             type : msg.type,
             data : msg.message
         }
-        //console.log(emitMsg)
+
         socket.emit(msg.type, emitMsg)
         return undefined
     }
@@ -77,8 +66,6 @@ export class TrainingGateway implements OnGatewayDisconnect{
         const userId : string = decoded.sub as string
         this.rabbitService.removeQueues(userId)
     }
-
-    
 }
 
 interface TrainingGatewayDTO{
