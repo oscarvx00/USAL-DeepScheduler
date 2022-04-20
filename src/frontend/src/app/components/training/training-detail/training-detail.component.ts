@@ -107,4 +107,10 @@ export class TrainingDetailComponent implements OnInit {
     }
   }
 
+  cancelTrainingRequest(){
+    this.trainingService.cancelTrainingRequest(this.data._id).subscribe((data : any) => {
+      alert("Canceled")
+    })
+  }
+
 }

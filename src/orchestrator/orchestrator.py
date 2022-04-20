@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import tarfile
 import time
+import uuid
 import zipfile
 import pika
 import docker
@@ -85,6 +86,8 @@ def zipdir(path, ziph):
                                        os.path.join(path, '..')))
 
 
+orchestrator_id = str(uuid.uuid1())
+orchestrator_cancel_queue_name = "cancel_queue_" + orchestrator_id
 
 #Get docker socket client
 dockerClient = docker.from_env()
@@ -110,6 +113,11 @@ connection = pika.BlockingConnection(
 channel = connection.channel()
 channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
 channel.exchange_declare(exchange='orchestrator_msgs_exchange', exchange_type='topic', durable=True)
+
+#Declare cancel queue and exchange
+channel.exchange_declare(exchange='cancel_training_exchange', exchange_type='fanout', durable=False)
+channel.queue_declare(queue=orchestrator_cancel_queue_name, durable=True)
+channel.queue_bind(exchange='cancel_training_exchange', queue=orchestrator_cancel_queue_name)
 
 #Create user-results bucket if not exists
 found = minioClient.bucket_exists(bucket_name=MINIO_RESULTS_BUCKET)
@@ -162,6 +170,18 @@ def callback(ch, method, properties, body):
 
     #Enter in a loop until max time is reached or container has exited
     while True:
+
+        #Check if execution canceled
+        _, _, msg = channel.basic_get(orchestrator_cancel_queue_name, auto_ack=True)
+        if msg != None:
+            cancelId = json.loads(msg.decode('utf-8'))['id']
+            if str(cancelId) == str(trainingRequest._id):
+                container.stop()
+                imageUpdated = TrainingRequest.fromJson(mongoHandler.setRequestCanceled(mongoDatabase, trainingRequest._id))
+                rabbitSendUpdate(RabbitMessage(RabbitMessageType.REQUEST_STATUS, requestUserId, imageUpdated))
+                return
+
+
         container.reload()
         #Optional: upload logs in a periodic time so that users can check them in almost real time
         logs = container.logs(stdout=True, stderr=True, tail=50).decode()
@@ -258,7 +278,7 @@ def callback(ch, method, properties, body):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
-
 channel.basic_qos(prefetch_count=1)
 channel.basic_consume(REQUEST_QUEUE, auto_ack=False, on_message_callback=callback)
+
 channel.start_consuming()

@@ -28,7 +28,7 @@ connection = pika.BlockingConnection(
     pika.ConnectionParameters(host=RABBIT_HOST, port=30001))
 channel = connection.channel()
 
-channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
+#channel.queue_declare(queue=REQUEST_QUEUE, durable=True)
 
 messages = [
     json.dumps({"id": "623f843df1cdc1cc5050f95a"})
@@ -43,9 +43,9 @@ messages = [
 for m in messages:
 
     channel.basic_publish(
-        exchange='',
-        routing_key=REQUEST_QUEUE,
-        body=m,
+        exchange='cancel_training_exchange',
+        routing_key='',
+        body=json.dumps({"msg": "test"}),
         properties=pika.BasicProperties(
             delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
             content_type='application/json',

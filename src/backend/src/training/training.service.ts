@@ -110,4 +110,12 @@ export class TrainingService {
         await this.trainingRequestModel.deleteMany({user : userId})
     }
 
+    async cancelTrainingRequest(user : any, id : string){
+        await this.rabbitService.publishCancelTrainingRequest(id)
+        await this.trainingRequestModel.findByIdAndUpdate(
+            id,
+            {status: 'CANCELED'}
+          ).exec()
+    }
+
 }

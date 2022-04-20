@@ -35,9 +35,9 @@ export class TrainingController {
         return await this.trainingService.getTrainingRequestResultsUrl(req.user, id)
     }
 
-    /*@Get('/test')
-    test(){
-        this.trainingService.test()
-    }*/
+    @Get("/cancel/:id")
+    async cancelTrainingRequest(@Req() req, @Param('id') id){
+        return await this.trainingService.cancelTrainingRequest(req.user, id)
+    }
 
 }

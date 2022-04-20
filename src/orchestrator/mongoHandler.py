@@ -44,3 +44,21 @@ def setRequestCompleted(database, id, completedComputingTime):
     rawData["_id"] = str(rawData["_id"])
     rawData["user"] = str(rawData["user"])
     return rawData
+
+
+def setRequestCanceled(database, id):
+    database.trainingrequests.update_one(
+        {'_id' : ObjectId(id)},
+        {'$set' : {
+            'status' : 'CANCELED',
+            'completedComputingTime' : 0
+        }},
+        upsert=False
+    )
+
+    rawData = database.trainingrequests.find_one(
+        {'_id' : ObjectId(id)}
+    )
+    rawData["_id"] = str(rawData["_id"])
+    rawData["user"] = str(rawData["user"])
+    return rawData

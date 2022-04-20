@@ -71,4 +71,8 @@ export class TrainingService {
   getTrainingRequestResults(trainingRequestId : string) : Observable<any>{
     return this.httpClient.get(environment.apiUrl + `/training/results/${trainingRequestId}`)
   }
+
+  cancelTrainingRequest(trainingRequestId : string) : Observable<any>{
+    return this.httpClient.get(environment.apiUrl + `/training/cancel/${trainingRequestId}`)
+  }
 }

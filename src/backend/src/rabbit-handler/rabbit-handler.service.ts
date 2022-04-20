@@ -23,6 +23,14 @@ export class RabbitHandlerService {
         )
     }
 
+    public publishCancelTrainingRequest(id : any){
+        this.amqpConnection.publish(
+            'cancel_training_exchange',
+            '',
+            {id: id}
+        )
+    }
+
     public async subscribeToRabbitMessage(socket : Socket, userId : string, handler : (socket : Socket, userId : string, msg : any) => void) : Promise<void>{
         return this.amqpConnection.createSubscriber(
             //this.mHandler.bind(this, socket, userId),
