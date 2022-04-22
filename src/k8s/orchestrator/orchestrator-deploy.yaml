@@ -33,7 +33,6 @@ spec:
                 secretKeyRef:
                   name: orchestrator-secret
                   key: MINIO_ACCESS
-              value: myaccesskey
             - name: MINIO_SECRET
               valueFrom:
                 secretKeyRef:

@@ -179,6 +179,7 @@ def callback(ch, method, properties, body):
                 container.stop()
                 imageUpdated = TrainingRequest.fromJson(mongoHandler.setRequestCanceled(mongoDatabase, trainingRequest._id))
                 rabbitSendUpdate(RabbitMessage(RabbitMessageType.REQUEST_STATUS, requestUserId, imageUpdated))
+                ch.basic_ack(delivery_tag=method.delivery_tag)
                 return
 
 
