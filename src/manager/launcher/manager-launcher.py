@@ -12,16 +12,16 @@ MONGO_HOST = os.environ['MONGO_HOST']
 
 
 class TrainingRequest:
-    def __init__(self, _id, user, quadrants, imageName, node, date):
+    def __init__(self, _id, user, quadrants, imageName, worker, date):
         self._id = _id
         self.user = user
         self.quadrants = quadrants
         self.imageName = imageName
-        self.node = node
+        self.worker = worker
         self.date = date
 
     def fromJson(jsonDict):
-        return TrainingRequest(jsonDict['_id'], jsonDict['user'], jsonDict['quadrants'], jsonDict['imageName'], jsonDict['node'], jsonDict['date'])
+        return TrainingRequest(jsonDict['_id'], jsonDict['user'], jsonDict['quadrants'], jsonDict['imageName'], jsonDict['worker'], jsonDict['date'])
     
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__)
@@ -51,7 +51,7 @@ channel.exchange_declare(exchange='workers_exchange', exchange_type='direct', du
 def sendRequest(trainingRequest):
     channel.basic_publish(
         exchange='workers_exchange',
-        routing_key=str(trainingRequest.node),
+        routing_key=str(trainingRequest.worker),
         body=json.dumps({"id" : str(trainingRequest._id)})
     )
 
@@ -71,12 +71,9 @@ def getCurrentQuadrant():
 
 trainingRequests = mongoHandler.getTrainingRequestsToLaunch(mongoDatabase, getCurrentQuadrant())
 
-if len(list(trainingRequests)) == 0:
-    print("No training requests to launch")
-else:
-    for tr in trainingRequests:
-        print("[SENT] " + tr)
-        sendRequest(TrainingRequest.fromJson(tr))
+for tr in trainingRequests:
+    print(tr)
+    sendRequest(TrainingRequest.fromJson(tr))
 
 
 connection.close()

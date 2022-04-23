@@ -125,7 +125,7 @@ export class TrainingService {
         imageName: string,
         quadrantStart: number,
         quadrantEnd: number,
-        nodeId: string
+        workerId: string
     }
     */
     async newTrainingRequestV2(request : any, user : any){     
@@ -135,7 +135,7 @@ export class TrainingService {
             quadrants : this.calculateQuadrants(request.quadrantStart, request.quadrantEnd),
             user : user._id,
             date : new Date(),
-            nodeId: request.nodeId
+            workerId: request.workerId
         }
 
         return await this.rabbitService.publishTrainingRequestV2(newTrainingRequestData)

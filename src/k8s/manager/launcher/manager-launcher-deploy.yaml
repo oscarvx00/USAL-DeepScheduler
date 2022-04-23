@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: deepscheduler-manager-launcher
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: deepscheduler-manager-launcher
+        spec:
+          containers:
+          - name: deepscheduler-manager-launcher
+            image: oscarvicente/deepscheduler-manager-launcher
+            env:
+              - name: MONGO_HOST
+                value: mongodb.default.svc.cluster.local/ds
+              - name: RABBIT_HOST
+                value: rabbitmq.default.svc.cluster.local

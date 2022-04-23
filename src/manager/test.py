@@ -2,18 +2,15 @@ from datetime import datetime, date, time
 import math
 
 
-epoch = datetime(2022,1,1,0,0)
-today = datetime.now()
+def getCurrentQuadrant():
+    #Declare init epoch
+    epoch = datetime(2022,1,1,0,0)
+    now = datetime.now()
 
-print(today)
+    day_number = (now - epoch).days
+    quadrants_per_day = 4 * 24
+    hour_quadrant = now.hour * 4 + math.floor(now.minute / 15)
 
-d = today - epoch
+    return day_number * quadrants_per_day + hour_quadrant
 
-dayNumber = d.days
-
-quadrants_per_day = 4 * 24
-
-hour_quadrant = today.hour * 4 + math.floor(today.minute / 15)
-
-full_quadrant = dayNumber * quadrants_per_day + hour_quadrant
-print(full_quadrant)
+print(getCurrentQuadrant())

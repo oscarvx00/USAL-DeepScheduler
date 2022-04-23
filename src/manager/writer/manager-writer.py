@@ -9,21 +9,21 @@ RABBIT_HOST = os.environ['RABBIT_HOST']
 MONGO_HOST = os.environ['MONGO_HOST'] 
 
 class TrainingRequest:
-    def __init__(self,  user, quadrants, imageName, node, date):
+    def __init__(self,  user, quadrants, imageName, worker, date):
         self.user = user
         self.quadrants = quadrants
         self.imageName = imageName
-        self.node = node
+        self.worker = worker
         self.date = date
 
     def fromJson(jsonDict):
-        return TrainingRequest(jsonDict['user'], jsonDict['quadrants'], jsonDict['imageName'], jsonDict['nodeId'], jsonDict['date'])
+        return TrainingRequest(jsonDict['user'], jsonDict['quadrants'], jsonDict['imageName'], jsonDict['workerId'], jsonDict['date'])
     
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
     def __str__(self):
-        return "Request: [userID: " + str(self.user) + ", quadrants: " + str(self.quadrants) + ", imageName: " + self.imageName + ", node: " + self.node + " ]\n"
+        return "Request: [userID: " + str(self.user) + ", quadrants: " + str(self.quadrants) + ", imageName: " + self.imageName + ", worker: " + self.worker + " ]\n"
 
 
 #Create MongoDB client
@@ -48,14 +48,14 @@ channel.queue_bind(exchange='manager_exchange', queue='manager_queue')
 
 def callback(ch, method, properties, body):
     print(body.decode('utf-8'))
-    trainingRequest = TrainingRequest.fromJsonV2(json.loads(body.decode('utf-8')))
+    trainingRequest = TrainingRequest.fromJson(json.loads(body.decode('utf-8')))
     print(trainingRequest)
 
-    if not mongoHandler.checkNodeExists(mongoDatabase, trainingRequest.node):
+    if not mongoHandler.checkWorkerExists(mongoDatabase, trainingRequest.worker):
 
         response = json.dumps({
             'result' : 'error',
-            'reason' : 'node not exists'
+            'reason' : 'worker not exists'
         })
 
         channel.basic_publish(exchange='',
@@ -68,7 +68,7 @@ def callback(ch, method, properties, body):
     if not mongoHandler.checkTrainingRequestQuadrants(mongoDatabase, trainingRequest):
         response = json.dumps({
             'result' : 'error',
-            'reason' : 'node not available at required quadrants'
+            'reason' : 'worker not available at required quadrants'
         })
 
         channel.basic_publish(exchange='',

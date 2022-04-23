@@ -1,2 +1,2 @@
-docker build -t oscarvicente/deepscheduler-orchestrator .
-docker push oscarvicente/deepscheduler-orchestrator
+docker build -t oscarvicente/deepscheduler-worker .
+docker push oscarvicente/deepscheduler-worker

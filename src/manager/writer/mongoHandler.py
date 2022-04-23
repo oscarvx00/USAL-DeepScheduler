@@ -7,7 +7,7 @@ def checkTrainingRequestQuadrants(database, request):
         res = database.trainingrequests_v2.find_one(
             {
                 'quadrants': q,
-                'node': ObjectId(request.node)
+                'node': ObjectId(request.worker)
             }
         )
         if res:
@@ -15,9 +15,9 @@ def checkTrainingRequestQuadrants(database, request):
 
     return True
 
-def checkNodeExists(database, nodeId):
-    res = database.nodes.find_one({
-        '_id' : ObjectId(nodeId)
+def checkWorkerExists(database, workerId):
+    res = database.workers.find_one({
+        '_id' : ObjectId(workerId)
     })
 
     return res != None
@@ -29,7 +29,7 @@ def insertTrainingRequest(database, request):
         'imageName' : request.imageName,
         'quadrants' : request.quadrants,
         'user' : ObjectId(request.user),
-        'node' : ObjectId(request.node),
+        'worker' : ObjectId(request.worker),
         'date' : request.date,
         'status' : 'SCHEDULED'
     })
