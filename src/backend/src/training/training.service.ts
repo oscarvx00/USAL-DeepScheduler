@@ -119,4 +119,39 @@ export class TrainingService {
           ).exec()
     }
 
+
+    /*
+    {
+        imageName: string,
+        quadrantStart: number,
+        quadrantEnd: number,
+        nodeId: string
+    }
+    */
+    async newTrainingRequestV2(request : any, user : any){     
+        
+        const newTrainingRequestData = {
+            imageName : request.imageName,
+            quadrants : this.calculateQuadrants(request.quadrantStart, request.quadrantEnd),
+            user : user._id,
+            date : new Date(),
+            nodeId: request.nodeId
+        }
+
+        return await this.rabbitService.publishTrainingRequestV2(newTrainingRequestData)
+        
+    }
+
+    private calculateQuadrants(qStart : number , qEnd : number) : number[]{
+        let arr : number[] = []
+        let index = qStart
+        arr.push(index)
+        index++
+        while(index <= qEnd){
+            arr.push(index)
+            index++
+        }
+        return arr
+    }
+
 }

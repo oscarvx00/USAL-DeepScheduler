@@ -39,4 +39,9 @@ export class TrainingController {
         return await this.trainingService.cancelTrainingRequest(req.user, id)
     }
 
+    @Post("v2")
+    async newTrainingRequestV2(@Req() req){
+        return await this.trainingService.newTrainingRequestV2(req.body, req.user)
+    }
+
 }

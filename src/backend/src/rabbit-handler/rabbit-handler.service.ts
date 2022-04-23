@@ -50,4 +50,17 @@ export class RabbitHandlerService {
     removeQueues(userId : string){
        this.amqpConnection.channel.deleteQueue('orchestrator_msgs_queue_' + userId) 
     }
+
+    async publishTrainingRequestV2(request : any){
+        try{
+            return  await this.amqpConnection.request({
+                exchange: 'manager_exchange',
+                routingKey: '',
+                payload: request
+            }) 
+        } catch {
+            return "ERROR"
+        }
+    }
+
 }
