@@ -1,16 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectModel, MongooseModule } from '@nestjs/mongoose';
 import { TrainingRequest } from 'src/schemas/trainingRequest.schema';
 import { Model } from 'mongoose';
 import { RabbitHandlerService } from 'src/rabbit-handler/rabbit-handler.service';
 import { MinioHandlerService } from 'src/minio-handler/minio-handler/minio-handler.service';
 import { User } from 'src/schemas/user.schema';
+import { TrainingRequestV2 } from 'src/schemas/trainingRequest_v2.schema';
+import mongoose from 'mongoose';
+import { type } from 'os';
 
 @Injectable()
 export class TrainingService {
 
     constructor(
         @InjectModel(TrainingRequest.name) private trainingRequestModel : Model<TrainingRequest>,
+        @InjectModel(TrainingRequestV2.name) private trainingRequestV2Model : Model<TrainingRequestV2>,
         private rabbitService : RabbitHandlerService,
         private minioService : MinioHandlerService
     ){}
@@ -152,6 +156,15 @@ export class TrainingService {
             index++
         }
         return arr
+    }
+
+    async quandrantIsAvailable(worker : string, quadrant : number) : Promise<boolean> {
+        const res = await this.trainingRequestV2Model.findOne({
+            quadrants : Number(quadrant),
+            worker : worker
+        }).exec()
+
+        return res == null
     }
 
 }

@@ -22,6 +22,8 @@
     "@angular/router": "~12.2.0",
     "@swimlane/ngx-charts": "^20.1.0",
     "@types/d3-scale": "^4.0.2",
+    "moment": "^2.29.3",
+    "moment-timezone": "^0.5.34",
     "ngx-highlight-js": "^13.0.0",
     "ngx-highlightjs": "^6.1.1",
     "ngx-socket-io": "^4.2.0",

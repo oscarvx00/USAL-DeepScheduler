@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { io } from 'socket.io-client';
+import { Quadrant } from 'src/app/components/training/training-new/training-new.component';
 import { TrainingRequest } from 'src/app/model/trainingRequest';
 import { environment } from 'src/environments/environment';
 
@@ -74,5 +75,12 @@ export class TrainingService {
 
   cancelTrainingRequest(trainingRequestId : string) : Observable<any>{
     return this.httpClient.get(environment.apiUrl + `/training/cancel/${trainingRequestId}`)
+  }
+
+  getWorkerQuadrants(workerId : string, startQ : number, endQ : number) : Observable<any> {
+    const params = new HttpParams()
+      .set('startQ', startQ)
+      .set('endQ', endQ)
+    return this.httpClient.get(environment.apiUrl + `workers/${workerId}`, {params})
   }
 }
