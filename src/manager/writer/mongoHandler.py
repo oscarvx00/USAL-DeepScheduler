@@ -7,7 +7,7 @@ def checkTrainingRequestQuadrants(database, request):
         res = database.trainingrequests_v2.find_one(
             {
                 'quadrants': q,
-                'node': ObjectId(request.worker)
+                'worker': ObjectId(request.worker)
             }
         )
         if res:

@@ -4,24 +4,24 @@ from bson.objectid import ObjectId
 
 def getAllRequests(database):
     requests = []
-    cursor = database.trainingrequests.find({})
+    cursor = database.trainingrequests_v2.find({})
     for req in cursor:
         requests.append(req)
 
     return requests
 
 def getRequestById(database, id):
-    return database.trainingrequests.find_one({"_id" : ObjectId(id)})
+    return database.trainingrequests_v2.find_one({"_id" : ObjectId(id)})
 
 def setRequestExecuting(database, id):
-    database.trainingrequests.update_one(
+    database.trainingrequests_v2.update_one(
         {'_id' : ObjectId(id)},
         {'$set' : {
             'status' : 'EXECUTING'
         }},
         upsert=False
     )
-    rawData = database.trainingrequests.find_one(
+    rawData = database.trainingrequests_v2.find_one(
         {'_id' : ObjectId(id)}
     )
     rawData["_id"] = str(rawData["_id"])
@@ -30,7 +30,7 @@ def setRequestExecuting(database, id):
 
 
 def setRequestCompleted(database, id, completedComputingTime):
-    database.trainingrequests.update_one(
+    database.trainingrequests_v2.update_one(
         {'_id' : ObjectId(id)},
         {'$set' : {
             'status' : 'COMPLETED',
@@ -39,7 +39,7 @@ def setRequestCompleted(database, id, completedComputingTime):
         upsert=False
     )
 
-    rawData = database.trainingrequests.find_one(
+    rawData = database.trainingrequests_v2.find_one(
         {'_id' : ObjectId(id)}
     )
     rawData["_id"] = str(rawData["_id"])
@@ -48,7 +48,7 @@ def setRequestCompleted(database, id, completedComputingTime):
 
 
 def setRequestCanceled(database, id):
-    database.trainingrequests.update_one(
+    database.trainingrequests_v2.update_one(
         {'_id' : ObjectId(id)},
         {'$set' : {
             'status' : 'CANCELED',
@@ -57,7 +57,7 @@ def setRequestCanceled(database, id):
         upsert=False
     )
 
-    rawData = database.trainingrequests.find_one(
+    rawData = database.trainingrequests_v2.find_one(
         {'_id' : ObjectId(id)}
     )
     rawData["_id"] = str(rawData["_id"])

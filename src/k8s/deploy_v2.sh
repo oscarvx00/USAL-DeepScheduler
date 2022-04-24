@@ -13,11 +13,12 @@ kubectl apply -f rabbitmq/rabbitmq-service.yaml
 kubectl apply -f rabbitmq/rabbitmq-deploy.yaml
 
 #Run worker
-
+kubectl apply -f worker/worker-secrets.yaml
+kubectl apply -f worker/worker-deploy.yaml
 
 #Run manager
-kubectl apply -f manager/writer/manager-writer.yaml
-kubectl apply -f manager/launcher/manager-launcher.yaml
+kubectl apply -f manager/writer/manager-writer-deploy.yaml
+kubectl apply -f manager/launcher/manager-launcher-deploy.yaml
 
 #Run backend
 kubectl apply -f backend/backend-secrets.yaml

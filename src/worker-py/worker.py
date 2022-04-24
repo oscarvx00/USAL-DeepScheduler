@@ -14,6 +14,8 @@ from pymongo import MongoClient
 import mongoHandler
 from enum import Enum
 import shutil
+from datetime import datetime, timezone
+import math
 
 RABBIT_HOST = os.environ['RABBIT_HOST']
 #REQUEST_QUEUE = os.environ['REQUEST_QUEUE']
@@ -27,22 +29,24 @@ MONGO_HOST = os.environ['MONGO_HOST']
 
 
 class TrainingRequest:
-    def __init__(self, _id, user, status,computingTime, imageName):
-        self._id = _id
-        self.user = user
-        self.status = status
-        self.computingTime = computingTime
+    def __init__(self, _id, user, quadrants, imageName, worker, date, status):
+        self._id = str(_id)
+        self.user = str(user)
+        self.quadrants = quadrants
         self.imageName = imageName
+        self.worker = str(worker)
+        self.date = date
+        self.status = status
 
     def fromJson(jsonDict):
-        #print(jsonDict)
-        return TrainingRequest(jsonDict['_id'],jsonDict['user'], jsonDict['status'], jsonDict['computingTime'], jsonDict['imageName'])
+        return TrainingRequest(jsonDict['_id'], jsonDict['user'], jsonDict['quadrants'], jsonDict['imageName'], jsonDict['worker'], jsonDict['date'], jsonDict['status'])
     
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__)
 
     def __str__(self):
-        return "Request: [requestId: " + str(self._id) + " userID: " + str(self.user) + ", status: " + self.status + ", executionTime: " + str(self.computingTime) + ", imageName: " + self.imageName + " ]\n"
+        return "Request: [userID: " + self.user + ", imageName: " + self.imageName + ", status: " + self.status + " ]\n"
+
 
 
 class LogMessage:
@@ -85,6 +89,18 @@ def zipdir(path, ziph):
                                        os.path.join(path, '..')))
 
 
+def getCurrentQuadrant():
+    #Declare init epoch
+    epoch = datetime(2022,1,1,0,0, tzinfo=timezone.utc)
+    now = datetime.now(timezone.utc)
+
+    day_number = (now - epoch).days
+    quadrants_per_day = 4 * 24
+    hour_quadrant = now.hour * 4 + math.floor(now.minute / 15)
+
+    return day_number * quadrants_per_day + hour_quadrant
+
+
 
 
 orchestrator_id = str(uuid.uuid1())
@@ -101,18 +117,18 @@ minioClient = Minio(
 )
 
 #Create MongoDB client
-mongoClient = MongoClient(host='localhost', port=30002)
-#mongoClient = MongoClient(host=MONGO_HOST)
+#mongoClient = MongoClient(host='localhost', port=30002)
+mongoClient = MongoClient(host=MONGO_HOST)
 mongoDatabase = mongoClient.ds
 
 workerId = str(mongoHandler.registerWorker(mongoDatabase, "TEST"))
 
 
 #Create connection to RabbitMQ container based on its service name
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
 #connection = pika.BlockingConnection(
-#    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0))
+#    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
+connection = pika.BlockingConnection(
+    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0))
 channel = connection.channel()
 
 #Incoming training requests
@@ -143,7 +159,6 @@ def callback(ch, method, properties, body):
     rawJson = json.loads(body)
     trainingRequest = TrainingRequest.fromJson(mongoHandler.getRequestById(mongoDatabase, rawJson['id']))
     print('\n\n [x] Received image: ', trainingRequest._id, flush=True)
-    
     #Check if state is scheduled, if not discard
     if trainingRequest.status != "SCHEDULED":
         #Discard
@@ -175,7 +190,6 @@ def callback(ch, method, properties, body):
         docker.types.DeviceRequest(count=-1, capabilities=[['gpu']])
     ])
 
-    #Get start time
     start_time = time.time()
 
     #Enter in a loop until max time is reached or container has exited
@@ -194,14 +208,10 @@ def callback(ch, method, properties, body):
 
 
         container.reload()
-        #Optional: upload logs in a periodic time so that users can check them in almost real time
         logs = container.logs(stdout=True, stderr=True, tail=50).decode()
-        #logs = logs.replace('\n', '\\n')
-        #print(logs.decode(), flush=True)
         rabbitSendUpdate(RabbitMessage(RabbitMessageType.REQUEST_LOGS, requestUserId, LogMessage(str(trainingRequest._id),logs)))
-        current_time = time.time()
-        elapsed_time = current_time - start_time
-        if elapsed_time > float(trainingRequest.computingTime):
+        current_quadrant = getCurrentQuadrant()
+        if current_quadrant not in trainingRequest.quadrants:
             #If max time reached exit from loop
             print(" [x] Max execution time reached")
             break

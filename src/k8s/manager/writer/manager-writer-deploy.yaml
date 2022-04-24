@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deepscheduler-manager-writer
+  name: manager-writer
 spec:
   selector:
     matchLabels:
@@ -23,6 +23,6 @@ spec:
         image: oscarvicente/deepscheduler-manager-writer
         env:
           - name: MONGO_HOST
-            value: mongodb.default.svc.cluster.local/ds
+            value: mongodb://mongodb.default.svc.cluster.local
           - name: RABBIT_HOST
             value: rabbitmq.default.svc.cluster.local

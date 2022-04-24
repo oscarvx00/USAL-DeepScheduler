@@ -1,9 +1,11 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: deepscheduler-manager-launcher
+  name: manager-launcher
 spec:
-  schedule: "* * * * *"
+  schedule: "0,15,30,45 * * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
@@ -16,6 +18,8 @@ spec:
             image: oscarvicente/deepscheduler-manager-launcher
             env:
               - name: MONGO_HOST
-                value: mongodb.default.svc.cluster.local/ds
+                value: mongodb://mongodb.default.svc.cluster.local
               - name: RABBIT_HOST
                 value: rabbitmq.default.svc.cluster.local
+          restartPolicy: Never
+          

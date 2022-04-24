@@ -27,16 +27,16 @@ class TrainingRequest:
 
 
 #Create MongoDB client
-mongoClient = MongoClient(host='localhost', port=30002)
-#mongoClient = MongoClient(host=MONGO_HOST)
+#mongoClient = MongoClient(host='localhost', port=30002)
+mongoClient = MongoClient(host=MONGO_HOST)
 mongoDatabase = mongoClient.ds
 
 
 #Create connection to RabbitMQ container based on its service name
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
 #connection = pika.BlockingConnection(
-#    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0))
+#    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
+connection = pika.BlockingConnection(
+    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0))
 channel = connection.channel()
 
 
@@ -49,7 +49,6 @@ channel.queue_bind(exchange='manager_exchange', queue='manager_queue')
 def callback(ch, method, properties, body):
     print(body.decode('utf-8'))
     trainingRequest = TrainingRequest.fromJson(json.loads(body.decode('utf-8')))
-    print(trainingRequest)
 
     if not mongoHandler.checkWorkerExists(mongoDatabase, trainingRequest.worker):
 
@@ -84,6 +83,8 @@ def callback(ch, method, properties, body):
     response = json.dumps({
         'result' : 'OK'
     })
+
+    print("[*] Sent -> " + trainingRequest.imageName + " to: " + trainingRequest.worker)
     
 
     channel.basic_publish(exchange='',

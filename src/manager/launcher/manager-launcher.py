@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 import math
 import os
@@ -34,16 +34,16 @@ class TrainingRequest:
 
 
 #Create MongoDB client
-mongoClient = MongoClient(host='localhost', port=30002)
-#mongoClient = MongoClient(host=MONGO_HOST)
+#mongoClient = MongoClient(host='localhost', port=30002)
+mongoClient = MongoClient(host=MONGO_HOST)
 mongoDatabase = mongoClient.ds
 
 
 #Create connection to RabbitMQ container based on its service name
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
 #connection = pika.BlockingConnection(
-#    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0))
+#    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
+connection = pika.BlockingConnection(
+    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0))
 channel = connection.channel()
 
 channel.exchange_declare(exchange='workers_exchange', exchange_type='direct', durable=False)
@@ -57,8 +57,8 @@ def sendRequest(trainingRequest):
 
 def getCurrentQuadrant():
     #Declare init epoch
-    epoch = datetime(2022,1,1,0,0)
-    now = datetime.now()
+    epoch = datetime(2022,1,1,0,0, tzinfo=timezone.utc)
+    now = datetime.now(timezone.utc)
 
     day_number = (now - epoch).days
     quadrants_per_day = 4 * 24
@@ -67,9 +67,11 @@ def getCurrentQuadrant():
     return day_number * quadrants_per_day + hour_quadrant
     
 
-
+print("Quadrant: " + str(getCurrentQuadrant()))
 
 trainingRequests = mongoHandler.getTrainingRequestsToLaunch(mongoDatabase, getCurrentQuadrant())
+print(trainingRequests)
+
 
 for tr in trainingRequests:
     print(tr)
