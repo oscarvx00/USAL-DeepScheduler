@@ -11,6 +11,8 @@ import * as moment from 'moment-timezone';
 })
 export class TrainingNewComponent implements OnInit {
 
+  MAX_QUADRANTS = 6 * 4
+
   currentStep = 0
 
   numDays = 5
@@ -27,6 +29,9 @@ export class TrainingNewComponent implements OnInit {
   daysColumHeader : string[] = []
 
   workerId = "62641d03d84966a982b0b1e1"
+
+  quadrantFirstSelection = true
+  quadrantsSelected : number[] = []
 
   @ViewChild('inputComputingTime') cardComputingTime! : ElementRef
   @ViewChild('continueButton') continueButton! : ElementRef
@@ -47,8 +52,8 @@ export class TrainingNewComponent implements OnInit {
       hours : ['', Validators.required],
       minutes : ['', Validators.required]
     })
-    this.generateTimetableData()
-    this.test()
+    this.initTimetableData()
+    console.log(this.getQuadrant(new Date()))
   }
 
   continueClicked(){
@@ -63,9 +68,7 @@ export class TrainingNewComponent implements OnInit {
     if(this.currentStep < 1){
       this.currentStep++
     }*/
-
-    this.generateQuadrants()
-    
+    this.printWorkerQuadrants()
   }
 
   submitImage(){
@@ -92,40 +95,39 @@ export class TrainingNewComponent implements OnInit {
       })
   }
 
-  generateTimetableData(){
+  private initTimetableData(){
 
     let time = new Date(2022, 0,1,0,0)
 
     const quadrants = this.generateQuadrants()
 
-    
 
     for(let i=0; i<this.numQuadrants; i++){
       this.timetableData.push({
         time: time.toLocaleTimeString().slice(0,-3),
         d0: {
           content : ' ',
-          status: 'free',
+          status: 'not-available',
           quadrant: quadrants[0][i]
         },
         d1: {
           content : ' ',
-          status: 'free',
+          status: 'not-available',
           quadrant: quadrants[1][i]
         },
         d2: {
           content : ' ',
-          status: 'free',
+          status: 'not-available',
           quadrant: quadrants[2][i]
         },
         d3: {
           content : ' ',
-          status: 'free',
+          status: 'not-available',
           quadrant: quadrants[3][i]
         },
         d4: {
           content : ' ',
-          status: 'free',
+          status: 'not-available',
           quadrant: quadrants[4][i]
         },
       })
@@ -139,7 +141,7 @@ export class TrainingNewComponent implements OnInit {
     }
   }
 
-  generateQuadrants() : number[][]{
+  private generateQuadrants() : number[][]{
     
     const now = new Date()
     let iteratorDate = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0))
@@ -164,26 +166,156 @@ export class TrainingNewComponent implements OnInit {
     const epoch = moment.utc([2022,0,1,0,0])
     const hourQuadrant = date.getUTCHours() * 4 + Math.floor(date.getUTCMinutes() / 15)
 
-    console.log(date.getUTCHours())
-
     const diffDays = moment(date).utc().diff(epoch, 'days')
-    console.log(diffDays)
 
     return diffDays * this.numQuadrants + hourQuadrant
   }
 
-  test(){
+
+  printWorkerQuadrants(){
+
     const quadrants = this.generateQuadrants()
 
     this.trainingService.getWorkerQuadrants(this.workerId, quadrants[0][0], quadrants[quadrants.length-1][quadrants[0].length-1]).subscribe(
       (res : any) => {
-        console.log(res)
+        if(!res.quadrants || res.quadrants.length != 96*5){
+          return
+        }
+
+        for(let i=0; i<this.numQuadrants;i++){
+          this.timetableData[i] = {
+            ...this.timetableData[i],
+            d0 : {
+              ...this.timetableData[i].d0,
+              status: this.calculateQuadrantStatus(res.quadrants[i])
+            },
+            d1 : {
+              ...this.timetableData[i].d1,
+              status: this.calculateQuadrantStatus(res.quadrants[i + this.numQuadrants])
+            },
+            d2 : {
+              ...this.timetableData[i].d2,
+              status: this.calculateQuadrantStatus(res.quadrants[i + this.numQuadrants*2])
+            },
+            d3 : {
+              ...this.timetableData[i].d3,
+              status: this.calculateQuadrantStatus(res.quadrants[i + this.numQuadrants*3])
+            },
+            d4 : {
+              ...this.timetableData[i].d4,
+              status: this.calculateQuadrantStatus(res.quadrants[i + this.numQuadrants*4])
+            },
+          }
+        }
+        this.timetableData = [...this.timetableData]
       },
       (err: any) => {
         console.log("ERROR")
         console.log(err)
       }
     )
+  }
+
+  private calculateQuadrantStatus(quadrant : any) : 'available' | 'not-available' | 'past-time' | 'available-selected'{
+    if(this.getQuadrant(new Date()) >= quadrant.quadrant){
+      return 'past-time'
+    }
+    
+    if(quadrant.available){
+      return 'available'
+    } else{
+      return 'not-available'
+    }
+  }
+
+  getStatusClass(status : 'available' | 'not-available' | 'past-time' | 'available-selected'){
+    switch(status){
+      case 'available':
+        return 'timetable-status-available'
+      case 'not-available':
+        return 'timetable-status-not-available'
+      case 'past-time':
+        return 'timetable-status-past-time'
+      case 'available-selected':
+        return 'timetable-status-available-selected'
+    }
+  }
+
+  quadrantClicked(quadrant : Quadrant){
+
+    let alertShown = false
+
+    if(quadrant.status != 'available' && quadrant.status != 'available-selected'){
+      alert('Cant select not available quadrants')
+      this.quadrantFirstSelection = true
+      this.unselectQuadrants()
+      return
+    }
+    if(this.quadrantFirstSelection){
+      this.unselectQuadrants()
+      this.quadrantFirstSelection = false
+      quadrant.status = 'available-selected'
+      this.quadrantsSelected = []
+      this.quadrantsSelected.push(quadrant.quadrant)
+    } else{
+      
+      if(this.quadrantsSelected[0] < quadrant.quadrant){
+        for(let i=this.quadrantsSelected[0]+1; i<=quadrant.quadrant; i++){
+          this.quadrantsSelected.push(i)
+        }
+      } else if(this.quadrantsSelected[0] > quadrant.quadrant){
+        for(let i=this.quadrantsSelected[0]-1; i>=quadrant.quadrant; i--){
+          this.quadrantsSelected.push(i)
+        }
+      } else{
+        return
+      }
+
+      if(this.quadrantsSelected.length > this.MAX_QUADRANTS){
+        alert("Max time is 6 hours")
+        this.quadrantFirstSelection = true
+        this.unselectQuadrants()
+        return
+      }
+
+      //Check if available as mark as selected
+      for(let row of this.timetableData){
+        Object.keys(row).forEach( (key, index) => {
+          if(key != 'time'){
+            if(this.quadrantsSelected.includes(row[key].quadrant)){
+              if(row[key].status == 'not-available' || row[key].status == 'past-time'){
+                
+                if(!alertShown){
+                  alert('Cant select not available quadrants')
+                  alertShown = true
+                  this.quadrantFirstSelection = true
+                  this.unselectQuadrants()
+                  
+                }  
+                return
+              } else{
+                row[key].status = 'available-selected'
+              }
+            }
+          }
+        })
+      }
+
+      this.quadrantFirstSelection = true
+    }
+  }
+
+  private unselectQuadrants(){
+    this.quadrantsSelected = []
+    for(let row of this.timetableData){
+      Object.keys(row).forEach( (key, index) => {
+        if(key != 'time'){
+          if(row[key].status == 'available-selected'){
+            row[key].status = 'available'
+          }          
+        }
+      })
+    }
   }
 
 }
@@ -199,6 +331,6 @@ export interface TimetableRow{
 
 export interface Quadrant{
   content : string,
-  status : 'free' | 'not-available' | 'past time',
+  status : 'available' | 'not-available' | 'past-time' | 'available-selected',
   quadrant : number
 }

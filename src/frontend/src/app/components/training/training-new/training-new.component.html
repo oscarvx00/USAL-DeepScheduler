@@ -1,5 +1,5 @@
 <div class="training-new-container">
-    <div class="input-card" #inputImageName>
+    <div class="input-card mat-elevation-z6" #inputImageName>
         <h2 class="input-card-title">Image repository name</h2>
         <form [formGroup]="imageNameForm">
             <mat-form-field class="input-card-image-field" appearence="fill">
@@ -9,33 +9,33 @@
             </mat-form-field>
         </form>
     </div>
-    <div class="input-card" #inputComputingTime>
+    <div class="input-card mat-elevation-z6" #inputComputingTime>
         <h2 class="input-card-title">Computing time</h2>
         <div class="timetable-container">
             <mat-table [dataSource]="timetableData">
                 <ng-container matColumnDef="time" [sticky]="true">
                     <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.time}} </mat-cell>
+                    <mat-cell *matCellDef="let element" > {{element.time}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="d0" [sticky]="true">
                     <mat-header-cell *matHeaderCellDef> {{daysColumHeader[0]}} </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.d0.quadrant}} </mat-cell>
+                    <mat-cell *matCellDef="let element" class="timetable-status-cell" [ngClass]="getStatusClass(element.d0.status)" (click)="quadrantClicked(element.d0)"> {{element.d0.status}} {{element.d0.quadrant}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="d1" [sticky]="true">
                     <mat-header-cell *matHeaderCellDef> {{daysColumHeader[1]}} </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.d1.quadrant}} </mat-cell>
+                    <mat-cell *matCellDef="let element" class="timetable-status-cell" [ngClass]="getStatusClass(element.d1.status)" (click)="quadrantClicked(element.d1)"> {{element.d1.status}} {{element.d1.quadrant}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="d2" [sticky]="true">
                     <mat-header-cell *matHeaderCellDef> {{daysColumHeader[2]}} </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.d2.quadrant}} </mat-cell>
+                    <mat-cell *matCellDef="let element" class="timetable-status-cell" [ngClass]="getStatusClass(element.d2.status)" (click)="quadrantClicked(element.d2)"> {{element.d2.status}} {{element.d2.quadrant}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="d3" [sticky]="true">
                     <mat-header-cell *matHeaderCellDef> {{daysColumHeader[3]}} </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.d3.quadrant}} </mat-cell>
+                    <mat-cell *matCellDef="let element" class="timetable-status-cell" [ngClass]="getStatusClass(element.d3.status)" (click)="quadrantClicked(element.d3)"> {{element.d3.status}} {{element.d3.quadrant}}</mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="d4" [sticky]="true">
                     <mat-header-cell *matHeaderCellDef> {{daysColumHeader[4]}} </mat-header-cell>
-                    <mat-cell *matCellDef="let element"> {{element.d4.quadrant}} </mat-cell>
+                    <mat-cell *matCellDef="let element" class="timetable-status-cell" [ngClass]="getStatusClass(element.d4.status)" (click)="quadrantClicked(element.d4)"> {{element.d4.status}} {{element.d4.quadrant}}</mat-cell>
                 </ng-container>
     
                 <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>

@@ -45,9 +45,14 @@ spec:
           volumeMounts:
             - mountPath: "/var/run/docker.sock"
               name: dockersock
+            - mountPath: "/etc/machine-id"
+              name: machine-id
       volumes:
         - name: dockersock
           hostPath:
             path: /var/run/docker.sock
+        - name: machine-id
+          hostPath:
+            path: "/etc/machine-id"
       nodeSelector:
         gpu-node: "true"

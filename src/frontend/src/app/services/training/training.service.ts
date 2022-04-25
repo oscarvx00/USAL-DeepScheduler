@@ -81,6 +81,6 @@ export class TrainingService {
     const params = new HttpParams()
       .set('startQ', startQ)
       .set('endQ', endQ)
-    return this.httpClient.get(environment.apiUrl + `workers/${workerId}`, {params})
+    return this.httpClient.get(environment.apiUrl + `/workers/${workerId}`, {params})
   }
 }

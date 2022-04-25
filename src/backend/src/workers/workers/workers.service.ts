@@ -19,7 +19,6 @@ export class WorkersService {
                 quadrant: i,
                 available : quadrantRes
             })
-            console.log(i + " " + quadrantRes)
         }
         return {
             quadrants : quadrants

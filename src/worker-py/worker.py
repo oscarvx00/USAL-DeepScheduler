@@ -16,6 +16,7 @@ from enum import Enum
 import shutil
 from datetime import datetime, timezone
 import math
+import subprocess
 
 RABBIT_HOST = os.environ['RABBIT_HOST']
 #REQUEST_QUEUE = os.environ['REQUEST_QUEUE']
@@ -121,7 +122,7 @@ minioClient = Minio(
 mongoClient = MongoClient(host=MONGO_HOST)
 mongoDatabase = mongoClient.ds
 
-workerId = str(mongoHandler.registerWorker(mongoDatabase, "TEST"))
+workerId = subprocess.check_output(['cat', '/etc/machine-id']).decode().rstrip()
 
 
 #Create connection to RabbitMQ container based on its service name

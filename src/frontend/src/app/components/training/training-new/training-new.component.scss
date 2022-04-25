@@ -11,7 +11,8 @@
 
 .input-card{
     width: 60%;
-    background-color: rgba($color: #FFF, $alpha: 0.5);
+    background-color: $color-background-general;
+    color: $color-foreground;
     border-radius: 15px;
     display: flex;
     flex-direction: column;
@@ -50,11 +51,72 @@
     width: 90% !important;
 }
 
+::ng-deep .mat-form-field {
+    color: green;
+}
+
 .timetable-container{
     height: 400px;
     overflow: auto;
+    background-color: $color-background-general;
 }
 
 .table-column-center{
     justify-content: center !important; 
+}
+
+.mat-table{
+    background-color: transparent;
+    margin: 0px 20px;
+    //border-radius: 20px;
+}
+
+.mat-header-cell{
+    background-color: $color-primary;
+    color: $color-foreground;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.mat-row{
+    min-height: 25px;
+}
+
+.mat-cell{
+    height: 25px;
+    color: $color-foreground;
+    text-align: center;
+    justify-content: center;
+}
+
+tr.mat-footer-row{
+    height: 10px !important;
+}
+
+.timetable-status-cell{
+    //font-size: 14px;
+    border: 1px solid white;
+    margin: 2px;
+    border-radius: 17px;
+    cursor: pointer;
+}
+
+.timetable-status-available{
+    background-color:rgba(153, 255, 153, 0.05);
+    border-color: rgb(153, 255, 153, 0.4) !important;
+}
+
+.timetable-status-available-selected{
+    background-color:rgba(153, 255, 153, 0.2);
+    border-color: rgb(153, 255, 153, 0.8) !important;
+}
+
+.timetable-status-not-available {
+    background-color: rgba(255, 123, 123, 0.05);
+    border-color: rgba(255, 123, 123, 0.7) !important;
+}
+
+.timetable-status-past-time {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-color: rgba(0, 0, 0, 0.7) !important;
 }
