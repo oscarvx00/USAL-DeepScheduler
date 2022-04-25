@@ -13,4 +13,9 @@ export class WorkersController{
         return await this.workersService.getWorkerQuadrants(id, startQ, endQ)
     }
 
+    @Get()
+    async getAllWorkers(){
+        return await this.workersService.getAllWorkers()
+    }
+
 }

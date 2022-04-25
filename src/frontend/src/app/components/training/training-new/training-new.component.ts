@@ -33,6 +33,8 @@ export class TrainingNewComponent implements OnInit {
   quadrantFirstSelection = true
   quadrantsSelected : number[] = []
 
+  workers : Worker[] = []
+
   @ViewChild('inputComputingTime') cardComputingTime! : ElementRef
   @ViewChild('continueButton') continueButton! : ElementRef
 
@@ -52,6 +54,7 @@ export class TrainingNewComponent implements OnInit {
       hours : ['', Validators.required],
       minutes : ['', Validators.required]
     })
+    this.getWorkers()
     this.initTimetableData()
     console.log(this.getQuadrant(new Date()))
   }
@@ -318,6 +321,14 @@ export class TrainingNewComponent implements OnInit {
     }
   }
 
+  getWorkers(){
+    this.trainingService.getAllWorkers().subscribe(
+      (res : Worker[]) => {
+        this.workers = res
+      }
+    )
+  }
+
 }
 
 export interface TimetableRow{
@@ -333,4 +344,10 @@ export interface Quadrant{
   content : string,
   status : 'available' | 'not-available' | 'past-time' | 'available-selected',
   quadrant : number
+}
+
+export interface Worker{
+  _id : string,
+  nodeId : string,
+  name : string
 }

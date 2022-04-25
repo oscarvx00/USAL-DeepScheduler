@@ -122,7 +122,8 @@ minioClient = Minio(
 mongoClient = MongoClient(host=MONGO_HOST)
 mongoDatabase = mongoClient.ds
 
-workerId = subprocess.check_output(['cat', '/etc/machine-id']).decode().rstrip()
+node_machine_id = subprocess.check_output(['cat', '/etc/machine-id']).decode().rstrip()
+workerId = str(mongoHandler.registerWorker(mongoDatabase, node_machine_id))
 
 
 #Create connection to RabbitMQ container based on its service name

@@ -77,7 +77,8 @@ import { RemoveAccountDialogComponent } from './components/user/profile/remove-a
     HighlightModule,
     MatTableModule,
     MatSelectModule,
-    NgxChartsModule
+    NgxChartsModule,
+    BrowserAnimationsModule,
   ],
   providers: [
     AuthDataSharingService,

@@ -1,4 +1,7 @@
 from dataclasses import dataclass
+import random
+from secrets import choice
+import uuid
 from bson.objectid import ObjectId
 
 
@@ -65,11 +68,31 @@ def setRequestCanceled(database, id):
     return rawData
 
 
-def registerWorker(database, workerName):
+def getRandomWorkerName(database):
+    with open('worker_names.txt') as file:
+        lines = file.readlines()
+        for i in range(0, 20):
+            selectedName = random.choice(lines).strip()
+            databaseRes = database.workers.find_one({
+                "name" : selectedName
+            })
+            if(databaseRes == None):
+                return selectedName
+
+    #If not name available return boring uuid
+    return uuid.uuid1()
+
+
+def registerWorker(database, node_id):
     #Check if exists
 
-    worker = database.workers.find_one({"name" : workerName})
+    worker = database.workers.find_one({"nodeId" : node_id})
     if worker != None:
         return worker['_id']
     else:
-        return database.workers.insert_one({"name" : workerName}).inserted_id
+        return database.workers.insert_one({
+            "nodeId" : node_id,
+            "name" : getRandomWorkerName(database)
+        }).inserted_id
+
+
