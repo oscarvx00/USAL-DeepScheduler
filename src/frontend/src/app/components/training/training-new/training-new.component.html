@@ -11,7 +11,21 @@
     </div>
     <div class="input-card mat-elevation-z6" #inputWorker>
         <h2 class="input-card-title">Worker</h2>
-
+        <div class="workers-container">
+            <div class="worker-nav-button" (click)="workerNavPrev()">
+                <img src="/assets/imgs/chevronLeft.png">
+            </div>
+            <div class="worker-content">
+                <p class="worker-content-name">{{workers[selectedWorker].name}}</p>
+                <div class="worker-content-prop-container">
+                    <p class="worker-content-prop-name">Prop 1</p>
+                    <p class="worker-content-prop">This is the prop 1</p>
+                </div>
+            </div>
+            <div class="worker-nav-button" (click)="workerNavNext()">
+                <img src="/assets/imgs/chevronRight.png">
+            </div>
+        </div>
     </div>
     <div class="input-card mat-elevation-z6" #inputComputingTime>
         <h2 class="input-card-title">Computing time</h2>
@@ -46,9 +60,8 @@
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
             </mat-table>
         </div>
-        
     </div>
-    <button class="continue-button" color="primary" mat-fab (click)="continueClicked()" #continueButton >
-        <img src="/assets/imgs/iconArrowDown.png">
+    <button class="ds-button-primary submit-button" color="primary" (click)="continueClicked()" #continueButton >
+        Submit training request
     </button>
 </div>

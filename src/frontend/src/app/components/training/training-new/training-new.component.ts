@@ -28,12 +28,11 @@ export class TrainingNewComponent implements OnInit {
   displayedColumns : string[] = ['time', 'd0', 'd1', 'd2', 'd3', 'd4']
   daysColumHeader : string[] = []
 
-  workerId = "62641d03d84966a982b0b1e1"
-
   quadrantFirstSelection = true
   quadrantsSelected : number[] = []
 
   workers : Worker[] = []
+  selectedWorker : number = 0
 
   @ViewChild('inputComputingTime') cardComputingTime! : ElementRef
   @ViewChild('continueButton') continueButton! : ElementRef
@@ -179,7 +178,7 @@ export class TrainingNewComponent implements OnInit {
 
     const quadrants = this.generateQuadrants()
 
-    this.trainingService.getWorkerQuadrants(this.workerId, quadrants[0][0], quadrants[quadrants.length-1][quadrants[0].length-1]).subscribe(
+    this.trainingService.getWorkerQuadrants(this.workers[this.selectedWorker]._id, quadrants[0][0], quadrants[quadrants.length-1][quadrants[0].length-1]).subscribe(
       (res : any) => {
         if(!res.quadrants || res.quadrants.length != 96*5){
           return
@@ -325,8 +324,23 @@ export class TrainingNewComponent implements OnInit {
     this.trainingService.getAllWorkers().subscribe(
       (res : Worker[]) => {
         this.workers = res
+        this.printWorkerQuadrants()
       }
     )
+  }
+
+  workerNavPrev(){
+    if(this.selectedWorker > 0){
+      this.selectedWorker--
+      this.printWorkerQuadrants()
+    }
+  }
+
+  workerNavNext(){
+    if(this.selectedWorker < this.workers.length -1){
+      this.selectedWorker++
+      this.printWorkerQuadrants()
+    }
   }
 
 }

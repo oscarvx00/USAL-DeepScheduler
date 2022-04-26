@@ -1,4 +1,3 @@
-.titanic {float: none;}
 2 men 1 shell
 Game of threads
 It works on local

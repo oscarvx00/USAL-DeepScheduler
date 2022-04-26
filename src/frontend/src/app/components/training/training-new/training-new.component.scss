@@ -33,15 +33,8 @@
     display: none;
 }
 
-.continue-button{
+.submit-button{
     margin-top: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.continue-button img{
-    height: 35px;
 }
 
 .input-card-computing-field{
@@ -120,4 +113,49 @@ tr.mat-footer-row{
 .timetable-status-past-time {
     background-color: rgba(0, 0, 0, 0.2);
     border-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.workers-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.worker-nav-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    padding: 15px;
+    border-radius: 40px;
+}
+
+.worker-nav-button:hover{
+    background-color: rgba($color: #FFFFFF, $alpha: 0.05);
+}
+
+.worker-nav-button img{
+    height: 25px;
+}
+
+.worker-content{
+    width: 80%;
+    height: 20vh;
+}
+
+.worker-content-name{
+    font-weight: bold;
+    font-size: 17px;
+    margin-bottom: 30px;
+}
+
+.worker-content-prop-container{
+    display: flex;
+    flex-direction: row;
+}
+
+.worker-content-prop-name{
+    margin-right: 10px;
+    font-weight: bold;
 }
