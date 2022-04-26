@@ -22,7 +22,6 @@ export class TrainingNewComponent implements OnInit {
   minutes = [0,15,30,45]
 
   imageNameForm! : FormGroup
-  computingTimeForm! : FormGroup
 
   timetableData : TimetableRow[] = new Array<TimetableRow>()
   displayedColumns : string[] = ['time', 'd0', 'd1', 'd2', 'd3', 'd4']
@@ -49,10 +48,6 @@ export class TrainingNewComponent implements OnInit {
     this.imageNameForm = this.formBuilder.group({
       imageName : ['', Validators.required]
     })
-    this.computingTimeForm = this.formBuilder.group({
-      hours : ['', Validators.required],
-      minutes : ['', Validators.required]
-    })
     this.getWorkers()
     this.initTimetableData()
     console.log(this.getQuadrant(new Date()))
@@ -70,7 +65,7 @@ export class TrainingNewComponent implements OnInit {
     if(this.currentStep < 1){
       this.currentStep++
     }*/
-    this.printWorkerQuadrants()
+    this.submitImage()
   }
 
   submitImage(){
@@ -79,21 +74,18 @@ export class TrainingNewComponent implements OnInit {
       //Show error
       return
     }
-    if(this.computingTimeForm.invalid){
-      //Show error
+    if(this.quadrantsSelected.length == 0){
       return
     }
 
     let imageName = this.imageNameForm.controls.imageName.value
-    let hours = this.computingTimeForm.controls.hours.value
-    let minutes = this.computingTimeForm.controls.minutes.value
 
-    this.trainingService.submitTrainingRequest(imageName, Number(hours), Number(minutes))
+    this.trainingService.submitTrainingRequest(imageName, this.workers[this.selectedWorker]._id, this.quadrantsSelected[0], this.quadrantsSelected[this.quadrantsSelected.length-1])
       .subscribe((res : any) => {
         this.router.navigateByUrl('training')
       },
       (err : any) =>{
-
+        console.log(err)
       })
   }
 

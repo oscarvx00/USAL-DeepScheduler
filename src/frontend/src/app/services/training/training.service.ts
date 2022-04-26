@@ -2,8 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { io } from 'socket.io-client';
+import { TrainingRequestRow } from 'src/app/components/training/training-home/training-home.component';
 import { Worker } from 'src/app/components/training/training-new/training-new.component';
-import { TrainingRequest } from 'src/app/model/trainingRequest';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -48,17 +48,17 @@ export class TrainingService {
     this.socket.off('request_status')
   }
 
-  submitTrainingRequest(imageName : string, hours : number, minutes : number) : Observable<any>{
-
-    let timeInSeconds = (hours * 3600) + (minutes * 60)
+  submitTrainingRequest(imageName : string, workerId : string, quadrantStart : number, quadrantEnd : number) : Observable<any>{
     return this.httpClient.post(environment.apiUrl + '/training', {
       imageName : imageName,
-      computingTime : timeInSeconds
+      workerId : workerId,
+      quadrantStart : quadrantStart,
+      quadrantEnd : quadrantEnd
     })
   }
 
-  getUserTrainingRequests() : Observable<TrainingRequest[]>{
-    return this.httpClient.get<TrainingRequest[]>(environment.apiUrl + '/training')
+  getUserTrainingRequests() : Observable<TrainingRequestRow[]>{
+    return this.httpClient.get<TrainingRequestRow[]>(environment.apiUrl + '/training')
   }
 
   getUserTrainingStats() : Observable<any>{

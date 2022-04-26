@@ -34,7 +34,7 @@ export class TrainingService {
     }
 
     async getUserTrainingRequests(user : any){
-       return await this.trainingRequestModel.find({user : user._id}).sort({'date':-1}).exec()
+       return await this.trainingRequestV2Model.find({user : user._id}).sort({'date':-1}).exec()
     }
 
     async getUserTrainingStats(user : any){
@@ -92,7 +92,7 @@ export class TrainingService {
     }
 
     async getTrainingRequestById(user : any, id : string){
-        return await this.trainingRequestModel.findOne({
+        return await this.trainingRequestV2Model.findOne({
             user : user._id,
             _id : id
         }).sort({'date':-1}).exec()
@@ -109,12 +109,12 @@ export class TrainingService {
 
     async removeAllUserTrainingData(userId : string){
         await this.minioService.removeUserData(userId)
-        await this.trainingRequestModel.deleteMany({user : userId})
+        await this.trainingRequestV2Model.deleteMany({user : userId})
     }
 
     async cancelTrainingRequest(user : any, id : string){
         await this.rabbitService.publishCancelTrainingRequest(id)
-        await this.trainingRequestModel.findOneAndUpdate(
+        await this.trainingRequestV2Model.findOneAndUpdate(
             {
                 _id : id,
                 user: user._id

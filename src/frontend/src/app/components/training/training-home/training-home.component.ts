@@ -13,7 +13,7 @@ import { TrainingService } from 'src/app/services/training/training.service';
 export class TrainingHomeComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['image', 'status'];
-  dataSource: TrainingRequest[] = [
+  dataSource: TrainingRequestRow[] = [
     /*{_id: "uuid1", imageName: "image 1", status: "COMPLETED", computingTime: "2 h"},
     {_id: "uuid1", imageName: "image 2", status: "SCHEDULED", computingTime: "2 h"},
     {_id: "uuid1", imageName: "image 3", status: "EXECUTING", computingTime: "2 h"},
@@ -27,7 +27,7 @@ export class TrainingHomeComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.trainingService.getUserTrainingRequests().subscribe((data : TrainingRequest[]) => {
+    this.trainingService.getUserTrainingRequests().subscribe((data : TrainingRequestRow[]) => {
       //console.log(data)
       this.dataSource = data
     },
@@ -77,4 +77,10 @@ export class TrainingHomeComponent implements OnInit, OnDestroy {
     this.router.navigateByUrl('training/'+row._id)
   }
 
+}
+
+export interface TrainingRequestRow {
+  _id : string,
+  imageName : string,
+  status : string
 }

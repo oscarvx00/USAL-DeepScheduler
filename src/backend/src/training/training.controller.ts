@@ -11,7 +11,7 @@ export class TrainingController {
 
     @Post()
     async newTrainingRequest(@Req() req){
-        await this.trainingService.newTrainingRequest(req.body, req.user)
+        return await this.trainingService.newTrainingRequestV2(req.body, req.user)
     }
 
     @Get()
@@ -37,11 +37,6 @@ export class TrainingController {
     @Get("/cancel/:id")
     async cancelTrainingRequest(@Req() req, @Param('id') id){
         return await this.trainingService.cancelTrainingRequest(req.user, id)
-    }
-
-    @Post("v2")
-    async newTrainingRequestV2(@Req() req){
-        return await this.trainingService.newTrainingRequestV2(req.body, req.user)
     }
 
 }
