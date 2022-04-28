@@ -95,7 +95,29 @@ export class TrainingService {
         return await this.trainingRequestV2Model.findOne({
             user : user._id,
             _id : id
-        }).sort({'date':-1}).exec()
+        }).exec()
+        /*return await this.trainingRequestV2Model.aggregate([
+            {
+                $match: {
+                    _id : id,
+                    user : user
+                }
+            },
+            {
+                $lookup:
+                    {
+                        from: 'workers',
+                        localField: 'worker',
+                        foreignField: '_id',
+                        as: 'worker'
+                    }
+            },
+            {
+                $set: {
+                    worker: {$arrayElemAt: ["$worker", 0]}
+                }
+            }
+        ])*/
     }
 
     async getTrainingRequestResultsUrl(user : any, id : string){

@@ -4,8 +4,8 @@
             <div class="card-info">
                 <div class="card-info-data">
                     <h1>{{data.imageName}}</h1>
-                    <p>Date: {{data.date}}</p>
-                    <p *ngIf="data.status == 'COMPLETED'">Reserved computing time: {{data.computingTime | secondsTime}}</p>
+                    <p>Date: {{data.date.split('T')[0]}}</p>
+                    <p *ngIf="data.status == 'COMPLETED'">Reserved computing time: {{quadrantsToSeconds(data.quadrants) | secondsTime}}</p>
                     <p *ngIf="data.status == 'COMPLETED'">Completed computing time: {{data.completedComputingTime | secondsTime}}</p>
                 </div>
                 <div class="card-info-status">
@@ -21,13 +21,13 @@
                 </div>
                 <div *ngIf="data.status == 'SCHEDULED'" class="card-status-data-scheduled">
                     <h1>Your training request is in the queue</h1>
-                    <button class="ds-button-primary" (click)="cancelTrainingRequest()">Cancel training request</button>
+                    <button class="ds-button-primary cancel-button" (click)="cancelTrainingRequest()">Cancel training request</button>
                 </div>
                 <div *ngIf="data.status == 'EXECUTING'" class="card-status-data-executing">
                     <div #scrollBottom class="log-container">
                         <div class="log-container-text">{{log}}</div>
                     </div>
-                    <button class="ds-button-primary" (click)="cancelTrainingRequest()">Cancel training request</button>
+                    <button class="ds-button-primary cancel-button" (click)="cancelTrainingRequest()">Cancel training request</button>
                 </div>
             </div>
         </div>                

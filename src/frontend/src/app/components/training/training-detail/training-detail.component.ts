@@ -11,13 +11,13 @@ export class TrainingDetailComponent implements OnInit {
 
   @ViewChild('scrollBottom') private logContainerText! : ElementRef
 
-  data = {
+  data : TrainingRequestDetail = {
     _id : "Id",
     imageName : "Image name",
     date : "Date",
-    computingTime : "Computing time",
+    quadrants : [],
     completedComputingTime : "Completed computing time",
-    status : "COMPLETED"
+    status : "COMPLETED",
   }
 
   log = ""
@@ -33,7 +33,7 @@ export class TrainingDetailComponent implements OnInit {
     this.route.params.subscribe(params => {
       this._id = params['id']
     })
-    this.trainingService.getTrainingRequest(this._id).subscribe(data => {
+    this.trainingService.getTrainingRequest(this._id).subscribe((data : TrainingRequestDetail) => {
       this.data = data
     })
     this.trainingService.getTrainingRequestUpdate().subscribe((message : any) => {
@@ -45,7 +45,7 @@ export class TrainingDetailComponent implements OnInit {
         this.log = message.data.log
         this.scrollToBottom()
       }
-      console.log(this.log)
+      //console.log(this.log)
     })
     
   }
@@ -113,4 +113,18 @@ export class TrainingDetailComponent implements OnInit {
     })
   }
 
+  quadrantsToSeconds(quadrants : []){
+    return quadrants.length * 15 * 60
+  }
+
 }
+
+export interface TrainingRequestDetail {
+  _id : string,
+  imageName : string,
+  date : string,
+  quadrants : number[],
+  completedComputingTime : string,
+  status : string
+}
+

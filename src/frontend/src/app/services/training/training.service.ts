@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { io } from 'socket.io-client';
+import { TrainingRequestDetail } from 'src/app/components/training/training-detail/training-detail.component';
 import { TrainingRequestRow } from 'src/app/components/training/training-home/training-home.component';
 import { Worker } from 'src/app/components/training/training-new/training-new.component';
 import { environment } from 'src/environments/environment';
@@ -65,8 +66,8 @@ export class TrainingService {
     return this.httpClient.get(environment.apiUrl + "/training/stats")
   }
 
-  getTrainingRequest(trainingRequestId : string) : Observable<any>{
-    return this.httpClient.get(environment.apiUrl + `/training/${trainingRequestId}`)
+  getTrainingRequest(trainingRequestId : string) : Observable<TrainingRequestDetail>{
+    return this.httpClient.get<TrainingRequestDetail>(environment.apiUrl + `/training/${trainingRequestId}`)
   }
 
   getTrainingRequestResults(trainingRequestId : string) : Observable<any>{
@@ -77,14 +78,7 @@ export class TrainingService {
     return this.httpClient.get(environment.apiUrl + `/training/cancel/${trainingRequestId}`)
   }
 
-  getWorkerQuadrants(workerId : string, startQ : number, endQ : number) : Observable<any> {
-    const params = new HttpParams()
-      .set('startQ', startQ)
-      .set('endQ', endQ)
-    return this.httpClient.get(environment.apiUrl + `/workers/${workerId}`, {params})
-  }
+  
 
-  getAllWorkers() : Observable<Worker[]> {
-    return this.httpClient.get<Worker[]>(environment.apiUrl + '/workers')
-  }
+  
 }

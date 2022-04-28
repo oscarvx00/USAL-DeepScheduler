@@ -4,7 +4,7 @@
         <form [formGroup]="imageNameForm">
             <mat-form-field class="input-card-image-field" appearence="fill">
                 <mat-label>Input</mat-label>
-                <input matInput placeholder="Placeholder" formControlName="imageName">
+                <input matInput formControlName="imageName">
                 <!--<mat-hint>Hint</mat-hint>-->
             </mat-form-field>
         </form>
@@ -69,7 +69,7 @@
             </mat-table>
         </div>
     </div>
-    <button class="ds-button-primary submit-button" color="primary" (click)="continueClicked()" #continueButton >
+    <button class="ds-button-primary submit-button" color="primary" (click)="submitClicked()" #continueButton >
         Submit training request
     </button>
 </div>

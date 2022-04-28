@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TrainingService } from 'src/app/services/training/training.service';
 import * as moment from 'moment-timezone';
+import { WorkerService } from 'src/app/services/worker/worker.service';
 
 @Component({
   selector: 'app-training-new',
@@ -12,8 +13,6 @@ import * as moment from 'moment-timezone';
 export class TrainingNewComponent implements OnInit {
 
   MAX_QUADRANTS = 6 * 4
-
-  currentStep = 0
 
   numDays = 5
   numQuadrants = 4 * 24
@@ -33,13 +32,11 @@ export class TrainingNewComponent implements OnInit {
   workers : Worker[] = []
   selectedWorker : number = 0
 
-  @ViewChild('inputComputingTime') cardComputingTime! : ElementRef
-  @ViewChild('continueButton') continueButton! : ElementRef
-
   constructor(
     private formBuilder : FormBuilder,
     private trainingService : TrainingService,
-    private router : Router
+    private router : Router,
+    private workerService : WorkerService
   ) {
     
    }
@@ -53,18 +50,7 @@ export class TrainingNewComponent implements OnInit {
     console.log(this.getQuadrant(new Date()))
   }
 
-  continueClicked(){
-    /*switch (this.currentStep){
-      case 0:
-        this.cardComputingTime.nativeElement.classList.remove('view-gone')
-        break;
-      case 1:
-        this.submitImage()
-        break;
-    }
-    if(this.currentStep < 1){
-      this.currentStep++
-    }*/
+  submitClicked(){
     this.submitImage()
   }
 
@@ -170,7 +156,7 @@ export class TrainingNewComponent implements OnInit {
 
     const quadrants = this.generateQuadrants()
 
-    this.trainingService.getWorkerQuadrants(this.workers[this.selectedWorker]._id, quadrants[0][0], quadrants[quadrants.length-1][quadrants[0].length-1]).subscribe(
+    this.workerService.getWorkerQuadrants(this.workers[this.selectedWorker]._id, quadrants[0][0], quadrants[quadrants.length-1][quadrants[0].length-1]).subscribe(
       (res : any) => {
         if(!res.quadrants || res.quadrants.length != 96*5){
           return
@@ -313,7 +299,7 @@ export class TrainingNewComponent implements OnInit {
   }
 
   getWorkers(){
-    this.trainingService.getAllWorkers().subscribe(
+    this.workerService.getAllWorkers().subscribe(
       (res : Worker[]) => {
         this.workers = res
         this.printWorkerQuadrants()
