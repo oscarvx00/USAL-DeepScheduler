@@ -353,7 +353,10 @@ export interface Quadrant{
 }
 
 export interface Worker{
-  _id : string,
-  nodeId : string,
+  _id : string
+  nodeId : string
   name : string
+  gpu_name : string
+  driver_version : string
+  compute_cap : string
 }

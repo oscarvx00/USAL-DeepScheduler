@@ -12,7 +12,7 @@ import os
 from minio import Minio
 from pymongo import MongoClient
 import mongoHandler
-from enum import Enum
+from enum import Enum, auto
 import shutil
 from datetime import datetime, timezone
 import math
@@ -102,10 +102,24 @@ def getCurrentQuadrant():
     return day_number * quadrants_per_day + hour_quadrant
 
 
+def getNodeGpuSpecs():
+
+    try:
+        dockerClient.images.pull('oscarvicente/nvidia-specs-query')
+        gpu_specs = dockerClient.containers.run(image='oscarvicente/nvidia-specs-query', device_requests=[
+        docker.types.DeviceRequest(count=-1, capabilities=[['gpu']])
+        ])
+              
+        return json.loads(gpu_specs.decode())
+    except Exception as e:
+        print("Error in nvidia-specs-query " + e)
+        return json.loads('{}')
 
 
-orchestrator_id = str(uuid.uuid1())
-orchestrator_cancel_queue_name = "cancel_queue_" + orchestrator_id
+
+
+#orchestrator_id = str(uuid.uuid1())
+#orchestrator_cancel_queue_name = "cancel_queue_" + orchestrator_id
 
 #Get docker socket client
 dockerClient = docker.from_env()
@@ -123,7 +137,8 @@ mongoClient = MongoClient(host=MONGO_HOST)
 mongoDatabase = mongoClient.ds
 
 node_machine_id = subprocess.check_output(['cat', '/etc/machine-id']).decode().rstrip()
-workerId = str(mongoHandler.registerWorker(mongoDatabase, node_machine_id))
+gpu_props = getNodeGpuSpecs()
+workerId = str(mongoHandler.registerWorker(mongoDatabase, node_machine_id, gpu_props))
 
 
 #Create connection to RabbitMQ container based on its service name
@@ -136,15 +151,16 @@ channel = connection.channel()
 #Incoming training requests
 worker_queue = "worker_queue_" + workerId
 channel.exchange_declare(exchange="workers_exchange", exchange_type='direct', durable=False)
-channel.queue_declare(queue=worker_queue, durable=False)
+channel.queue_declare(queue=worker_queue, durable=False, auto_delete=True)
 channel.queue_bind(exchange='workers_exchange', queue=worker_queue, routing_key=workerId)
 
 #Logs and status updates
 channel.exchange_declare(exchange='orchestrator_msgs_exchange', exchange_type='topic', durable=True)
 
 #Declare cancel queue and exchange
+orchestrator_cancel_queue_name = "cancel_queue_" + workerId
 channel.exchange_declare(exchange='cancel_training_exchange', exchange_type='fanout', durable=False)
-channel.queue_declare(queue=orchestrator_cancel_queue_name, durable=True)
+channel.queue_declare(queue=orchestrator_cancel_queue_name, durable=False, auto_delete=True)
 channel.queue_bind(exchange='cancel_training_exchange', queue=orchestrator_cancel_queue_name)
 
 #Create user-results bucket if not exists

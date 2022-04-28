@@ -83,7 +83,7 @@ def getRandomWorkerName(database):
     return uuid.uuid1()
 
 
-def registerWorker(database, node_id):
+def registerWorker(database, node_id, gpu_props):
     #Check if exists
 
     worker = database.workers.find_one({"nodeId" : node_id})
@@ -92,7 +92,10 @@ def registerWorker(database, node_id):
     else:
         return database.workers.insert_one({
             "nodeId" : node_id,
-            "name" : getRandomWorkerName(database)
+            "name" : getRandomWorkerName(database),
+            "gpu_name" : gpu_props["gpu_name"],
+            "driver_version" : gpu_props["driver_version"],
+            "compute_cap" : gpu_props["compute_cap"]
         }).inserted_id
 
 

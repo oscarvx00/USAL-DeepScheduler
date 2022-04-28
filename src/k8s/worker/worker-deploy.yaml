@@ -47,6 +47,9 @@ spec:
               name: dockersock
             - mountPath: "/etc/machine-id"
               name: machine-id
+          securityContext:
+            privileged: true
+
       volumes:
         - name: dockersock
           hostPath:
