@@ -1,0 +1,17 @@
+<h3 mat-dialog-title>Warning!! You will lose all your data</h3>
+<h5>A confirmation code has been sent to your mail</h5>
+<mat-dialog-content class="mat-typography" align="center">
+    <div class="input-local">
+        <form [formGroup]="removeAccountForm">
+            <mat-form-field appearance="outline">
+                <mat-label>Confirmation code</mat-label>
+                <input matInput placeholder="password" required formControlName="confirmationCode">
+                <mat-error>Error</mat-error>
+            </mat-form-field>
+        </form>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button (click)="onSubmit()" cdkFocusInitial>Remove account</button>
+</mat-dialog-actions>

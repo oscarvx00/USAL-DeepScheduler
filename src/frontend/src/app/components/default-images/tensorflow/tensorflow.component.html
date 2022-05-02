@@ -1,0 +1,40 @@
+<div class="tensorflow-container">
+    <div class="blured-card">
+        <h1 class="card-title">Tensorflow instructions</h1>
+        <a href="https://gitlab.com/HP-SCDS/Observatorio/2021-2022/deepscheduler/usal-deepscheduler/-/tree/dev/src/default-images/pytorch">Full example here</a>
+        <mat-tab-group mat-align-tabs="center" class="card-tabs" dynamicHeight (selectedTabChange)="tabSelected($event)">
+            <mat-tab label="Considerations" >
+                <div class="card-tab-content">
+                    <ul>
+                        <li>The working directory of the base image is /train</li>
+                        <li>Base image includes torch, torchvision and numpy, but you can add more pip dependencies.</li>
+                        <li>All the results MUST be saved in /train/results.</li>
+                        <li>You SHOULD include a signal handler to save the results in case of max time reached.</li>
+                    </ul>
+                </div>
+            </mat-tab>
+            <mat-tab label="Modify Script">
+                <div class="card-tab-content">
+                    <h4>Modify your scripts to save the results in /results directory:</h4>
+                    <pre><code class="code-block" [highlight]="codeStep1" [languages]="['python']"></code></pre>
+                </div>
+            </mat-tab>
+            <mat-tab label="Include handler">
+                <div class="card-tab-content">
+                    <h4>Include a signal handler to save results if the container is stopped:</h4>
+                    <pre><code class="code-block" [highlight]="codeStep2" [languages]="['python']"></code></pre>
+                </div>
+            </mat-tab>
+            <mat-tab label="Dockerize">
+                <div class="card-tab-content">
+                    <h4>Copy scripts and data into the working directory:</h4>
+                    <pre><code class="code-block" [highlight]="codeStep3_1" [languages]="['docker']"></code></pre>
+                    <h4>If you have pip requirements create a requirements.txt file, copy it into the container and run pip install:</h4>
+                    <pre><code class="code-block" [highlight]="codeStep3_2" [languages]="['docker']"></code></pre>
+                    <h4>Finally include an entrypoint with the main script execution (include cuda parameter)</h4>
+                    <pre><code class="code-block" [highlight]="codeStep3_3" [languages]="['docker']"></code></pre>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

@@ -1,0 +1,116 @@
+@import '~@angular/material/theming';
+@import 'src/custom-theme.scss';
+@import '../shared-styles.scss';
+
+.training-detail-container{
+    height: 100%;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: $color-background-general;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.training-detail-content{
+    //background-color: aqua;
+    //margin-top: 50px;
+    width: 70%;
+    height: 100%;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.training-detail-card{
+    width: 100%;
+    min-height: 70%;
+    border-radius: 15px;
+    border: 1px solid;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+} 
+
+.card-info{
+    display: flex;
+    width: 90%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-info-data h1{
+    font-weight: 800;
+}
+
+.card-info-data p{
+    margin-bottom: 4px;
+    font-weight: 300;
+}
+
+.status-cell{
+    //font-size: 14px;
+    border: 1px solid white;
+    padding: 5px 12px;
+    border-radius: 17px;
+    font-size: 18px;
+}
+
+.card-status-data{
+    flex: 1;
+    display: flex;
+    width: 90%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-status-data-scheduled h1{
+    font-weight: 300;
+}
+
+.card-status-data-executing, .card-status-data-completed{
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-status-data-scheduled{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ds-button-primary{
+    width: 10vw;
+    margin-top: 20px;
+}
+
+.log-container{
+    margin-top: 80px;
+    //flex: 1;
+    height: 40vh;
+    max-height: 40vh;
+    width: 100%;
+    background-color: #222;
+    padding: 10px;
+    overflow-y: scroll;
+    font-family: 'Inconsolata', monospace;
+    font-weight: 500;
+}
+
+.log-container-text{
+    white-space: pre-wrap;
+}
+
+.cancel-button{
+    width: 250px !important;
+}

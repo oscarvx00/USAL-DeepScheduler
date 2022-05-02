@@ -1,0 +1,80 @@
+@import '~@angular/material/theming';
+@import 'src/custom-theme.scss';
+
+//@use '@angular/material' as mat;
+.tensorflow-container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: $color-background-general;
+    transform: scale();
+    background-image: url("/assets/backgrounds/Pytorch-background.png");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+
+.blured-card{
+    height: 75%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    background-color: rgba($color: #FFF, $alpha:0.4);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 15px 25px rgba(129, 124, 124, 0.2);
+    align-items: center;
+    
+}
+
+.blured-card a{
+    margin-bottom: 30px;
+}
+
+.card-title{
+    margin: 3% 3%;
+    font-size: 2.5rem;
+    color: $color-background-general;
+    font-family: 'Montserrat', sans-serif;
+    //font-weight: 500;
+}
+
+.card-tabs{
+    width: 90%;
+    display: flex;
+}
+
+.indicator{
+    color:rebeccapurple
+}
+
+::ng-deep .mat-ink-bar{
+    background-color: #E32D5B !important;
+}
+
+.card-tab-content{
+    margin: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-tab-content pre{
+    margin-top: 5px !important;
+    margin-bottom: 30px !important;
+}
+
+.card-tab-content h4{
+    margin-bottom: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+.code-block{
+    background-color: rgba($color: #FFF, $alpha:0.4) !important;
+    border-radius: 10px;
+}
+

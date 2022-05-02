@@ -1,0 +1,119 @@
+@import '~@angular/material/theming';
+@import 'src/custom-theme.scss';
+
+.profile-container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: $color-background-general;
+}
+
+.profile-content{
+    //background-color: aqua;
+    height: 80%;
+    //margin-top: 50px;
+    width: 50%;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.profile-content-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile-content-header h1{
+    margin-top: 30px;
+    margin-bottom: 40px;
+    justify-self: center;
+    font-weight: 800;
+}
+
+.profile-content-user{
+    display: flex;
+    flex-direction: row;
+    //align-items: center;
+}
+
+.profile-content-user img{
+    border-radius: 50%;
+    height: 70px;
+    margin-left: 30px;
+}
+
+.profile-content-user-data{
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+}
+
+.profile-content-user-options{
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    justify-content: space-around;
+}
+
+.button-profile{
+    padding: 7px 20px;
+    background-color: $color-background-general;
+    border: 1px solid $color-foreground;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    color: $color-foreground;
+}
+
+.button-red{
+    border-color: rgb(255, 125, 125);
+}
+
+.button-profile:hover{
+    background-color: $color-background-hover;
+}
+
+.profile-content-stats{
+    max-height: 40%;
+    flex-grow: 1;
+    width: 100%;
+    margin-top: 70px;
+    border-radius: 20px;
+    background-color: rgba($color: #FFF, $alpha: 0.02);
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.profile-content-stats-data{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 20px;
+}
+
+.profile-content-stats-data h1{
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.profile-content-stats-data-row{
+    font-weight: 600;
+    margin: 10px 0px;
+    margin-left: 20px;
+    font-size: 18px;
+}
+
+.profile-content-stats-chart{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+}
+

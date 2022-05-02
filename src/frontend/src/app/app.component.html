@@ -1,0 +1,34 @@
+<div class="app-container">
+  <header>
+    <h2 class="logo-title" [routerLink]="['']">DeepScheduler</h2>
+    <nav>     
+        <ul class="nav-links">
+          <li [routerLink]="['default-images/tensorflow']" class="nav-link-item">Tensorflow</li>
+          <li [routerLink]="['default-images/pytorch']" class="nav-link-item">Pytorch</li>
+        </ul>    
+    </nav>
+    <div *ngIf="!isUserLoggedIn">
+      <button class="ds-button-secondary nav-button" (click)="loginClicked()">Login</button>
+      <button class="ds-button-primary nav-button" (click)="registerClicked()">Register</button>
+    </div>
+    <div class="dropdown" *ngIf="isUserLoggedIn">
+      <div class="nav-user-container"   (click)="showProfile = true">
+        {{username}}
+      </div>
+      <div class="dropdown-menu" role="tablist" #navdrop id="navdrop" *ngIf="showProfile">
+        <h4>User menu</h4>
+        <div class="dropdown-menu-separator"></div>
+        <ul>
+          <li (click)="profileClicked()"><img src="/assets/imgs/iconProfile.png" >My Profile</li>
+          <li (click)="trainingClicked()"><img src="/assets/imgs/iconTraining.png" >Training</li>
+          <li (click)="logoutClicked()"><img src="/assets/imgs/iconLogout.png">Logout</li>
+        </ul>
+      </div>
+    </div>
+    
+  </header>
+  
+  <div class="router-container" (click)="showProfile = false" >
+    <router-outlet></router-outlet>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="training-detail-container">
+    <div class="training-detail-content">
+        <div class="training-detail-card mat-elevation-z6" [ngClass]="getCardStatusClass()">
+            <div class="card-info">
+                <div class="card-info-data">
+                    <h1>{{data.imageName}}</h1>
+                    <p>Date: {{data.date.split('T')[0]}}</p>
+                    <p *ngIf="data.status == 'COMPLETED'">Reserved computing time: {{quadrantsToSeconds(data.quadrants) | secondsTime}}</p>
+                    <p *ngIf="data.status == 'COMPLETED'">Completed computing time: {{data.completedComputingTime | secondsTime}}</p>
+                </div>
+                <div class="card-info-status">
+                    <span class="status-cell" [ngClass]="getStatusClass()">{{data.status.toLowerCase()}}</span>
+                </div>
+            </div>
+            <div class="card-status-data">
+                <div *ngIf="data.status == 'COMPLETED'" class="card-status-data-completed">
+                    <div *ngIf="log != ''" #scrollBottom class="log-container">
+                        <div class="log-container-text">{{log}}</div>
+                    </div>
+                    <button class="ds-button-primary" (click)="getTrainingRequestResults()">Download results</button>
+                </div>
+                <div *ngIf="data.status == 'SCHEDULED'" class="card-status-data-scheduled">
+                    <h1>Your training request is in the queue</h1>
+                    <button class="ds-button-primary cancel-button" (click)="cancelTrainingRequest()">Cancel training request</button>
+                </div>
+                <div *ngIf="data.status == 'EXECUTING'" class="card-status-data-executing">
+                    <div #scrollBottom class="log-container">
+                        <div class="log-container-text">{{log}}</div>
+                    </div>
+                    <button class="ds-button-primary cancel-button" (click)="cancelTrainingRequest()">Cancel training request</button>
+                </div>
+            </div>
+        </div>                
+    </div>
+</div>

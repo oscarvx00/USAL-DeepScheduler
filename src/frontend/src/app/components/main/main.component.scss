@@ -1,0 +1,58 @@
+@import '~@angular/material/theming';
+@import 'src/custom-theme.scss';
+
+.main-1{
+    width: 100%;
+    height: 60vh;
+    background-image: url("/assets/backgrounds/ElectronicMain.gif");
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.main-1 h1{
+    color: white;
+    font-size: 40px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+}
+
+.main-1 button{
+    width: 200px;
+}
+
+.main-1 p{
+    color: white;
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+}
+
+.main-card{
+    height: 60vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-card-separator{
+    width: 10vw;
+}
+
+.main-card-il img{
+    max-height: 35vh;
+}
+
+.main-card-text{
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    max-width: 20vw;
+}
+
+.main-footer{
+    height: 20vh;
+    background-color: #38383a;
+}

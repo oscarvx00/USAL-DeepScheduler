@@ -1,0 +1,178 @@
+@import '~@angular/material/theming';
+@import 'src/custom-theme.scss';
+
+.training-new-container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: $color-background-general;
+    padding-bottom: 50px;
+}
+
+.input-card{
+    width: 60%;
+    background-color: $color-background-general;
+    color: $color-foreground;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    padding: 40px;
+}
+
+.input-card form{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-gone{
+    display: none;
+}
+
+.submit-button{
+    margin-top: 50px;
+}
+
+.input-card-computing-field{
+    width: 60px !important;
+}
+
+.input-card-image-field{
+    width: 90% !important;
+}
+
+
+.timetable-container{
+    height: 400px;
+    overflow: auto;
+    background-color: $color-background-general;
+}
+
+.table-column-center{
+    justify-content: center !important; 
+}
+
+.mat-table{
+    background-color: transparent;
+    margin: 0px 20px;
+    //border-radius: 20px;
+}
+
+.mat-header-cell{
+    background-color: $color-primary;
+    color: $color-foreground;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.mat-row{
+    min-height: 25px;
+}
+
+.mat-cell{
+    height: 25px;
+    color: $color-foreground;
+    text-align: center;
+    justify-content: center;
+}
+
+tr.mat-footer-row{
+    height: 10px !important;
+}
+
+.timetable-status-cell{
+    //font-size: 14px;
+    border: 1px solid white;
+    margin: 2px;
+    border-radius: 17px;
+    cursor: pointer;
+}
+
+.timetable-status-available{
+    background-color:rgba(153, 255, 153, 0.05);
+    border-color: rgb(153, 255, 153, 0.4) !important;
+}
+
+.timetable-status-available-selected{
+    background-color:rgba(153, 255, 153, 0.2);
+    border-color: rgb(153, 255, 153, 0.8) !important;
+}
+
+.timetable-status-not-available {
+    background-color: rgba(255, 123, 123, 0.05);
+    border-color: rgba(255, 123, 123, 0.7) !important;
+}
+
+.timetable-status-past-time {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.workers-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.worker-nav-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    padding: 15px;
+    border-radius: 40px;
+}
+
+.worker-nav-button:hover{
+    background-color: rgba($color: #FFFFFF, $alpha: 0.05);
+}
+
+.worker-nav-button img{
+    height: 25px;
+}
+
+.worker-content{
+    width: 80%;
+    height: 20vh;
+}
+
+.worker-content-name{
+    font-weight: bold;
+    font-size: 19px;
+    margin-bottom: 30px;
+}
+
+.worker-content-prop-container{
+    display: flex;
+    flex-direction: row;
+}
+
+.worker-content-prop-name{
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+    /*change color of label*/
+    color: $color-foreground !important;
+}
+
+::ng-deep .mat-form-field-label {
+    /*change color of label*/
+    color: $color-foreground !important;
+}
+
+::ng-deep.mat-form-field-underline {
+    /*change color of underline*/
+    background-color: $color-foreground!important;
+} 
+
+::ng-deep.mat-form-field-ripple {
+    /*change color of underline when focused*/
+    background-color: $color-foreground !important;;
+}

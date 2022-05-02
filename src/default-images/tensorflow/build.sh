@@ -1,0 +1,1 @@
+exec docker build -t oscarvicente/deepscheduler-tensorflow-cuda-base .

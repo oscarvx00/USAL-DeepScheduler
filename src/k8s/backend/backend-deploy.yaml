@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deepscheduler-backend
+spec:
+  selector:
+    matchLabels:
+      app: deepscheduler-backend
+  template:
+    metadata:
+      labels:
+        app: deepscheduler-backend
+    spec:
+      initContainers:
+        - name: wait-for-rabbitmq
+          image: oscarvicente/wait-for-it
+          command: ["./wait-for-it.sh", "rabbitmq.default.svc.cluster.local:5672"]
+        - name: wait-for-mongo 
+          image: oscarvicente/wait-for-it
+          command: ["./wait-for-it.sh", "mongodb.default.svc.cluster.local:27017"]
+      containers:
+      - name: deepscheduler-backend-k8s
+        image: oscarvicente/deepscheduler-backend
+        env: 
+          - name: BACKEND_HOST
+            value: http://deepscheduler.sytes.net:30003
+          - name: MONGO_HOST
+            value: mongodb.default.svc.cluster.local/ds
+          - name: GOOGLE_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: backend-secret
+                key: GOOGLE_CLIENT_ID
+          - name: GOOGLE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: backend-secret
+                key: GOOGLE_SECRET
+          - name: VERIFICATION_MAIL_USER
+            value: deepscheduler@gmail.com
+          - name: VERIFICATION_MAIL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: backend-secret
+                key: VERIFICATION_MAIL_PASSWORD
+          - name: GITHUB_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: backend-secret
+                key: GITHUB_CLIENT_ID
+          - name: GITHUB_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: backend-secret
+                key: GITHUB_SECRET
+          - name: GITLAB_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: backend-secret
+                key: GITLAB_CLIENT_ID
+          - name: GITLAB_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: backend-secret
+                key: GITLAB_SECRET
+          - name: RABBIT_HOST
+            value: rabbitmq.default.svc.cluster.local
+          - name: MINIO_HOST
+            value: minio-oscarvx00.cloud.okteto.net
+          - name: MINIO_ACCESS
+            value: myaccesskey
+          - name: MINIO_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: backend-secret
+                key: MINIO_SECRET
+        ports:
+        - name: http
+          protocol: TCP
+          containerPort: 3000
+        - name: websocket
+          protocol: TCP
+          containerPort: 3001

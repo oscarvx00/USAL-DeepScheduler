@@ -1,0 +1,46 @@
+<div class="login-container">
+    <mat-card class="login-card">
+        <div class="input-container">
+            <div class="input-local">
+                <form [formGroup]="loginForm">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Enter your username</mat-label>
+                        <input matInput placeholder="username" required formControlName="username">
+                        <mat-error>Error</mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline"> 
+                        <mat-label>Enter your password</mat-label>
+                        <input matInput type="password" required formControlName="password">
+                        <mat-error>Error</mat-error>
+                    </mat-form-field>
+                    <button mat-stroked-button type="submit" (click)="onSubmit()">Login</button>
+                </form>
+            </div>
+            <div class="input-separator">
+                <div class="separator-bar"></div>
+                <p>OR</p>
+                <div class="separator-bar"></div>
+            </div>
+            <div class="input-external">
+                <button class="login-external-button" mat-stroked-button (click)="onLoginGoogle()">
+                    <div class="login-external-button-content">
+                        <img src="/assets/imgs/logoGoogle.png"/>
+                        <span>Login with Google</span>
+                    </div>    
+                </button>
+                <button class="login-external-button" style="background-color: rgb(48, 48, 48); color: white;" mat-stroked-button (click)="onLoginGithub()">
+                    <div class="login-external-button-content">
+                        <img src="/assets/imgs/logoGithub.png"/>
+                        <span>Login with Github</span>
+                    </div>    
+                </button>
+                <button class="login-external-button" style="background-color: #fc6d26; color: white;" mat-stroked-button (click)="onLoginGitlab()">
+                    <div class="login-external-button-content">
+                        <img src="/assets/imgs/logoGitlab.png"/>
+                        <span>Login with Gitlab</span>
+                    </div>    
+                </button>
+            </div> 
+        </div>   
+    </mat-card>
+</div>
