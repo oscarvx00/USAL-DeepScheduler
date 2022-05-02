@@ -4,10 +4,7 @@ import { TrainingRequest } from 'src/schemas/trainingRequest.schema';
 import { Model } from 'mongoose';
 import { RabbitHandlerService } from 'src/rabbit-handler/rabbit-handler.service';
 import { MinioHandlerService } from 'src/minio-handler/minio-handler/minio-handler.service';
-import { User } from 'src/schemas/user.schema';
 import { TrainingRequestV2 } from 'src/schemas/trainingRequest_v2.schema';
-import mongoose from 'mongoose';
-import { type } from 'os';
 
 @Injectable()
 export class TrainingService {
@@ -96,28 +93,6 @@ export class TrainingService {
             user : user._id,
             _id : id
         }).exec()
-        /*return await this.trainingRequestV2Model.aggregate([
-            {
-                $match: {
-                    _id : id,
-                    user : user
-                }
-            },
-            {
-                $lookup:
-                    {
-                        from: 'workers',
-                        localField: 'worker',
-                        foreignField: '_id',
-                        as: 'worker'
-                    }
-            },
-            {
-                $set: {
-                    worker: {$arrayElemAt: ["$worker", 0]}
-                }
-            }
-        ])*/
     }
 
     async getTrainingRequestResultsUrl(user : any, id : string){
@@ -145,15 +120,13 @@ export class TrainingService {
           ).exec()
     }
 
-
-    /*
-    {
+    
+    /*{
         imageName: string,
         quadrantStart: number,
         quadrantEnd: number,
         workerId: string
-    }
-    */
+    }*/
     async newTrainingRequestV2(request : any, user : any){     
         
         const newTrainingRequestData = {
@@ -164,8 +137,7 @@ export class TrainingService {
             workerId: request.workerId
         }
 
-        return await this.rabbitService.publishTrainingRequestV2(newTrainingRequestData)
-        
+        return await this.rabbitService.publishTrainingRequestV2(newTrainingRequestData)   
     }
 
     private calculateQuadrants(qStart : number , qEnd : number) : number[]{
@@ -189,4 +161,14 @@ export class TrainingService {
         return res == null
     }
 
+    async stopUserActiveRequests(userId : string){
+        const res = await this.trainingRequestV2Model.find({
+            user : userId,
+            status : {$in : ['SCHEDULED', 'EXECUTING']}
+        }).exec()
+
+        for(let tr of res){
+            this.cancelTrainingRequest(userId, tr._id.toString())
+        }
+    }
 }
