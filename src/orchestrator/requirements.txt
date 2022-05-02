@@ -1,5 +1,0 @@
-Flask
-pika
-docker
-minio
-pymongo
