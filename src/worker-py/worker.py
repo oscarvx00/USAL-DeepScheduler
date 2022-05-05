@@ -4,7 +4,6 @@ from io import BytesIO
 import json
 import tarfile
 import time
-import uuid
 import zipfile
 import pika
 import docker
@@ -206,7 +205,7 @@ def callback(ch, method, properties, body):
     #Create a container with gpu capabilities.
     container = dockerClient.containers.run(image=trainingRequest.imageName, detach="True", device_requests=[
         docker.types.DeviceRequest(count=-1, capabilities=[['gpu']])
-    ])
+    ], ports={'6006/tcp' : ('127.0.0.1', 6006)})
 
     start_time = time.time()
 
