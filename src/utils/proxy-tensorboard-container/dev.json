@@ -1,0 +1,7 @@
+{
+    "operation" : "ADD",
+    "location": {
+            "location" : "test",
+            "nodeUrl" : "http://192.168.1.51:6006/"
+        }
+}
