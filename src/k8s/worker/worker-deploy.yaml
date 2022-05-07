@@ -42,6 +42,10 @@ spec:
               value: users-results
             - name: MONGO_HOST
               value: mongodb.default.svc.cluster.local
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
           volumeMounts:
             - mountPath: "/var/run/docker.sock"
               name: dockersock
