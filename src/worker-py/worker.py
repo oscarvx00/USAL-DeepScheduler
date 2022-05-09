@@ -27,6 +27,8 @@ MINIO_RESULTS_BUCKET = os.environ['MINIO_RESULTS_BUCKET']
 
 MONGO_HOST = os.environ['MONGO_HOST'] 
 
+NODE_IP = os.environ['NODE_IP']
+
 
 class TrainingRequest:
     def __init__(self, _id, user, quadrants, imageName, worker, date, status):
@@ -115,6 +117,16 @@ def getNodeGpuSpecs():
         return json.loads('{}')
 
 
+def sendProxyMsg(request_id, node_ip, operation):
+    content = json.dumps({
+        "operation" : operation,
+        "location" : {
+            "location" : request_id,
+            "nodeUrl" : "http://" + str(node_ip) + ":6006/"
+        }
+    })
+    channel.basic_publish(
+    exchange='proxy_exchange', routing_key='', body=content)
 
 
 #orchestrator_id = str(uuid.uuid1())
@@ -137,7 +149,7 @@ mongoDatabase = mongoClient.ds
 
 node_machine_id = subprocess.check_output(['cat', '/etc/machine-id']).decode().rstrip()
 gpu_props = getNodeGpuSpecs()
-workerId = str(mongoHandler.registerWorker(mongoDatabase, node_machine_id, gpu_props))
+workerId = str(mongoHandler.registerWorker(mongoDatabase, node_machine_id, gpu_props, NODE_IP))
 
 
 #Create connection to RabbitMQ container based on its service name
@@ -205,9 +217,10 @@ def callback(ch, method, properties, body):
     #Create a container with gpu capabilities.
     container = dockerClient.containers.run(image=trainingRequest.imageName, detach="True", device_requests=[
         docker.types.DeviceRequest(count=-1, capabilities=[['gpu']])
-    ], ports={'6006/tcp' : ('127.0.0.1', 6006)})
+    ], ports={'6006/tcp' : ('0.0.0.0', 6006)})
 
     start_time = time.time()
+    sendProxyMsg(trainingRequest._id, NODE_IP, "ADD")
 
     #Enter in a loop until max time is reached or container has exited
     while True:
@@ -217,6 +230,7 @@ def callback(ch, method, properties, body):
         if msg != None:
             cancelId = json.loads(msg.decode('utf-8'))['id']
             if str(cancelId) == str(trainingRequest._id):
+                sendProxyMsg(trainingRequest._id, NODE_IP, "DEL")
                 container.stop()
                 imageUpdated = TrainingRequest.fromJson(mongoHandler.setRequestCanceled(mongoDatabase, trainingRequest._id))
                 rabbitSendUpdate(RabbitMessage(RabbitMessageType.REQUEST_STATUS, requestUserId, imageUpdated))
@@ -239,6 +253,7 @@ def callback(ch, method, properties, body):
         time.sleep(3)
 
     final_time = time.time()
+    sendProxyMsg(trainingRequest._id, NODE_IP, "DEL")
     #Stored for stats purposes
     completed_computing_time = final_time - start_time
     print(" [x] Total time: ", completed_computing_time)

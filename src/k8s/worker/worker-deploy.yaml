@@ -21,6 +21,9 @@ spec:
       containers:
         - name: worker
           image: oscarvicente/deepscheduler-worker
+          ports:
+            - containerPort: 6006
+              hostPort: 6006
           env:
             - name: RABBIT_HOST
               value: rabbitmq.default.svc.cluster.local
