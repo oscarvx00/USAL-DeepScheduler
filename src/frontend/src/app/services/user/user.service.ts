@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/model/user';
 import { environment } from 'src/environments/environment';
+import { AuthDataSharingService } from '../auth/user-data-sharing';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,9 @@ import { environment } from 'src/environments/environment';
 export class UserService {
 
   constructor(
-    private httpClient : HttpClient
+    private httpClient : HttpClient,
+    private router : Router,
+    private authDataSharingService : AuthDataSharingService
   ) { }
 
   getUserBasicProfile() : Observable<User> {
@@ -36,10 +40,13 @@ export class UserService {
     this.httpClient.post(environment.apiUrl + "/user/remove/confirm", {
       confirmationCode : confirmationCode
     }).subscribe((resp : any) => {
-      //localStorage.removeItem('auth_token')
+      //console.log(resp + "HOLA")
+      localStorage.removeItem('auth_token')
+      this.authDataSharingService.isUserLoggedIn.next(false)
+      this.router.navigate([''])
     },
     (err : any) => {
-
+      //console.log(err)
     })
   }
 }
