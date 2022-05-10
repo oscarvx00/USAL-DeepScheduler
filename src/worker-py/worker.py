@@ -122,7 +122,7 @@ def sendProxyMsg(request_id, node_ip, operation):
         "operation" : operation,
         "location" : {
             "location" : request_id,
-            "nodeUrl" : "http://" + str(node_ip) + ":6006/"
+            "nodeUrl" : "http://" + str(node_ip) + ":50000/"
         }
     })
     channel.basic_publish(
@@ -217,7 +217,7 @@ def callback(ch, method, properties, body):
     #Create a container with gpu capabilities.
     container = dockerClient.containers.run(image=trainingRequest.imageName, detach="True", device_requests=[
         docker.types.DeviceRequest(count=-1, capabilities=[['gpu']])
-    ], ports={'6006/tcp' : ('0.0.0.0', 6006)})
+    ], ports={'6006/tcp' : ('0.0.0.0', 50000)})
 
     start_time = time.time()
     sendProxyMsg(trainingRequest._id, NODE_IP, "ADD")
