@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TrainingService } from 'src/app/services/training/training.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-training-detail',
@@ -115,6 +116,11 @@ export class TrainingDetailComponent implements OnInit {
 
   quadrantsToSeconds(quadrants : []){
     return quadrants.length * 15 * 60
+  }
+
+  openTensorboard(){
+    const url = `${environment.proxyUrl}/${this.data._id}`
+    window.open(url, '_blank')
   }
 
 }

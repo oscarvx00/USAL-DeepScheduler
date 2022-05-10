@@ -27,6 +27,7 @@
                     <div #scrollBottom class="log-container">
                         <div class="log-container-text">{{log}}</div>
                     </div>
+                    <button class="tensorboard-button" mat-stroked-button (click)="openTensorboard()">Open tensorboard</button>
                     <button class="ds-button-primary cancel-button" (click)="cancelTrainingRequest()">Cancel training request</button>
                 </div>
             </div>
