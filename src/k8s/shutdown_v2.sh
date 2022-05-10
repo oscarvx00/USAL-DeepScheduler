@@ -15,6 +15,10 @@ kubectl delete daemonset worker
 kubectl delete cronjob manager-launcher
 kubectl delete deploy manager-writer
 
+#Delete reverse-proxy
+kubectl delete svc deepscheduler-reverse-proxy
+kubectl delete deploy deepscheduler-reverse-proxy
+
 #Delete rabbitmq
 #kubectl delete statefulsets rabbitmq
 #kubectl delete svc rabbitmq

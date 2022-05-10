@@ -28,3 +28,7 @@ kubectl apply -f backend/backend-service.yaml
 #Run frontend
 kubectl apply -f frontend/frontend-deploy.yaml
 kubectl apply -f frontend/frontend-service.yaml
+
+#Run reverse-proxy
+kubectl apply -f configurable-reverse-proxy/reverse-proxy-deploy.yaml
+kubectl apply -f configurable-reverse-proxy/reverse-proxy-service.yaml
