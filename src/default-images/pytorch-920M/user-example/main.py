@@ -12,6 +12,8 @@ import signal
 import data
 import model
 
+from torch.utils.tensorboard import SummaryWriter
+
 parser = argparse.ArgumentParser(description='PyTorch Wikitext-2 RNN/LSTM/GRU/Transformer Language Model')
 parser.add_argument('--data', type=str, default='./data/wikitext-2',
                     help='location of the data corpus')
@@ -54,6 +56,8 @@ parser.add_argument('--dry-run', action='store_true',
                     help='verify the code and the model')
 
 args = parser.parse_args()
+
+writer = SummaryWriter('/train/results/')
 
 # Set the random seed manually for reproducibility.
 torch.manual_seed(args.seed)
@@ -237,6 +241,7 @@ try:
                 'valid ppl {:8.2f}'.format(epoch, (time.time() - epoch_start_time),
                                            val_loss, math.exp(val_loss)))
         print('-' * 89)
+        writer.add_scalar('Loss', val_loss, epoch)
         # Save the model if the validation loss is the best we've seen so far.
         if not best_val_loss or val_loss < best_val_loss:
             with open(args.save, 'wb+') as f:

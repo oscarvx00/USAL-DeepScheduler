@@ -21,6 +21,9 @@ spec:
       containers:
         - name: worker
           image: oscarvicente/deepscheduler-worker
+          ports:
+            - containerPort: 6006
+              hostPort: 6006
           env:
             - name: RABBIT_HOST
               value: rabbitmq.default.svc.cluster.local
@@ -42,6 +45,10 @@ spec:
               value: users-results
             - name: MONGO_HOST
               value: mongodb.default.svc.cluster.local
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
           volumeMounts:
             - mountPath: "/var/run/docker.sock"
               name: dockersock
