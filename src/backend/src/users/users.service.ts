@@ -136,10 +136,10 @@ export class UsersService {
     
         if(user){     
             if(confirmationCode == user.removeAccountCode){
-              //Also stop all running images
+                await this.trainingService.stopUserActiveRequests(mUser._id)
                 await this.trainingService.removeAllUserTrainingData(mUser._id)
                 await this.userModel.deleteOne({username : user.username})
-                return
+                return "OK"
             }    
         }
         throw new UnauthorizedException('Wrong confirmation code')
