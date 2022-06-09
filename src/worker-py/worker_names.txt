@@ -4,3 +4,8 @@ It works on local
 404 Not Found
 It’s not a bug, it’s a feature
 Ctrl Alt Elite
+drop table users;
+NotAVirus
+Byte me
+Code_Eat_Sleep
+1+1=10
