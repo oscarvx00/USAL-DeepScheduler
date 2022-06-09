@@ -1,7 +1,7 @@
 <div class="tensorflow-container">
     <div class="blured-card">
         <h1 class="card-title">Pytorch instructions</h1>
-        <a href="https://gitlab.com/HP-SCDS/Observatorio/2021-2022/deepscheduler/usal-deepscheduler/-/tree/dev/src/default-images/pytorch">Full example here</a>
+        <a href="https://github.com/oscarvx00/USAL-DeepScheduler/tree/main/src/default-images/pytorch">Full example and scripts here</a>
         <mat-tab-group mat-align-tabs="center" class="card-tabs" dynamicHeight (selectedTabChange)="tabSelected($event)">
             <mat-tab label="Considerations" >
                 <div class="card-tab-content">
@@ -31,7 +31,7 @@
                     <pre><code class="code-block" [highlight]="codeStep3_1" [languages]="['docker']"></code></pre>
                     <h4>If you have pip requirements create a requirements.txt file, copy it into the container and run pip install:</h4>
                     <pre><code class="code-block" [highlight]="codeStep3_2" [languages]="['docker']"></code></pre>
-                    <h4>Finally include an entrypoint with the main script execution (include cuda parameter)</h4>
+                    <h4>Finally modify the entrypoint.sh script including the main script execution (include cuda parameter)</h4>
                     <pre><code class="code-block" [highlight]="codeStep3_3" [languages]="['docker']"></code></pre>
                 </div>
             </mat-tab>
