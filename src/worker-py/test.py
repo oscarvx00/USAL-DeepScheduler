@@ -1,3 +1,4 @@
+from time import sleep
 import docker
 
 TENSORBOARD_IMAGE = 'oscarvicente/tensorboard-container'
@@ -12,4 +13,11 @@ container = dockerClient.containers.run(image='oscarvicente/pytorch-920m-user-ex
         docker.types.DeviceRequest(count=-1, capabilities=[['gpu']])],
         volumes=[tensorboard_volume.id+':/train/results']
     )
+
+sleep(10)
+tensorboard_container.stop()
+tensorboard_container.remove()
+container.stop()
+container.remove()
+tensorboard_volume.remove(force=True)
 

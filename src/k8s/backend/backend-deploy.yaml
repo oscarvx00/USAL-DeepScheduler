@@ -23,7 +23,7 @@ spec:
         image: oscarvicente/deepscheduler-backend
         env: 
           - name: BACKEND_HOST
-            value: http://deepscheduler.sytes.net:30003
+            value: http://deepscheduler.ddns.net:30003
           - name: MONGO_HOST
             value: mongodb.default.svc.cluster.local/ds
           - name: GOOGLE_CLIENT_ID

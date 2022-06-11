@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-from cProfile import label
-from ctypes import DllGetClassObject
 from io import BytesIO
 import json
 import tarfile
@@ -130,6 +128,28 @@ def sendProxyMsg(request_id, node_ip, operation):
     channel.basic_publish(
     exchange='proxy_exchange', routing_key='', body=content)
 
+def stopAndRemoveAll(training_container, training_image, tensorboard_container, tensorboard_volume):
+    try:
+        training_container.stop()
+    except:
+        print('Error stopping training container')
+    try:
+        dockerClient.images.remove(training_image.id)
+    except:
+        print('Error removing training image')
+    try:
+        tensorboard_container.stop()
+    except:
+        print('Error stopping tensorboard container')
+    try:
+        tensorboard_container.remove()
+    except:
+        print('Error removing tensorboard container')
+    try:
+        tensorboard_volume.remove(force=True)
+    except:
+        print('Error removing tensorborad volume')
+
 
 #orchestrator_id = str(uuid.uuid1())
 #orchestrator_cancel_queue_name = "cancel_queue_" + orchestrator_id
@@ -242,7 +262,16 @@ def callback(ch, method, properties, body):
             cancelId = json.loads(msg.decode('utf-8'))['id']
             if str(cancelId) == str(trainingRequest._id):
                 sendProxyMsg(trainingRequest._id, NODE_IP, "DEL")
-                container.stop()
+                stopAndRemoveAll(container, image, tensorboard_container, tensorboard_volume)
+                # container.stop()
+                # try:
+                #     container.remove()
+                #     dockerClient.images.remove(image.id)
+                #     tensorboard_container.stop()
+                #     tensorboard_container.remove()
+                #     tensorboard_volume.remove()
+                # except:
+                #     print("Error removing image or container", flush=True)
                 imageUpdated = TrainingRequest.fromJson(mongoHandler.setRequestCanceled(mongoDatabase, trainingRequest._id))
                 rabbitSendUpdate(RabbitMessage(RabbitMessageType.REQUEST_STATUS, requestUserId, imageUpdated))
                 ch.basic_ack(delivery_tag=method.delivery_tag)
@@ -330,13 +359,15 @@ def callback(ch, method, properties, body):
     rabbitSendUpdate(RabbitMessage(RabbitMessageType.REQUEST_STATUS, requestUserId, imageUpdated))
 
     #Remove container, remove image
-    try:
-        container.remove()
-        dockerClient.images.remove(image.id)
-        tensorboard_container.remove()
-        tensorboard_volume.remove()
-    except:
-        print("Error removing image or container", flush=True)
+    stopAndRemoveAll(container, image, tensorboard_container, tensorboard_volume)
+    # try:
+    #     container.remove()
+    #     dockerClient.images.remove(image.id)
+    #     tensorboard_container.stop()
+    #     tensorboard_container.remove()
+    #     tensorboard_volume.remove()
+    # except:
+    #     print("Error removing image or container", flush=True)
 
     print("\n=========== Request " + str(trainingRequest._id)+ " completed ===========\n\n\n", flush=True)
 
