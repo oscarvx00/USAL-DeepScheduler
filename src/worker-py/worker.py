@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from cProfile import label
+from ctypes import DllGetClassObject
 from io import BytesIO
 import json
 import tarfile
@@ -29,6 +30,7 @@ MONGO_HOST = os.environ['MONGO_HOST']
 
 NODE_IP = os.environ['NODE_IP']
 
+TENSORBOARD_IMAGE = 'oscarvicente/tensorboard-container'
 
 class TrainingRequest:
     def __init__(self, _id, user, quadrants, imageName, worker, date, status):
@@ -152,6 +154,9 @@ gpu_props = getNodeGpuSpecs()
 workerId = str(mongoHandler.registerWorker(mongoDatabase, node_machine_id, gpu_props, NODE_IP))
 
 
+#Download tensorboard image
+tensorboard_image = dockerClient.images.pull(TENSORBOARD_IMAGE)
+
 #Create connection to RabbitMQ container based on its service name
 #connection = pika.BlockingConnection(
 #    pika.ConnectionParameters(host=RABBIT_HOST, heartbeat=0, port=30001))
@@ -214,10 +219,16 @@ def callback(ch, method, properties, body):
     print(" [x] Image " + trainingRequest.imageName + " pulled")
 
 
+    #Create volume for tensorboard
+    tensorboard_volume = dockerClient.volumes.create()
+    #Create tensorboard container
+    tensorboard_container = dockerClient.containers.run(image=TENSORBOARD_IMAGE, detach=True,
+    volumes=[tensorboard_volume.id+':/train/results'], ports={'6006/tcp' : ('0.0.0.0', 50000)})
+
     #Create a container with gpu capabilities.
     container = dockerClient.containers.run(image=trainingRequest.imageName, detach="True", device_requests=[
-        docker.types.DeviceRequest(count=-1, capabilities=[['gpu']])
-    ], ports={'6006/tcp' : ('0.0.0.0', 50000)})
+        docker.types.DeviceRequest(count=-1, capabilities=[['gpu']])], 
+        volumes=[tensorboard_volume.id+':/train/results'])
 
     start_time = time.time()
     sendProxyMsg(trainingRequest._id, NODE_IP, "ADD")
@@ -322,6 +333,8 @@ def callback(ch, method, properties, body):
     try:
         container.remove()
         dockerClient.images.remove(image.id)
+        tensorboard_container.remove()
+        tensorboard_volume.remove()
     except:
         print("Error removing image or container", flush=True)
 
