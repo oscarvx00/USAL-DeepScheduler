@@ -26,4 +26,9 @@ kubectl delete deploy deepscheduler-reverse-proxy
 #Delete mongo
 #kubectl delete svc mongodb
 #kubectl delete deploy mongodb
+
+#Delete minio
+#kubectl delete svc minio
+#kubectl delete deploy minio
+
 #Secrets, volumes and storage class are not deleted

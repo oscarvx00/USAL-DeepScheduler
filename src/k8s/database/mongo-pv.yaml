@@ -1,18 +1,18 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: mongo-local-pv
+  name: mongo-pv
   labels:
-    type: local
+    type: mongo
 spec:
-  storageClassName: mongo-local-storage
+  storageClassName: mongo-storage
   persistentVolumeReclaimPolicy: Retain
   capacity:
-    storage: 500Mi
+    storage: 200Mi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mnt/ds-data"
+    path: "/mnt/ds-data-mongo"
   nodeAffinity:
     required:
       nodeSelectorTerms:
