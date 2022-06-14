@@ -68,7 +68,7 @@ spec:
           - name: MINIO_HOST
             value: deepscheduler.ddns.net #minio-oscarvx00.cloud.okteto.net
           - name: MINIO_PORT
-            value: '30012'
+            value: '30011'
           - name: MINIO_ACCESS
             value: myaccesskey
           - name: MINIO_SECRET

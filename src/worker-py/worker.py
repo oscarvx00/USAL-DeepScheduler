@@ -161,7 +161,8 @@ dockerClient = docker.from_env()
 minioClient = Minio(
     MINIO_CLIENT,
     access_key=MINIO_ACCESS,
-    secret_key=MINIO_SECRET
+    secret_key=MINIO_SECRET,
+    secure=False
 )
 
 #Create MongoDB client

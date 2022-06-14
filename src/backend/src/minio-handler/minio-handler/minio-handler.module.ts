@@ -9,7 +9,8 @@ import { MinioHandlerService } from './minio-handler.service';
       endPoint: process.env.MINIO_HOST,
       port: Number(process.env.MINIO_PORT),
       accessKey: process.env.MINIO_ACCESS,
-      secretKey: process.env.MINIO_SECRET
+      secretKey: process.env.MINIO_SECRET,
+      useSSL: false
     })
   ],
   exports: [MinioHandlerService]
