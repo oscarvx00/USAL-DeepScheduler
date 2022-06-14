@@ -1,13 +1,14 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mongodb-pv-claim
+  name: minio-pv-claim
   labels:
-    app: mongodb
+    app: minio
 spec:
   resources:
     requests:
-      storage: 200Mi
+      storage: 500Mi
   accessModes:
     - ReadWriteOnce
-  storageClassName: mongo-storage
+  storageClassName: minio-storage
+      

@@ -30,7 +30,7 @@ spec:
             - name: REQUEST_QUEUE
               value: request_queue
             - name: MINIO_CLIENT
-              value: minio-oscarvx00.cloud.okteto.net
+              value: deepscheduler.ddns.net:30011
             - name: MINIO_ACCESS
               valueFrom:
                 secretKeyRef:

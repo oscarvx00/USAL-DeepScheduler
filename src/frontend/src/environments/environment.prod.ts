@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: "http://deepscheduler.sytes.net:30003",
-  apiSocketUrl: "http://deepscheduler.sytes.net:30005",
-  proxyUrl: 'http://deepscheduler.sytes.net:8889'
+  apiUrl: "http://deepscheduler.ddns.net:30003",
+  apiSocketUrl: "http://deepscheduler.ddns.net:30005",
+  proxyUrl: 'http://deepscheduler.ddns.net:8889'
 };

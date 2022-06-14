@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from cProfile import label
 from io import BytesIO
 import json
 import tarfile
@@ -29,6 +28,7 @@ MONGO_HOST = os.environ['MONGO_HOST']
 
 NODE_IP = os.environ['NODE_IP']
 
+TENSORBOARD_IMAGE = 'oscarvicente/tensorboard-container'
 
 class TrainingRequest:
     def __init__(self, _id, user, quadrants, imageName, worker, date, status):
@@ -128,6 +128,28 @@ def sendProxyMsg(request_id, node_ip, operation):
     channel.basic_publish(
     exchange='proxy_exchange', routing_key='', body=content)
 
+def stopAndRemoveAll(training_container, training_image, tensorboard_container, tensorboard_volume):
+    try:
+        training_container.stop()
+    except:
+        print('Error stopping training container')
+    try:
+        dockerClient.images.remove(training_image.id)
+    except:
+        print('Error removing training image')
+    try:
+        tensorboard_container.stop()
+    except:
+        print('Error stopping tensorboard container')
+    try:
+        tensorboard_container.remove()
+    except:
+        print('Error removing tensorboard container')
+    try:
+        tensorboard_volume.remove(force=True)
+    except:
+        print('Error removing tensorborad volume')
+
 
 #orchestrator_id = str(uuid.uuid1())
 #orchestrator_cancel_queue_name = "cancel_queue_" + orchestrator_id
@@ -139,7 +161,8 @@ dockerClient = docker.from_env()
 minioClient = Minio(
     MINIO_CLIENT,
     access_key=MINIO_ACCESS,
-    secret_key=MINIO_SECRET
+    secret_key=MINIO_SECRET,
+    secure=False
 )
 
 #Create MongoDB client
@@ -151,6 +174,9 @@ node_machine_id = subprocess.check_output(['cat', '/etc/machine-id']).decode().r
 gpu_props = getNodeGpuSpecs()
 workerId = str(mongoHandler.registerWorker(mongoDatabase, node_machine_id, gpu_props, NODE_IP))
 
+
+#Download tensorboard image
+tensorboard_image = dockerClient.images.pull(TENSORBOARD_IMAGE)
 
 #Create connection to RabbitMQ container based on its service name
 #connection = pika.BlockingConnection(
@@ -214,10 +240,16 @@ def callback(ch, method, properties, body):
     print(" [x] Image " + trainingRequest.imageName + " pulled")
 
 
+    #Create volume for tensorboard
+    tensorboard_volume = dockerClient.volumes.create()
+    #Create tensorboard container
+    tensorboard_container = dockerClient.containers.run(image=TENSORBOARD_IMAGE, detach=True,
+    volumes=[tensorboard_volume.id+':/train/results'], ports={'6006/tcp' : ('0.0.0.0', 50000)})
+
     #Create a container with gpu capabilities.
     container = dockerClient.containers.run(image=trainingRequest.imageName, detach="True", device_requests=[
-        docker.types.DeviceRequest(count=-1, capabilities=[['gpu']])
-    ], ports={'6006/tcp' : ('0.0.0.0', 50000)})
+        docker.types.DeviceRequest(count=-1, capabilities=[['gpu']])], 
+        volumes=[tensorboard_volume.id+':/train/results'])
 
     start_time = time.time()
     sendProxyMsg(trainingRequest._id, NODE_IP, "ADD")
@@ -231,7 +263,16 @@ def callback(ch, method, properties, body):
             cancelId = json.loads(msg.decode('utf-8'))['id']
             if str(cancelId) == str(trainingRequest._id):
                 sendProxyMsg(trainingRequest._id, NODE_IP, "DEL")
-                container.stop()
+                stopAndRemoveAll(container, image, tensorboard_container, tensorboard_volume)
+                # container.stop()
+                # try:
+                #     container.remove()
+                #     dockerClient.images.remove(image.id)
+                #     tensorboard_container.stop()
+                #     tensorboard_container.remove()
+                #     tensorboard_volume.remove()
+                # except:
+                #     print("Error removing image or container", flush=True)
                 imageUpdated = TrainingRequest.fromJson(mongoHandler.setRequestCanceled(mongoDatabase, trainingRequest._id))
                 rabbitSendUpdate(RabbitMessage(RabbitMessageType.REQUEST_STATUS, requestUserId, imageUpdated))
                 ch.basic_ack(delivery_tag=method.delivery_tag)
@@ -319,11 +360,15 @@ def callback(ch, method, properties, body):
     rabbitSendUpdate(RabbitMessage(RabbitMessageType.REQUEST_STATUS, requestUserId, imageUpdated))
 
     #Remove container, remove image
-    try:
-        container.remove()
-        dockerClient.images.remove(image.id)
-    except:
-        print("Error removing image or container", flush=True)
+    stopAndRemoveAll(container, image, tensorboard_container, tensorboard_volume)
+    # try:
+    #     container.remove()
+    #     dockerClient.images.remove(image.id)
+    #     tensorboard_container.stop()
+    #     tensorboard_container.remove()
+    #     tensorboard_volume.remove()
+    # except:
+    #     print("Error removing image or container", flush=True)
 
     print("\n=========== Request " + str(trainingRequest._id)+ " completed ===========\n\n\n", flush=True)
 

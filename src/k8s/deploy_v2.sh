@@ -1,12 +1,20 @@
 #!/bin/bash
 
 #Run mongo
-kubectl apply -f database/mongodb-storageclass.yaml
-kubectl apply -f database/mongodb-pv.yaml
+kubectl apply -f database/mongo-storage-class.yaml
+kubectl apply -f database/mongo-pv.yaml
 kubectl apply -f database/mongodb-pvc.yaml
 kubectl apply -f database/mongodb-secrets.yaml
 kubectl apply -f database/mongodb-deploy.yaml
 kubectl apply -f database/mongodb-service.yaml
+
+#Run Minio
+kubectl apply -f minio/minio-storage-class.yaml
+kubectl apply -f minio/minio-pv.yaml
+kubectl apply -f minio/minio-pvc.yaml
+kubectl apply -f minio/minio-secrets.yaml
+kubectl apply -f minio/minio-deploy.yaml
+kubectl apply -f minio/minio-service.yaml
 
 #Run rabbitmq
 kubectl apply -f rabbitmq/rabbitmq-service.yaml

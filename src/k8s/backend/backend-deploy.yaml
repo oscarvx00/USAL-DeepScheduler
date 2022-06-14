@@ -23,7 +23,7 @@ spec:
         image: oscarvicente/deepscheduler-backend
         env: 
           - name: BACKEND_HOST
-            value: http://deepscheduler.sytes.net:30003
+            value: http://deepscheduler.ddns.net:30003
           - name: MONGO_HOST
             value: mongodb.default.svc.cluster.local/ds
           - name: GOOGLE_CLIENT_ID
@@ -66,7 +66,9 @@ spec:
           - name: RABBIT_HOST
             value: rabbitmq.default.svc.cluster.local
           - name: MINIO_HOST
-            value: minio-oscarvx00.cloud.okteto.net
+            value: deepscheduler.ddns.net #minio-oscarvx00.cloud.okteto.net
+          - name: MINIO_PORT
+            value: '30011'
           - name: MINIO_ACCESS
             value: myaccesskey
           - name: MINIO_SECRET
