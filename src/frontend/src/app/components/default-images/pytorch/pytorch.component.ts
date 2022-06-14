@@ -24,8 +24,7 @@ export class PytorchComponent implements OnInit {
   codeStep3_1 = `FROM oscarvicente/deepscheduler-pytorch-cuda-base
 COPY ./ ./`
   codeStep3_2 = `RUN pip3 install -r requirements.txt`
-  codeStep3_3 = `tensorboard --logdir=/train/results/ --host 0.0.0.0 &
-python3 -u main.py --cuda`
+  codeStep3_3 = `ENTRYPOINT [ "python3", "-u", "main.py", "--cuda" ]`
 
   ngOnInit(): void {
   }

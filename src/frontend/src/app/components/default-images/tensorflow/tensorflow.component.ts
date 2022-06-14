@@ -24,8 +24,7 @@ signal.signal(signal.SIGTERM, handleTimeout)`
   codeStep3_1 = `FROM oscarvicente/deepscheduler-pytorch-cuda-base
 COPY ./ ./`
   codeStep3_2 = `RUN pip3 install -r requirements.txt`
-  codeStep3_3 = `tensorboard --logdir=/train/results/ --bind_all &
-python3 -u bidirectional-rnn.py`
+  codeStep3_3 = `ENTRYPOINT [ "python3", "-u", "main.py"]`
 
   ngOnInit(): void {
   }

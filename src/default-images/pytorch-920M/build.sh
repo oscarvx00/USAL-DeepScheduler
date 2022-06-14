@@ -1,1 +1,0 @@
-exec docker build -t oscarvicente/deepscheduler-pytorch-920m-cuda-base .
