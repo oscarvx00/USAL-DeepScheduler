@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: deepscheduler-reverse-proxy
+  namespace: deepscheduler
   labels:
     app: deepscheduler-reverse-proxy
 spec:

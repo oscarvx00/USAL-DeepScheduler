@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deepscheduler-reverse-proxy
+  namespace: deepscheduler
 spec:
   selector:
     matchLabels:
@@ -14,13 +15,13 @@ spec:
       initContainers:
         - name: wait-for-rabbitmq
           image: oscarvicente/wait-for-it
-          command: ["./wait-for-it.sh", "rabbitmq.default.svc.cluster.local:5672"]
+          command: ["./wait-for-it.sh", "rabbitmq.deepscheduler.svc.cluster.local:5672"]
       containers:
         - name: reverse-proxy
           image: oscarvicente/configurable-reverse-proxy
           env:
             - name: RABBIT_HOST
-              value: amqp://rabbitmq.default.svc.cluster.local
+              value: amqp://rabbitmq.deepscheduler.svc.cluster.local
           ports:
             - name: http
               protocol: TCP

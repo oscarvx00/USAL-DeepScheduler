@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#Create namespace
+kubectl create namespace deepscheduler
+
 #Run mongo
 kubectl apply -f database/mongo-storage-class.yaml
 kubectl apply -f database/mongo-pv.yaml

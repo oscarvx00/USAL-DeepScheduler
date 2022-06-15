@@ -2,13 +2,14 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: mongo-pv
+  namespace: deepscheduler
   labels:
     type: mongo
 spec:
   storageClassName: mongo-storage
   persistentVolumeReclaimPolicy: Retain
   capacity:
-    storage: 200Mi
+    storage: 500Mi
   accessModes:
     - ReadWriteOnce
   hostPath:

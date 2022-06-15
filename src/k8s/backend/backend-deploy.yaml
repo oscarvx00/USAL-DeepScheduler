@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: deepscheduler-backend
+  namespace: deepscheduler
 spec:
   selector:
     matchLabels:
@@ -14,10 +15,10 @@ spec:
       initContainers:
         - name: wait-for-rabbitmq
           image: oscarvicente/wait-for-it
-          command: ["./wait-for-it.sh", "rabbitmq.default.svc.cluster.local:5672"]
+          command: ["./wait-for-it.sh", "rabbitmq.deepscheduler.svc.cluster.local:5672"]
         - name: wait-for-mongo 
           image: oscarvicente/wait-for-it
-          command: ["./wait-for-it.sh", "mongodb.default.svc.cluster.local:27017"]
+          command: ["./wait-for-it.sh", "mongodb.deepscheduler.svc.cluster.local:27017"]
       containers:
       - name: deepscheduler-backend-k8s
         image: oscarvicente/deepscheduler-backend
@@ -25,7 +26,7 @@ spec:
           - name: BACKEND_HOST
             value: http://deepscheduler.ddns.net:30003
           - name: MONGO_HOST
-            value: mongodb.default.svc.cluster.local/ds
+            value: mongodb.deepscheduler.svc.cluster.local/ds
           - name: GOOGLE_CLIENT_ID
             valueFrom:
               secretKeyRef:
@@ -64,7 +65,7 @@ spec:
                 name: backend-secret
                 key: GITLAB_SECRET
           - name: RABBIT_HOST
-            value: rabbitmq.default.svc.cluster.local
+            value: rabbitmq.deepscheduler.svc.cluster.local
           - name: MINIO_HOST
             value: deepscheduler.ddns.net #minio-oscarvx00.cloud.okteto.net
           - name: MINIO_PORT
