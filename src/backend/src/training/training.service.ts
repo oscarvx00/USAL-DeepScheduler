@@ -97,7 +97,6 @@ export class TrainingService {
 
     async getTrainingRequestResultsUrl(user : any, id : string){
         const filename = `${user._id}/${id}.zip`
-        //TODO: VERIFY USER OWNS REQUEST 
         const url =  await this.minioService.getPresignedUrl(filename)
         return {
             url : url

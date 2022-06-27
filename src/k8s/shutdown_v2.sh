@@ -1,34 +1,34 @@
 #!/bin/bash
 
 #Delete frontend
-kubectl delete svc deepscheduler-frontend
-kubectl delete deploy deepscheduler-frontend
+kubectl delete svc -n deepscheduler deepscheduler-frontend
+kubectl delete deploy -n deepscheduler deepscheduler-frontend
 
 #Delete backend
-kubectl delete svc deepscheduler-backend
-kubectl delete deploy deepscheduler-backend
+kubectl delete svc -n deepscheduler deepscheduler-backend
+kubectl delete deploy -n deepscheduler deepscheduler-backend
 
 #Delete worker
-kubectl delete daemonset worker
+kubectl delete daemonset -n deepscheduler worker
 
 #Delete managers
-kubectl delete cronjob manager-launcher
-kubectl delete deploy manager-writer
+kubectl delete cronjob -n deepscheduler manager-launcher
+kubectl delete deploy -n deepscheduler manager-writer
 
 #Delete reverse-proxy
-kubectl delete svc deepscheduler-reverse-proxy
-kubectl delete deploy deepscheduler-reverse-proxy
+kubectl delete svc -n deepscheduler deepscheduler-reverse-proxy
+kubectl delete deploy -n deepscheduler deepscheduler-reverse-proxy
 
 #Delete rabbitmq
-#kubectl delete statefulsets rabbitmq
-#kubectl delete svc rabbitmq
+#kubectl delete statefulsets -n deepscheduler rabbitmq
+#kubectl delete svc -n deepscheduler rabbitmq
 
 #Delete mongo
-#kubectl delete svc mongodb
-#kubectl delete deploy mongodb
+#kubectl delete svc -n deepscheduler mongodb
+#kubectl delete deploy -n deepscheduler mongodb
 
 #Delete minio
-#kubectl delete svc minio
-#kubectl delete deploy minio
+#kubectl delete svc -n deepscheduler minio
+#kubectl delete deploy -n deepscheduler minio
 
 #Secrets, volumes and storage class are not deleted
